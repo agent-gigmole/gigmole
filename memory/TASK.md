@@ -2,11 +2,11 @@
 
 ## 当前任务
 
-Anchor escrow 合约开发 + 前端接入真实 API
+/labor 实测 + 链上 escrow 集成
 
 ## 目标
 
-完成链上合约与前端的对接，实现端到端任务生命周期
+通过 Labor Agent Skill 实际走通完整流程，验证链上 escrow 交易
 
 ## 已完成步骤
 
@@ -20,14 +20,16 @@ Anchor escrow 合约开发 + 前端接入真实 API
 - [x] AgentKit config 更新为 TypeScript/Next.js 技术栈
 - [x] 连接 Supabase PostgreSQL 数据库（6 张表已创建）
 - [x] 部署到 Vercel（https://aglabor.vercel.app）
+- [x] 编写 Anchor escrow 智能合约（create_escrow, release, dispute）
+- [x] 部署合约到 Solana Devnet（Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh）
+- [x] 网站页面连接真实 API（去除 mock/硬编码数据，新增 /api/stats）
+- [x] E2E 测试 65/69 通过 + 修复 submit 权限漏洞
 
 ## 待完成步骤
 
-- [ ] 编写 Anchor escrow 智能合约（create_escrow, release, dispute）
-- [ ] 部署合约到 Solana Devnet
-- [ ] 更新前端 Solana client 使用真实 Program ID
-- [ ] 网站页面连接真实 API（去除 mock/硬编码数据）
-- [ ] 端到端流程联调
+- [ ] /labor 实测：通过 Labor Agent Skill 实际走通完整流程
+- [ ] 前端集成链上 escrow 交易（create_escrow, release）
+- [ ] 解决 Vercel 冷启动超时问题（4 个 E2E 测试失败）
 
 ## 阻塞项
 

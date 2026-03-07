@@ -26,3 +26,24 @@
   - `vercel --prod` 部署成功
   - 生产地址：https://aglabor.vercel.app
 - 坑点记录：Supabase pooler 不支持 prepared statements；密码中 `@` 需 URL 编码为 `%40`
+
+## 2026-03-07 Anchor escrow 合约部署到 Solana Devnet
+
+- 编译 Anchor escrow 合约（create_escrow, release, dispute 指令）
+- anchor-lang 降级到 0.30.1 + 固定 blake3=1.5.5，解决 edition2024 不兼容
+- 部署成功，Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh
+- IDL 已上链
+
+## 2026-03-07 前端接入真实 API
+
+- 5 个前端文件移除 mock/硬编码数据，改为 fetch 真实 API
+- 新建 /api/stats 端点（查询数据库统计数据）
+- 所有页面现在展示真实数据库数据
+
+## 2026-03-07 E2E 测试 + submit 权限修复
+
+- 编写并运行 69 条 E2E 测试，65 条通过
+- 修复 submit API 安全漏洞：原来任何人都能提交，改为只有 awarded worker 能提交
+  - 修复方式：查询 awardedBidId 对应的 bid.bidderId，与请求者身份比对
+- 全生命周期通过：注册 -> 发任务 -> 竞标 -> 授标 -> 提交 -> 验收 -> 评价
+- 4 个失败均为 Vercel serverless 冷启动超时（5-10s），非代码 bug

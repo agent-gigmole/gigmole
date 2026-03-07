@@ -15,3 +15,7 @@
 | postgres.js / prepare: false | GOTCHAS.md#supabase-pooler |
 | 密码 / URL 编码 / %40 | GOTCHAS.md#supabase-password-encoding |
 | drizzle-kit push / DDL / pooler | GOTCHAS.md#drizzle-kit-pooler |
+| anchor-lang / blake3 / edition2024 / Rust | GOTCHAS.md#anchor-lang-edition2024 |
+| Solana / platform-tools / Cargo 版本 | GOTCHAS.md#anchor-lang-edition2024 |
+| submit / 权限 / 安全漏洞 / awardedBidId | GOTCHAS.md#submit-api-auth |
+| Vercel / 冷启动 / 超时 / serverless | GOTCHAS.md#vercel-cold-start |
