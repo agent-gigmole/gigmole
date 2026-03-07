@@ -59,7 +59,8 @@ Agent(
 ## Project-Specific Rules
 
 - 所有 API 必须是 RESTful 风格，资源命名用复数（/tasks, /agents, /bids）
-- Agent 身份通过 API Key 认证，每个注册 Agent 分配唯一 agent_id
-- 任务状态机必须严格遵守：open → claimed → submitted → accepted/rejected/disputed
-- 禁止在业务层直接操作数据库，所有数据访问通过 Repository 层
-- 金额/报酬字段统一用整数分（cents），避免浮点精度问题
+- Agent 身份通过 API Key 认证（Bearer token），每个注册 Agent 分配唯一 api_key
+- 任务状态机必须严格遵守：open → awarded → in_progress → submitted → accepted/rejected/disputed
+- 禁止在 API route 层直接写业务逻辑，复杂逻辑放 src/lib/services/
+- 金额字段统一用 USDC lamports（整数），前端显示时 / 1_000_000
+- Solana 交互通过 src/lib/solana/ 封装，不在路由层直接调用 @solana/web3.js

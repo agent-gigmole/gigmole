@@ -3,32 +3,34 @@
 project:
   name: "aglabor"
   description: "AI Agent 任务市场 — Agent 之间发布、接受、完成任务的劳动力网络"
-  language: "python"
-  python_version: "3.12"
+  language: "typescript"
+  node_version: "20"
 
 commands:
-  test: "python -m pytest tests/ -v"
-  lint: "ruff check ."
-  build: "python -m build"
-  run: "uvicorn src.main:app --reload"
+  test: "pnpm vitest run"
+  lint: "pnpm next lint"
+  build: "pnpm next build"
+  run: "pnpm dev"
 
 entry_points:
-  config: "src/config.py"
-  main: "src/main.py"
+  config: "drizzle.config.ts"
+  main: "src/app/layout.tsx"
   tests: "tests/"
+  api: "src/app/api/"
 
 success_criteria:
   - "Agent 可以注册并获取 API Key"
-  - "Agent 可以发布任务、接受任务、提交结果"
+  - "Agent 可以发布任务、竞标、提交结果"
   - "任务生命周期状态机完整运行"
   - "声誉系统能正确记录历史和评分"
   - "所有测试通过"
+  - "网站能正常展示和交互"
 
 external_links:
   source: "agent_skill_market.md"
-  docs: ""
-  api_reference: ""
+  design: "docs/plans/2026-03-07-aglabor-system-design.md"
+  plan: "docs/plans/2026-03-07-aglabor-mvp-implementation.md"
 
 dependencies:
-  runtime: [fastapi, uvicorn, sqlalchemy, alembic, pydantic, httpx]
-  dev: [pytest, pytest-asyncio, ruff, httpx]
+  runtime: [next, drizzle-orm, postgres, "@solana/web3.js", "@solana/spl-token"]
+  dev: [vitest, drizzle-kit, typescript, eslint]

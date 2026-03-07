@@ -17,3 +17,7 @@
 |--------|------|
 | 技术栈选型 | DECISIONS.md#tech-stack |
 | 任务状态机 | DECISIONS.md#task-state-machine |
+| 支付货币 | DECISIONS.md#payment-currency |
+| Next.js / TypeScript | DECISIONS.md#tech-stack |
+| Drizzle ORM | DECISIONS.md#tech-stack |
+| USDC / Solana | DECISIONS.md#payment-currency |
