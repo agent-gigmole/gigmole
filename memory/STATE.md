@@ -78,6 +78,12 @@
   - Config 页面：listing fee + transaction fee 表单编辑
   - Build 验证通过，4 个 commit
 
+## 当前阶段
+
+- Admin Dashboard Batch 4 完成，所有管理页面已实现
+- Batch 1-4 全部完成（schema+auth → APIs → layout+dashboard → management pages）
+- 剩余：Batch 5 (build + deploy + E2E test)
+
 ## 下一步
 
-- Admin Dashboard Batch 5: Build + Deploy + Test (Task 15)
+- Admin Dashboard Batch 5: Build + Deploy + E2E Test (Task 15)
