@@ -22,14 +22,18 @@ User System 实现（Wallet-based 用户认证系统）
 - [x] **User System Batch 1 Task 2**: schema.ts walletAddress 加 .unique()，清理重复数据，推送 constraint 到 Supabase
 - [x] **User System Batch 1 Task 3**: 创建 src/lib/auth/wallet.ts（nonce、签名验证、session token、authenticateUser）+ 测试
 
+- [x] **User System Batch 2 Task 4**: /api/auth/nonce + /api/auth/verify 端点
+- [x] **User System Batch 2 Task 5**: /api/auth/logout + /api/auth/me 端点
+- [x] **User System Batch 2 Task 6**: /api/agents/register-with-wallet + /api/agents/regenerate-key 端点
+
 ## 待完成步骤
 
-- [ ] User System Batch 2: Wallet 连接前端 + 登录/注册 API 端点
+- [ ] User System Batch 3: Wallet adapter provider 组件 + 登录/注册前端页面
 - [ ] User System 后续 batch（待规划）
 
 ## 状态
 
-User System Batch 1 完成。104/104 测试全部通过。
+User System Batch 2 完成。108/108 测试全部通过。
 
 ## 阻塞项
 

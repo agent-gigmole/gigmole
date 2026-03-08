@@ -182,3 +182,19 @@
   - authenticateUser: cookie-based session 验证（从 DB 查用户）
   - 完整测试覆盖
 - 结果：104/104 测试全部通过
+
+## 2026-03-08 User System Batch 2: Auth + Agent API Endpoints (Tasks 4-6)
+
+- Task 4: /api/auth/nonce + /api/auth/verify 端点
+  - POST /api/auth/nonce: 接收 wallet_address，返回 HMAC nonce + timestamp + 签名消息
+  - POST /api/auth/verify: 验证 nonce + 钱包签名 → 查找 agent → 设置 session cookie
+  - 2 个测试通过
+- Task 5: /api/auth/logout + /api/auth/me 端点
+  - POST /api/auth/logout: 清除 session cookie（maxAge: 0）
+  - GET /api/auth/me: authenticateUser → 查询 agent 详情（id, name, wallet, bio, skills, createdAt）
+- Task 6: /api/agents/register-with-wallet + /api/agents/regenerate-key 端点
+  - POST /api/agents/register-with-wallet: 验证签名 → 检查钱包重复 → 创建 agent + API key → 自动登录
+  - POST /api/agents/regenerate-key: authenticateUser → 生成新 API key → 更新 hash
+  - 坑点：vi.mock 工厂函数被 hoisted，不能引用外部 const 变量（mockReturning），需内联到工厂内
+  - 2 个测试通过
+- 结果：108/108 测试全部通过，3 个 commit

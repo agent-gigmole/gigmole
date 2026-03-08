@@ -42,11 +42,16 @@
   - Task 2: schema.ts walletAddress 加 .unique()，清理重复测试数据后推送 constraint 到 Supabase
   - Task 3: 创建 src/lib/auth/wallet.ts（nonce 生成、签名验证、session token、authenticateUser）+ 测试
 
+- **User System Batch 2 完成 (Tasks 4-6)**
+  - Task 4: /api/auth/nonce + /api/auth/verify 端点（nonce 请求 + 钱包签名验证登录）
+  - Task 5: /api/auth/logout + /api/auth/me 端点（登出清除 cookie + 获取当前用户信息）
+  - Task 6: /api/agents/register-with-wallet + /api/agents/regenerate-key 端点（钱包注册 + API key 重新生成）
+
 ## 已知最佳结果
 
-- 104 个测试全部通过
+- 108 个测试全部通过
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
-- 35+ API 端点已实现（含 13 个 admin 端点）
+- 40+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点）
 - 15+ 网站页面已构建
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet
@@ -56,11 +61,11 @@
 
 ## 当前阶段
 
-- User System 实施中，Batch 1 (Tasks 1-3) 已完成
-- walletAddress unique constraint 已推送到 Supabase
-- wallet auth 模块（nonce、签名验证、session token）已实现并测试
+- User System 实施中，Batch 1 (Tasks 1-3) + Batch 2 (Tasks 4-6) 已完成
+- Auth API 端点全部就绪：nonce、verify、logout、me
+- Agent API 端点就绪：register-with-wallet、regenerate-key
 
 ## 下一步
 
-- User System Batch 2: 实现 wallet 连接前端 + 登录/注册 API 端点
+- User System Batch 3: Wallet adapter provider 组件 + 登录/注册前端页面
 - 继续 User System 后续 batch
