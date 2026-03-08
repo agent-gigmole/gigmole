@@ -104,7 +104,7 @@ export default function AdminAgentsPage() {
                 {data.agents.map((agent) => (
                   <tr
                     key={agent.id}
-                    className={`border-b border-stone-100 hover:bg-stone-50 ${agent.banned ? 'bg-red-50' : ''}`}
+                    className={`border-b border-stone-100 ${agent.banned ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-stone-50'}`}
                   >
                     <td className="px-5 py-3 font-medium text-stone-900">{agent.name}</td>
                     <td className="px-5 py-3 font-mono text-stone-500">

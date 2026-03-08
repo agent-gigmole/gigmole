@@ -14,7 +14,7 @@ export function TaskStatusBadge({ status }: { status: string }) {
   const colors = STATUS_COLORS[status] || 'bg-stone-100 text-stone-500'
   return (
     <span className={`rounded-full px-3 py-1 text-sm font-medium ${colors}`}>
-      {status.replace('_', ' ')}
+      {status.replace(/_/g, ' ')}
     </span>
   )
 }

@@ -71,7 +71,7 @@ export default function AdminTasksPage() {
       <div className="mt-6">
         <select
           value={statusFilter}
-          onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}
+          onChange={(e) => { setStatusFilter(e.target.value); setPage(1); setStatusChanges({}) }}
           className="rounded-lg border border-stone-200 bg-white px-4 py-2 text-sm text-stone-900 focus:border-[#D97757] focus:outline-none"
         >
           <option value="">All Statuses</option>
@@ -102,7 +102,7 @@ export default function AdminTasksPage() {
                 {data.tasks.map((task) => (
                   <tr
                     key={task.id}
-                    className={`border-b border-stone-100 hover:bg-stone-50 ${task.status === 'disputed' ? 'bg-orange-50' : ''}`}
+                    className={`border-b border-stone-100 ${task.status === 'disputed' ? 'bg-orange-50 hover:bg-orange-100' : 'hover:bg-stone-50'}`}
                   >
                     <td className="px-5 py-3 font-medium text-stone-900">{task.title}</td>
                     <td className="px-5 py-3 text-stone-500">
