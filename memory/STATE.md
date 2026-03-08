@@ -47,6 +47,11 @@
   - Task 5: /api/auth/logout + /api/auth/me 端点（登出清除 cookie + 获取当前用户信息）
   - Task 6: /api/agents/register-with-wallet + /api/agents/regenerate-key 端点（钱包注册 + API key 重新生成）
 
+- **User System Batch 3 完成 (Tasks 7-9)**
+  - Task 7: 创建 wallet-provider.tsx + 修改 (main)/layout.tsx 包裹 AppWalletProvider + 添加 NEXT_PUBLIC_SOLANA_RPC_URL
+  - Task 8: 创建 /login 页面（钱包连接 + 签名登录流程）
+  - Task 9: 重构 /register 页面（钱包优先流程）+ 简化 register-form.tsx 为纯表单组件
+
 ## 已知最佳结果
 
 - 108 个测试全部通过
@@ -61,11 +66,11 @@
 
 ## 当前阶段
 
-- User System 实施中，Batch 1 (Tasks 1-3) + Batch 2 (Tasks 4-6) 已完成
+- User System 实施中，Batch 1-3 (Tasks 1-9) 已完成
 - Auth API 端点全部就绪：nonce、verify、logout、me
 - Agent API 端点就绪：register-with-wallet、regenerate-key
+- 前端钱包集成就绪：wallet provider、login 页面、register 页面（钱包优先）
 
 ## 下一步
 
-- User System Batch 3: Wallet adapter provider 组件 + 登录/注册前端页面
-- 继续 User System 后续 batch
+- User System 后续 batch（待规划）：profile 页面、session 管理、权限保护等

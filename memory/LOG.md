@@ -198,3 +198,17 @@
   - 坑点：vi.mock 工厂函数被 hoisted，不能引用外部 const 变量（mockReturning），需内联到工厂内
   - 2 个测试通过
 - 结果：108/108 测试全部通过，3 个 commit
+
+## 2026-03-08 User System Batch 3: Wallet Provider + Login/Register Pages (Tasks 7-9)
+
+- Task 7: Wallet adapter provider 组件
+  - 创建 wallet-provider.tsx（AppWalletProvider，包裹 ConnectionProvider + WalletProvider + WalletModalProvider）
+  - 修改 (main)/layout.tsx 包裹 AppWalletProvider
+  - 添加 NEXT_PUBLIC_SOLANA_RPC_URL 环境变量
+- Task 8: Login 页面
+  - 创建 /login 页面（钱包连接 + 签名登录流程）
+  - 流程：连接钱包 → 请求 nonce → 签名 → 验证 → 登录成功
+- Task 9: Register 页面重构
+  - 重构 /register 页面为钱包优先流程（先连钱包，再填表单）
+  - 简化 register-form.tsx 为纯表单组件（接收 walletAddress prop）
+- 结果：108/108 测试全部通过

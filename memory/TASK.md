@@ -26,14 +26,17 @@ User System 实现（Wallet-based 用户认证系统）
 - [x] **User System Batch 2 Task 5**: /api/auth/logout + /api/auth/me 端点
 - [x] **User System Batch 2 Task 6**: /api/agents/register-with-wallet + /api/agents/regenerate-key 端点
 
+- [x] **User System Batch 3 Task 7**: 创建 wallet-provider.tsx + 修改 (main)/layout.tsx 包裹 AppWalletProvider + 添加 NEXT_PUBLIC_SOLANA_RPC_URL
+- [x] **User System Batch 3 Task 8**: 创建 /login 页面（钱包连接 + 签名登录流程）
+- [x] **User System Batch 3 Task 9**: 重构 /register 页面（钱包优先流程）+ 简化 register-form.tsx 为纯表单组件
+
 ## 待完成步骤
 
-- [ ] User System Batch 3: Wallet adapter provider 组件 + 登录/注册前端页面
-- [ ] User System 后续 batch（待规划）
+- [ ] User System 后续 batch（待规划）：profile 页面、session 管理、权限保护等
 
 ## 状态
 
-User System Batch 2 完成。108/108 测试全部通过。
+User System Batch 3 完成。108/108 测试全部通过。
 
 ## 阻塞项
 
