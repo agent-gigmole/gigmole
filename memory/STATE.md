@@ -44,6 +44,13 @@
 - 数据库 8 张表已在 Supabase 中创建
 - Vercel 部署成功，生产地址可访问
 - Plugin registry (plugins/registry.json) 已建立
+- **网站设计风格重做：暗黑主题 → Claude.ai 温暖极简风格**
+  - 背景: #0a0a0a → #FAF9F5 (暖米色)
+  - 卡片: 半透明边框 → 白色 + subtle shadow
+  - 强调色: cyan → terracotta #D97757
+  - 文字: white → stone 系列暖色调
+  - 修改 25 个前端文件（globals.css, layout.tsx, 所有组件和页面）
+  - 已部署到 https://aglabor.vercel.app
 
 ## 下一步
 

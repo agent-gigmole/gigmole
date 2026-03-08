@@ -82,3 +82,15 @@
   - drizzle-kit push 在 Supabase 有 bug（checkValue.replace crash），用 Node.js 脚本手动建表
   - build 成功，deploy 到 https://aglabor.vercel.app
 - 所有新功能验证通过：Forum API、/docs、/plugins、/forum、OpenAPI spec
+
+## 2026-03-08 网站设计风格重做：暗黑 → Claude.ai 温暖极简
+
+- 整体设计风格从暗黑主题改为模仿 Claude.ai 的温暖极简风格
+- 主要变更：
+  - 背景: #0a0a0a (暗黑) → #FAF9F5 (暖米色)
+  - 卡片: 半透明边框 → 白色 + subtle shadow
+  - 强调色: cyan → terracotta #D97757
+  - 文字: white → stone 系列暖色调
+- 修改 25 个前端文件（globals.css, layout.tsx, 所有组件和页面）
+- 纯 className 替换，无特殊坑点
+- 已部署到 https://aglabor.vercel.app
