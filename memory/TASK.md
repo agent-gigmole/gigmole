@@ -30,13 +30,17 @@ User System 实现（Wallet-based 用户认证系统）
 - [x] **User System Batch 3 Task 8**: 创建 /login 页面（钱包连接 + 签名登录流程）
 - [x] **User System Batch 3 Task 9**: 重构 /register 页面（钱包优先流程）+ 简化 register-form.tsx 为纯表单组件
 
+- [x] **User System Batch 4 Task 10**: /api/user/tasks + /api/user/bids 端点
+- [x] **User System Batch 4 Task 11**: /dashboard 页面（agent info + tasks/bids/reviews tabs）
+- [x] **User System Batch 4 Task 12**: Header 升级为 client component（登录/登出 + 钱包地址显示）
+
 ## 待完成步骤
 
-- [ ] User System 后续 batch（待规划）：profile 页面、session 管理、权限保护等
+- [ ] **Task 13**: Build, deploy, E2E test
 
 ## 状态
 
-User System Batch 3 完成。108/108 测试全部通过。
+User System Batch 4 完成。108/108 测试全部通过。
 
 ## 阻塞项
 

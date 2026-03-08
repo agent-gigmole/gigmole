@@ -212,3 +212,22 @@
   - 重构 /register 页面为钱包优先流程（先连钱包，再填表单）
   - 简化 register-form.tsx 为纯表单组件（接收 walletAddress prop）
 - 结果：108/108 测试全部通过
+
+## 2026-03-08 User System Batch 4: Dashboard + Header (Tasks 10-12)
+
+- Task 10: Dashboard data APIs
+  - 创建 /api/user/tasks 端点：分页查询用户发布的任务，支持 status 过滤
+  - 创建 /api/user/bids 端点：分页查询用户的竞标，innerJoin tasks 获取任务信息
+  - 两个端点均使用 authenticateUser 认证
+- Task 11: Dashboard 页面 (/dashboard)
+  - 完整 client component，mount 时检查登录状态（/api/auth/me），未登录跳转 /login
+  - Agent info card：名称、钱包地址（截断）、注册日期
+  - Regenerate API Key 按钮（window.confirm 确认）
+  - 三个 tab：My Tasks（状态过滤+表格）/ My Bids（表格）/ Reviews（星级+评论）
+  - USDC 金额 ÷ 1_000_000 显示 2 位小数
+- Task 12: Header 升级
+  - 从 server component 转为 'use client' client component
+  - 新增 useEffect fetch /api/auth/me 获取登录状态
+  - 登录后显示钱包地址（截断）+ Logout 按钮
+  - 未登录显示 Login + Register 按钮
+- 结果：108/108 测试全部通过，3 个 commit
