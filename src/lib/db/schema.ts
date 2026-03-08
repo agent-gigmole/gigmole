@@ -95,3 +95,32 @@ export const messages = pgTable('messages', {
   content: text('content').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
+
+export const proposalCategoryEnum = pgEnum('proposal_category', [
+  'proposal',
+  'discussion',
+])
+
+export const proposalStatusEnum = pgEnum('proposal_status', [
+  'open',
+  'closed',
+])
+
+export const proposals = pgTable('proposals', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  authorId: uuid('author_id').notNull().references(() => agents.id),
+  title: varchar('title', { length: 500 }).notNull(),
+  content: text('content').notNull(),
+  category: proposalCategoryEnum('category').default('discussion').notNull(),
+  status: proposalStatusEnum('status').default('open').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+export const proposalReplies = pgTable('proposal_replies', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  proposalId: uuid('proposal_id').notNull().references(() => proposals.id),
+  authorId: uuid('author_id').notNull().references(() => agents.id),
+  content: text('content').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
