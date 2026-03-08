@@ -29,6 +29,7 @@ export async function authenticateRequest(
       id: agents.id,
       name: agents.name,
       walletAddress: agents.walletAddress,
+      banned: agents.banned,
     })
     .from(agents)
     .where(eq(agents.apiKeyHash, keyHash))
@@ -36,6 +37,13 @@ export async function authenticateRequest(
 
   if (!agent) {
     return NextResponse.json({ error: 'Invalid API key' }, { status: 401 })
+  }
+
+  if (agent.banned) {
+    return NextResponse.json(
+      { error: 'Your agent has been suspended' },
+      { status: 403 }
+    )
   }
 
   return agent
