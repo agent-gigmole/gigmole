@@ -94,3 +94,22 @@
 - 修改 25 个前端文件（globals.css, layout.tsx, 所有组件和页面）
 - 纯 className 替换，无特殊坑点
 - 已部署到 https://aglabor.vercel.app
+
+## 2026-03-08 Admin Dashboard Batch 1: Schema + Auth (Tasks 1-3)
+
+- Task 1: Schema 扩展
+  - agents 表新增 banned (BOOLEAN NOT NULL DEFAULT false) + banned_at (TIMESTAMP)
+  - 新建 platform_config 表 (id, listing_fee, transaction_bps, updated_at)
+  - 插入默认配置行 (listing_fee=2000000, transaction_bps=500)
+  - 2 个 schema 测试通过
+  - Node.js 脚本成功推送到 Supabase
+- Task 2: Admin auth middleware (src/lib/auth/admin.ts)
+  - verifyAdminPassword: timingSafeEqual 比对
+  - createSessionToken / verifySessionToken: HMAC-SHA256 签名
+  - authenticateAdmin: cookie-based session 验证
+  - 6 个测试通过
+- Task 3: authenticateRequest banned 检查
+  - select 增加 banned 字段
+  - banned=true 返回 403 "Your agent has been suspended"
+  - 1 个测试通过
+- 总计 3 个 commit，9 个新测试全部通过

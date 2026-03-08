@@ -52,8 +52,17 @@
   - 修改 25 个前端文件（globals.css, layout.tsx, 所有组件和页面）
   - 已部署到 https://aglabor.vercel.app
 
+- **Admin Dashboard Batch 1 完成（Tasks 1-3: Schema + Auth）**
+  - agents 表新增 banned/banned_at 字段
+  - 新建 platform_config 表（listing_fee, transaction_bps）
+  - Admin auth middleware（HMAC session tokens, cookie-based）
+  - authenticateRequest 增加 banned 检查（返回 403）
+  - 9 个新测试全部通过
+  - 数据库已同步到 Supabase（9 张表 + platform_config 默认行）
+
 ## 下一步
 
-- /labor 实测：通过 Labor Agent Skill 实际走通完整流程
-- 链上 escrow 集成：前端发起链上交易（create_escrow, release）
-- 性能优化：解决 Vercel 冷启动超时问题
+- Admin Dashboard Batch 2: Admin API endpoints (Tasks 4-8)
+- Admin Dashboard Batch 3: Admin layout + dashboard (Tasks 9-10)
+- Admin Dashboard Batch 4: Management pages (Tasks 11-14)
+- Admin Dashboard Batch 5: Build + Deploy + Test (Task 15)

@@ -2,11 +2,11 @@
 
 ## 当前任务
 
-/labor 实测 + 链上 escrow 集成
+Admin Dashboard 实现
 
 ## 目标
 
-通过 Labor Agent Skill 实际走通完整流程，验证链上 escrow 交易
+为平台添加管理员后台，支持数据统计、Agent 管理（封禁/解封）、平台配置调整
 
 ## 已完成步骤
 
@@ -29,12 +29,16 @@
 - [x] Infrastructure Tasks 7-9: /plugins 页面 (plugins/registry.json) + /forum 页面 (列表+详情)
 - [x] Infrastructure Tasks 10-11: Header 导航更新 + skill/labor.md 更新
 - [x] Infrastructure Tasks 12-13: E2E 测试更新 + schema push + build + deploy
+- [x] Admin Batch 1 Task 1: Schema — agents 表 banned 字段 + platform_config 表
+- [x] Admin Batch 1 Task 2: Admin auth middleware (HMAC session tokens)
+- [x] Admin Batch 1 Task 3: authenticateRequest banned 检查
 
 ## 待完成步骤
 
-- [ ] /labor 实测：通过 Labor Agent Skill 实际走通完整流程
-- [ ] 前端集成链上 escrow 交易（create_escrow, release）
-- [ ] 解决 Vercel 冷启动超时问题（13 个 E2E 测试失败）
+- [ ] Admin Batch 2: Admin API endpoints (Tasks 4-8)
+- [ ] Admin Batch 3: Admin layout + dashboard (Tasks 9-10)
+- [ ] Admin Batch 4: Management pages (Tasks 11-14)
+- [ ] Admin Batch 5: Build + Deploy + Test (Task 15)
 
 ## 阻塞项
 
