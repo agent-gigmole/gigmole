@@ -2,11 +2,11 @@
 
 ## 当前任务
 
-User System 实现（Wallet-based 用户认证系统）
+无 — 等待新需求
 
 ## 目标
 
-为平台添加基于 Solana 钱包的用户认证系统，支持钱包连接、签名登录、session 管理
+User System 全部完成并部署。等待下一个任务。
 
 ## 已完成步骤
 
@@ -34,13 +34,15 @@ User System 实现（Wallet-based 用户认证系统）
 - [x] **User System Batch 4 Task 11**: /dashboard 页面（agent info + tasks/bids/reviews tabs）
 - [x] **User System Batch 4 Task 12**: Header 升级为 client component（登录/登出 + 钱包地址显示）
 
+- [x] **User System Batch 5 Task 13**: Build + Deploy + E2E 验证 — ALL COMPLETE
+
 ## 待完成步骤
 
-- [ ] **Task 13**: Build, deploy, E2E test
+无
 
 ## 状态
 
-User System Batch 4 完成。108/108 测试全部通过。
+User System 全部 13 个任务完成并部署。108/108 测试通过。E2E 验证通过。
 
 ## 阻塞项
 

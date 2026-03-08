@@ -37,44 +37,35 @@
 - **Admin Dashboard 全部完成并部署（15 个任务，5 个 batch）**
   - Admin URL: https://aglabor.vercel.app/admin
 
-- **User System Batch 1 完成 (Tasks 1-3)**
-  - Task 1: 安装 wallet adapter + tweetnacl 依赖
-  - Task 2: schema.ts walletAddress 加 .unique()，清理重复测试数据后推送 constraint 到 Supabase
-  - Task 3: 创建 src/lib/auth/wallet.ts（nonce 生成、签名验证、session token、authenticateUser）+ 测试
-
-- **User System Batch 2 完成 (Tasks 4-6)**
-  - Task 4: /api/auth/nonce + /api/auth/verify 端点（nonce 请求 + 钱包签名验证登录）
-  - Task 5: /api/auth/logout + /api/auth/me 端点（登出清除 cookie + 获取当前用户信息）
-  - Task 6: /api/agents/register-with-wallet + /api/agents/regenerate-key 端点（钱包注册 + API key 重新生成）
-
-- **User System Batch 3 完成 (Tasks 7-9)**
-  - Task 7: 创建 wallet-provider.tsx + 修改 (main)/layout.tsx 包裹 AppWalletProvider + 添加 NEXT_PUBLIC_SOLANA_RPC_URL
-  - Task 8: 创建 /login 页面（钱包连接 + 签名登录流程）
-  - Task 9: 重构 /register 页面（钱包优先流程）+ 简化 register-form.tsx 为纯表单组件
-
-- **User System Batch 4 完成 (Tasks 10-12)**
-  - Task 10: /api/user/tasks + /api/user/bids 端点（分页、状态过滤、join 查询）
-  - Task 11: /dashboard 页面（agent info card + 3 tabs: My Tasks / My Bids / Reviews）
-  - Task 12: Header 升级为 client component（登录/登出状态切换 + 钱包地址显示）
+- **User System 全部完成并部署（13 个任务，5 个 batch）**
+  - Batch 1 (Tasks 1-3): 依赖安装 + schema unique constraint + wallet auth 库
+  - Batch 2 (Tasks 4-6): Auth API 端点 (nonce/verify/logout/me) + Agent wallet 注册/key 重生成
+  - Batch 3 (Tasks 7-9): Wallet provider 组件 + Login 页面 + Register 页面重构
+  - Batch 4 (Tasks 10-12): Dashboard data APIs + Dashboard 页面 + Header 登录状态
+  - Batch 5 (Task 13): 环境变量配置 + Build + Deploy + E2E 验证
+  - 新增文件：wallet.ts, wallet-provider.tsx, login/page.tsx, dashboard/page.tsx, 6 个 API route, 3 个测试文件
+  - 修改文件：schema.ts (.unique()), layout.tsx (AppWalletProvider), register/page.tsx (wallet-first), register-form.tsx (props), header.tsx (client component with auth)
 
 ## 已知最佳结果
 
 - 108 个测试全部通过
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
 - 40+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点）
-- 15+ 网站页面已构建（含 dashboard）
+- 15+ 网站页面已构建（含 dashboard、login）
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet
 - 数据库 9 张表已在 Supabase 中创建（含 platform_config）
 - Vercel 部署成功，生产地址可访问
 - Plugin registry (plugins/registry.json) 已建立
+- E2E 验证：/api/auth/nonce 返回正确 nonce，/api/auth/me 无 cookie 返回 401，/login /register /dashboard 页面均可访问
 
 ## 当前阶段
 
-- User System 实施中，Batch 1-4 (Tasks 1-12) 已完成
-- Dashboard 功能就绪：/api/user/tasks, /api/user/bids, /dashboard 页面
-- Header 已升级为 client component，支持登录/登出状态显示
+- User System 全部 13 个任务完成并部署
+- Admin Dashboard 全部 15 个任务完成并部署
+- 平台基础设施升级全部 13 个任务完成并部署
+- MVP 全部 22 个任务完成
 
 ## 下一步
 
-- User System Task 13: Build, deploy, E2E test
+- 待定：用户提出新需求

@@ -231,3 +231,16 @@
   - 登录后显示钱包地址（截断）+ Logout 按钮
   - 未登录显示 Login + Register 按钮
 - 结果：108/108 测试全部通过，3 个 commit
+
+## 2026-03-08 User System Batch 5: Build + Deploy + E2E (Task 13) — USER SYSTEM COMPLETE
+
+- 添加环境变量到 .env 和 Vercel
+- Build 验证：108/108 测试全部通过，build 成功
+- 部署到 https://aglabor.vercel.app
+- E2E 验证通过：
+  - /api/auth/nonce 返回正确 nonce
+  - /api/auth/me 无 cookie 返回 401
+  - /login、/register、/dashboard 页面均可访问
+- User System 全部 13 个任务，5 个 batch 全部完成
+- 新增文件：wallet.ts, wallet-provider.tsx, login/page.tsx, dashboard/page.tsx, 6 个 API route, 3 个测试文件
+- 修改文件：schema.ts (.unique()), layout.tsx (AppWalletProvider), register/page.tsx (wallet-first), register-form.tsx (props), header.tsx (client component with auth)
