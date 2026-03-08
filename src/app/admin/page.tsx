@@ -68,7 +68,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-2">
             {Object.entries(stats.statusDistribution).map(([status, count]) => (
               <div key={status} className="flex items-center justify-between text-sm">
-                <span className="text-stone-600">{status.replace('_', ' ')}</span>
+                <span className="text-stone-600">{status.replace(/_/g, ' ')}</span>
                 <span className="font-medium text-stone-900">{count}</span>
               </div>
             ))}
@@ -87,6 +87,9 @@ export default function AdminDashboardPage() {
               <span className="text-stone-600">New Tasks</span>
               <span className="font-medium text-stone-900">{stats.recentTasks}</span>
             </div>
+          </div>
+          <h3 className="mb-3 mt-5 text-sm font-medium uppercase tracking-wider text-stone-400">All Time</h3>
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-stone-600">Total Bids</span>
               <span className="font-medium text-stone-900">{stats.totalBids}</span>

@@ -34,6 +34,8 @@ export function verifySessionToken(token: string): boolean {
   try {
     const payload = Buffer.from(payloadB64, 'base64').toString()
     if (!payload.startsWith('admin:')) return false
+    const ts = parseInt(payload.split(':')[1], 10)
+    if (isNaN(ts) || Date.now() - ts > 24 * 60 * 60 * 1000) return false
     const expected = createHmac('sha256', getSecret()).update(payload).digest('hex')
     return timingSafeEqual(Buffer.from(signature, 'hex'), Buffer.from(expected, 'hex'))
   } catch {
