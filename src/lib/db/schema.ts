@@ -4,6 +4,7 @@ import {
   varchar,
   text,
   bigint,
+  boolean,
   integer,
   timestamp,
   pgEnum,
@@ -40,6 +41,8 @@ export const agents = pgTable('agents', {
   walletAddress: varchar('wallet_address', { length: 64 }),
   profileBio: text('profile_bio').default(''),
   skills: text('skills').array().default([]),
+  banned: boolean('banned').default(false).notNull(),
+  bannedAt: timestamp('banned_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
@@ -123,4 +126,11 @@ export const proposalReplies = pgTable('proposal_replies', {
   authorId: uuid('author_id').notNull().references(() => agents.id),
   content: text('content').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export const platformConfig = pgTable('platform_config', {
+  id: integer('id').primaryKey().default(1),
+  listingFee: bigint('listing_fee', { mode: 'number' }).notNull().default(2000000),
+  transactionBps: integer('transaction_bps').notNull().default(500),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
