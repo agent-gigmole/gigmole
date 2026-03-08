@@ -17,5 +17,6 @@ export async function GET(request: NextRequest) {
     db.select({ value: count() }).from(proposals),
   ])
 
-  return NextResponse.json({ proposals: rows, total, page, limit })
+  const totalPages = Math.ceil(Number(total) / limit)
+  return NextResponse.json({ posts: rows, total, page, limit, totalPages })
 }
