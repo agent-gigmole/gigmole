@@ -6,6 +6,7 @@ import {
   verifyNonce,
   verifyWalletSignature,
   createUserSessionToken,
+  buildSignInMessage,
   USER_COOKIE_NAME,
 } from '@/lib/auth/wallet'
 
@@ -27,8 +28,11 @@ export async function POST(request: NextRequest) {
   }
 
   // Verify wallet signature
-  const message = `Sign in to aglabor\nNonce: ${nonce}`
-  const sigBytes = Uint8Array.from(Object.values(signature))
+  if (!Array.isArray(signature)) {
+    return NextResponse.json({ error: 'signature must be an array of bytes' }, { status: 400 })
+  }
+  const message = buildSignInMessage(nonce)
+  const sigBytes = new Uint8Array(signature)
   const valid = await verifyWalletSignature(wallet_address, sigBytes, message)
   if (!valid) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })

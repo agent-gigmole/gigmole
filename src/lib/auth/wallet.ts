@@ -3,6 +3,10 @@ import { createHmac, timingSafeEqual } from 'crypto'
 
 export const USER_COOKIE_NAME = 'user_session'
 
+export function buildSignInMessage(nonce: string): string {
+  return `Sign in to aglabor\nNonce: ${nonce}`
+}
+
 function getSecret(): string {
   return process.env.USER_SESSION_SECRET || 'fallback-user-secret-not-for-prod'
 }

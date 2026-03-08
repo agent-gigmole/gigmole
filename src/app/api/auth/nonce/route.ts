@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateNonce } from '@/lib/auth/wallet'
+import { generateNonce, buildSignInMessage } from '@/lib/auth/wallet'
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}))
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { nonce, timestamp } = generateNonce(body.wallet_address)
-  const message = `Sign in to aglabor\nNonce: ${nonce}`
+  const message = buildSignInMessage(nonce)
 
   return NextResponse.json({ nonce, timestamp, message })
 }
