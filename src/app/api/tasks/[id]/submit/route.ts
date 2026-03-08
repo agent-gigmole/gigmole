@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
-import { tasks, submissions, TaskStatus } from '@/lib/db/schema'
+import { tasks, submissions, bids, TaskStatus } from '@/lib/db/schema'
 import { isValidTransition } from '@/lib/services/task-service'
 import { eq } from 'drizzle-orm'
 
@@ -36,6 +36,25 @@ export async function POST(
     return NextResponse.json(
       { error: `Cannot submit deliverable for task with status "${task.status}"` },
       { status: 409 }
+    )
+  }
+
+  // Verify the submitter is the awarded worker
+  if (!task.awardedBidId) {
+    return NextResponse.json(
+      { error: 'No bid has been awarded for this task' },
+      { status: 403 }
+    )
+  }
+  const [awardedBid] = await db
+    .select()
+    .from(bids)
+    .where(eq(bids.id, task.awardedBidId))
+    .limit(1)
+  if (!awardedBid || awardedBid.bidderId !== auth.id) {
+    return NextResponse.json(
+      { error: 'Only the awarded worker can submit deliverables' },
+      { status: 403 }
     )
   }
 
