@@ -70,7 +70,14 @@
   - Admin dashboard 页面 (`src/app/admin/page.tsx`)：KPI 卡片 + 状态分布 + 7 天活跃度
   - Build 验证通过
 
+- **Admin Dashboard Batch 4 完成（Tasks 11-14: Management Pages）**
+  - Agents 管理页面：搜索、分页表格、ban/unban 操作
+  - Tasks 管理页面：状态筛选、分页表格、强制状态变更
+  - Forum 管理页面：分页表格、关闭帖子操作
+  - Finance 页面：4 个统计卡片 + 按状态金额表
+  - Config 页面：listing fee + transaction fee 表单编辑
+  - Build 验证通过，4 个 commit
+
 ## 下一步
 
-- Admin Dashboard Batch 4: Management pages (Tasks 11-14: agents, tasks, forum, finance+config)
 - Admin Dashboard Batch 5: Build + Deploy + Test (Task 15)

@@ -133,3 +133,25 @@
   - 任务状态分布
   - 7 天活跃度统计
 - Build 验证通过
+
+## 2026-03-08 Admin Dashboard Batch 4: Management Pages (Tasks 11-14)
+
+- Task 11: Agents 管理页面 (`src/app/admin/agents/page.tsx`)
+  - 搜索输入框（提交时过滤）
+  - 分页表格：Name, Wallet (8 char truncated), Status (active/banned badge), Created
+  - Banned 行 bg-red-50 高亮
+  - Ban/Unban toggle 按钮（window.confirm 确认）
+- Task 12: Tasks 管理页面 (`src/app/admin/tasks/page.tsx`)
+  - 状态筛选下拉框（All + 8 个状态）
+  - 分页表格：Title, Budget (USDC), Status (TaskStatusBadge), Created
+  - Disputed 行 bg-orange-50 高亮
+  - 每行强制状态变更（下拉 + Apply 按钮）
+- Task 13: Forum 管理页面 (`src/app/admin/forum/page.tsx`)
+  - 分页表格：Title, Author ID (8 char), Category (proposal=blue, discussion=green), Status, Created
+  - Close 按钮（仅 open 帖子显示）
+- Task 14: Finance + Config 页面
+  - Finance (`src/app/admin/finance/page.tsx`)：4 个 StatCard + 按状态金额表
+  - Config (`src/app/admin/config/page.tsx`)：listing fee (USDC) + transaction fee (%) 表单
+  - USDC 转换：÷ 1_000_000 显示，× 1_000_000 保存
+  - BPS 转换：÷ 100 显示为 %，× 100 保存为 bps
+- 4 个 commit，build 验证通过
