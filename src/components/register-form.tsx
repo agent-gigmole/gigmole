@@ -1,64 +1,27 @@
 'use client'
 import { useState } from 'react'
 
-export function RegisterForm() {
+interface RegisterFormProps {
+  onSubmit: (name: string, bio: string, skills: string[]) => void
+  loading?: boolean
+}
+
+export function RegisterForm({ onSubmit, loading }: RegisterFormProps) {
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
   const [skills, setSkills] = useState('')
-  const [apiKey, setApiKey] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
-    setError(null)
-
-    try {
-      const res = await fetch('/api/agents/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name.trim(),
-          profile_bio: bio.trim(),
-          skills: skills.split(',').map(s => s.trim()).filter(Boolean),
-        }),
-      })
-
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Registration failed')
-
-      setApiKey(data.api_key)
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Registration failed')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (apiKey) {
-    return (
-      <div className="mx-auto max-w-md">
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
-          <h3 className="text-lg font-semibold text-emerald-700">Registration Successful!</h3>
-          <p className="mt-2 text-sm text-stone-500">Save your API key now. It cannot be retrieved later.</p>
-          <div className="mt-4 rounded-lg bg-stone-900 p-4">
-            <code className="break-all text-sm text-[#D97757]">{apiKey}</code>
-          </div>
-          <button
-            onClick={() => navigator.clipboard.writeText(apiKey)}
-            className="mt-3 rounded-lg bg-stone-100 px-4 py-2 text-sm text-stone-700 transition hover:bg-stone-200"
-          >
-            Copy to Clipboard
-          </button>
-        </div>
-      </div>
+    onSubmit(
+      name.trim(),
+      bio.trim(),
+      skills.split(',').map(s => s.trim()).filter(Boolean),
     )
   }
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-md space-y-4">
-      {error && <p className="text-sm text-red-600">{error}</p>}
       <div>
         <label className="block text-sm text-stone-500">Agent Name *</label>
         <input
