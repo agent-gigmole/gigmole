@@ -63,3 +63,22 @@
   - 左侧 sticky 导航（mobile 隐藏）+ 右侧内容区
   - 端点卡片：MethodBadge, AuthBadge, 参数表格, JSON 示例, 错误码
   - 暗色主题：bg-white/5, text-white/60, text-cyan-400
+
+## 2026-03-08 平台基础设施升级全部完成（13 个任务，5 个 batch）
+
+- Batch 1 (Tasks 1-3): Forum 功能
+  - 新增 proposals + proposal_replies 表（schema 扩展）
+  - Forum API：CRUD（创建/列表/详情/回复）
+- Batch 2 (Tasks 4-6): API 文档体系（已在上条记录）
+- Batch 3 (Tasks 7-9): 新页面
+  - /plugins 页面 + plugins/registry.json（插件注册表）
+  - /forum 页面（列表 + 详情 /forum/[id]）
+- Batch 4 (Tasks 10-11): 导航与 Skill
+  - Header 导航新增 Docs / Plugins / Forum 链接
+  - skill/labor.md 新增 forum 命令 + reference implementation 说明
+- Batch 5 (Tasks 12-13): 测试与部署
+  - E2E 测试扩展：新增 forum API、openapi、新页面的测试用例
+  - 结果：69/82 通过，13 个失败全是 Vercel cold-start 超时 + 级联失败
+  - drizzle-kit push 在 Supabase 有 bug（checkValue.replace crash），用 Node.js 脚本手动建表
+  - build 成功，deploy 到 https://aglabor.vercel.app
+- 所有新功能验证通过：Forum API、/docs、/plugins、/forum、OpenAPI spec

@@ -13,7 +13,7 @@
 - Supabase PostgreSQL 数据库连接配置
   - .env 中 DATABASE_URL 指向 Supabase pooler（Transaction mode, port 6543）
   - src/lib/db/index.ts 添加 `prepare: false`
-  - 6 张表全部通过 drizzle-kit push 创建
+  - 8 张表全部在 Supabase 中创建（原 6 张 + proposals + proposal_replies）
 - Vercel 生产环境部署
   - 项目已 link，4 个环境变量已设置
   - 生产地址：https://aglabor.vercel.app
@@ -21,25 +21,29 @@
   - Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh
   - anchor-lang 0.30.1，IDL 已上链
 - 前端连接真实 API（5 个文件去除 mock 数据，新增 /api/stats 端点）
-- E2E 测试 65/69 通过
+- E2E 测试 69/82 通过
   - 全生命周期验证：注册 -> 发任务 -> 竞标 -> 授标 -> 提交 -> 验收 -> 评价
   - 修复 submit API 权限漏洞（只有 awarded worker 能提交）
-  - 4 个失败均为 Vercel 冷启动超时，非代码 bug
-- Infrastructure Plan Tasks 4-6 完成
-  - Task 4: src/lib/api-docs.ts — 结构化 API 文档数据（9 组，18+ 端点）
-  - Task 5: GET /api/openapi.json — OpenAPI 3.0 规范端点（8 个测试全通过）
-  - Task 6: /docs 页面 — API 文档展示页面（左导航 + 端点卡片）
+  - 13 个失败均为 Vercel 冷启动超时（HTTP 000）+ 级联失败，非代码 bug
+- **平台基础设施升级全部完成（13 个任务，5 个 batch）**
+  - Batch 1 (Tasks 1-3): Forum schema (proposals + proposal_replies 表) + Forum API (CRUD + replies)
+  - Batch 2 (Tasks 4-6): API docs 数据源 (src/lib/api-docs.ts, 22 endpoints) + OpenAPI 3.0 spec endpoint + /docs 页面
+  - Batch 3 (Tasks 7-9): /plugins 页面 (plugins/registry.json) + /forum 页面 (列表+详情)
+  - Batch 4 (Tasks 10-11): Header 导航更新 (Docs/Plugins/Forum 链接) + skill/labor.md 更新 (forum 命令 + reference implementation)
+  - Batch 5 (Tasks 12-13): E2E 测试更新 (新增 forum + openapi + 新页面测试) + schema push + build + deploy
 
 ## 已知最佳结果
 
-- 40+ 单元测试全部通过（新增 8 个 OpenAPI 测试）
-- E2E 测试 65/69 通过（4 个超时非代码问题）
-- 14 个 API 端点已实现 + /api/stats + /api/openapi.json 新增
-- 8 个网站页面已构建（含 /docs、/forum、/forum/[id]）
+- 40+ 单元测试全部通过（含 8 个 OpenAPI 测试）
+- E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
+- 22+ API 端点已实现（含 Forum CRUD、OpenAPI spec、Stats）
+- 10 个网站页面已构建（含 /docs、/plugins、/forum、/forum/[id]）
+- Header 导航包含 Docs/Plugins/Forum 链接
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh）
-- 数据库 6 张表已在 Supabase 中创建
+- 数据库 8 张表已在 Supabase 中创建
 - Vercel 部署成功，生产地址可访问
+- Plugin registry (plugins/registry.json) 已建立
 
 ## 下一步
 

@@ -25,15 +25,16 @@
 - [x] 网站页面连接真实 API（去除 mock/硬编码数据，新增 /api/stats）
 - [x] E2E 测试 65/69 通过 + 修复 submit 权限漏洞
 - [x] Infrastructure Tasks 4-6: API docs data + OpenAPI endpoint + /docs 页面
+- [x] Infrastructure Tasks 1-3: Forum schema (proposals + proposal_replies) + Forum API (CRUD + replies)
+- [x] Infrastructure Tasks 7-9: /plugins 页面 (plugins/registry.json) + /forum 页面 (列表+详情)
+- [x] Infrastructure Tasks 10-11: Header 导航更新 + skill/labor.md 更新
+- [x] Infrastructure Tasks 12-13: E2E 测试更新 + schema push + build + deploy
 
 ## 待完成步骤
 
-- [ ] Infrastructure Tasks 7-9: Plugin 页面 + Forum 页面增强
-- [ ] Infrastructure Tasks 10-11: Nav 更新 + Skill 更新
-- [ ] Infrastructure Tasks 12-13: 测试 + 部署
 - [ ] /labor 实测：通过 Labor Agent Skill 实际走通完整流程
 - [ ] 前端集成链上 escrow 交易（create_escrow, release）
-- [ ] 解决 Vercel 冷启动超时问题（4 个 E2E 测试失败）
+- [ ] 解决 Vercel 冷启动超时问题（13 个 E2E 测试失败）
 
 ## 阻塞项
 

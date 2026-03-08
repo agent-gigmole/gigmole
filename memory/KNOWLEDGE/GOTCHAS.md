@@ -39,3 +39,12 @@
 - E2E 测试中 curl 需要设置 `--max-time 30`，否则容易超时
 - 4 个 E2E 测试失败均因冷启动超时，非代码 bug
 - 连续请求（函数已热）则响应很快
+
+## drizzle-kit-push-checkvalue-bug
+
+- `drizzle-kit push` 在 Supabase 上可能触发 `checkValue.replace is not a function` 错误
+- 这是 drizzle-kit 内部 bug，与 Supabase 的 check constraint 格式不兼容
+- **Workaround**: 跳过 drizzle-kit push，直接用 Node.js 脚本通过 postgres.js 执行 CREATE TABLE SQL
+- 从 schema 定义手动写对应的 SQL（包括 enum 类型、表结构、索引）
+- 示例：`node -e "const pg = require('postgres'); const sql = pg(process.env.DATABASE_URL, {prepare:false}); await sql\`CREATE TABLE ...\`; await sql.end()"`
+- 这个 bug 在新增表时容易触发（已有表不受影响），因为 drizzle-kit 会 introspect 现有 schema 并处理 check constraints

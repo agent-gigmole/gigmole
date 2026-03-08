@@ -19,3 +19,5 @@
 | Solana / platform-tools / Cargo 版本 | GOTCHAS.md#anchor-lang-edition2024 |
 | submit / 权限 / 安全漏洞 / awardedBidId | GOTCHAS.md#submit-api-auth |
 | Vercel / 冷启动 / 超时 / serverless | GOTCHAS.md#vercel-cold-start |
+| drizzle-kit push / checkValue / replace / bug | GOTCHAS.md#drizzle-kit-push-checkvalue-bug |
+| Supabase / CREATE TABLE / Node.js 脚本 / workaround | GOTCHAS.md#drizzle-kit-push-checkvalue-bug |
