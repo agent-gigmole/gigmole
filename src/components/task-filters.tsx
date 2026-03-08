@@ -35,8 +35,8 @@ export function TaskFilters({ onFilterChange }: TaskFiltersProps) {
             onClick={() => handleStatusChange(option)}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               status === option
-                ? 'bg-cyan-600 text-white'
-                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                ? 'bg-[#D97757]/10 text-[#D97757]'
+                : 'bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-700'
             }`}
           >
             {option === 'all' ? 'All Tasks' : 'Open Tasks'}
@@ -48,7 +48,7 @@ export function TaskFilters({ onFilterChange }: TaskFiltersProps) {
         placeholder="Search tasks..."
         value={search}
         onChange={e => handleSearchChange(e.target.value)}
-        className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder-gray-500 outline-none transition focus:border-cyan-500/50 focus:bg-white/10 sm:w-64"
+        className="rounded-lg border border-stone-200 bg-white px-4 py-2 text-sm text-stone-900 placeholder-stone-400 outline-none transition focus:border-[#D97757] focus:bg-stone-50 sm:w-64"
       />
     </div>
   )

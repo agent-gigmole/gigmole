@@ -1,94 +1,94 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-interface MockTask {
+interface Task {
   id: string
   title: string
   budget: number
   tags: string[]
-  timeAgo: string
+  createdAt: string
 }
 
-const mockTasks: MockTask[] = [
-  {
-    id: '1',
-    title: 'Scrape and structure top 100 DeFi protocols data',
-    budget: 150,
-    tags: ['data', 'scraping', 'defi'],
-    timeAgo: '2 min ago',
-  },
-  {
-    id: '2',
-    title: 'Generate Solidity audit report for NFT marketplace',
-    budget: 500,
-    tags: ['audit', 'solidity', 'security'],
-    timeAgo: '8 min ago',
-  },
-  {
-    id: '3',
-    title: 'Translate whitepaper to Chinese and Japanese',
-    budget: 80,
-    tags: ['translation', 'docs'],
-    timeAgo: '15 min ago',
-  },
-  {
-    id: '4',
-    title: 'Build sentiment analysis pipeline for crypto Twitter',
-    budget: 300,
-    tags: ['ml', 'nlp', 'twitter'],
-    timeAgo: '32 min ago',
-  },
-  {
-    id: '5',
-    title: 'Create vector embeddings for DAO governance proposals',
-    budget: 200,
-    tags: ['embeddings', 'dao', 'ai'],
-    timeAgo: '1 hr ago',
-  },
-]
+function formatUSDC(budget: number): string {
+  return `${(budget / 1_000_000).toFixed(2)} USDC`
+}
 
-function formatUSDC(amount: number): string {
-  return `${amount.toLocaleString()} USDC`
+function timeAgo(dateStr: string): string {
+  const seconds = Math.floor(
+    (Date.now() - new Date(dateStr).getTime()) / 1000
+  )
+  if (seconds < 60) return `${seconds}s ago`
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) return `${minutes} min ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours} hr ago`
+  const days = Math.floor(hours / 24)
+  return `${days}d ago`
 }
 
 export function TaskFeed() {
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/tasks?limit=5')
+      .then((res) => res.json())
+      .then((data) => {
+        setTasks(Array.isArray(data) ? data : data.tasks ?? [])
+      })
+      .catch(() => setTasks([]))
+      .finally(() => setLoading(false))
+  }, [])
+
   return (
     <section className="px-4 py-16">
       <div className="mx-auto max-w-4xl">
-        <h2 className="text-2xl font-bold text-white">Latest Tasks</h2>
+        <h2 className="text-2xl font-bold text-stone-900">Latest Tasks</h2>
 
         <div className="mt-6 space-y-3">
-          {mockTasks.map((task) => (
-            <div
-              key={task.id}
-              className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-5 transition hover:border-white/20 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-medium text-white">{task.title}</p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {task.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md bg-white/10 px-2 py-0.5 text-xs text-gray-400"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+          {loading ? (
+            <p className="text-stone-400">Loading...</p>
+          ) : tasks.length === 0 ? (
+            <p className="text-stone-400">No tasks yet.</p>
+          ) : (
+            tasks.map((task) => (
+              <Link
+                key={task.id}
+                href={`/tasks/${task.id}`}
+                className="flex flex-col gap-3 rounded-xl border border-stone-200 bg-white p-5 shadow-sm transition hover:border-stone-300 hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium text-stone-900">
+                    {task.title}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {(task.tags ?? []).map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-md bg-stone-100 px-2 py-0.5 text-xs text-stone-500"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-4 text-sm sm:flex-shrink-0">
-                <span className="font-mono font-medium text-cyan-400">
-                  {formatUSDC(task.budget)}
-                </span>
-                <span className="text-gray-500">{task.timeAgo}</span>
-              </div>
-            </div>
-          ))}
+                <div className="flex items-center gap-4 text-sm sm:flex-shrink-0">
+                  <span className="font-mono font-medium text-[#D97757]">
+                    {formatUSDC(task.budget)}
+                  </span>
+                  <span className="text-stone-400">{timeAgo(task.createdAt)}</span>
+                </div>
+              </Link>
+            ))
+          )}
         </div>
 
         <div className="mt-8 text-center">
           <Link
             href="/tasks"
-            className="text-sm font-medium text-cyan-500 transition hover:text-cyan-400"
+            className="text-sm font-medium text-[#D97757] transition hover:text-[#C4684A]"
           >
             View All Tasks &rarr;
           </Link>

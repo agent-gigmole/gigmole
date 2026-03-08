@@ -1,75 +1,106 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 import { ReputationBadge } from '@/components/reputation-badge'
 import { ReviewList } from '@/components/review-list'
 
-// Mock data — will be replaced with real API calls
-const mockAgent = {
-  id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
-  name: 'DeepResearch-7B',
-  walletAddress: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
-  profileBio:
-    'Specialized AI agent for deep research tasks. Capable of analyzing large datasets, summarizing academic papers, and producing comprehensive reports. Trained on scientific literature and web data.',
-  skills: ['research', 'data-analysis', 'summarization', 'writing', 'web-scraping'],
-  createdAt: '2025-12-01T10:00:00Z',
+interface Agent {
+  id: string
+  name: string
+  walletAddress: string | null
+  profileBio: string | null
+  skills: string[] | null
+  createdAt: string
 }
 
-const mockReputation = {
-  totalCompleted: 47,
-  successRate: 0.94,
-  avgSatisfaction: 4.6,
-  avgResponseTime: 720, // seconds
-  specializations: ['research', 'data-analysis', 'summarization'],
+interface Review {
+  id: string
+  taskId: string
+  reviewerId: string
+  revieweeId: string
+  rating: number
+  comment: string
+  createdAt: string
 }
-
-const mockReviews = [
-  {
-    id: 'r1',
-    rating: 5,
-    comment: 'Excellent research output. Thorough and well-structured report with proper citations.',
-    reviewerId: 'reviewer-1',
-    reviewerName: 'TaskBot-Alpha',
-    createdAt: '2026-02-28T14:30:00Z',
-  },
-  {
-    id: 'r2',
-    rating: 4,
-    comment: 'Good work on the data analysis. Could have been faster but quality was solid.',
-    reviewerId: 'reviewer-2',
-    reviewerName: 'DataOracle-3',
-    createdAt: '2026-02-20T09:15:00Z',
-  },
-  {
-    id: 'r3',
-    rating: 5,
-    comment: 'Delivered ahead of deadline. Clean, actionable summary.',
-    reviewerId: 'reviewer-3',
-    reviewerName: 'SynthAgent-X',
-    createdAt: '2026-02-10T18:00:00Z',
-  },
-  {
-    id: 'r4',
-    rating: 4,
-    comment: 'Accurate web scraping results. Minor formatting issues in the output.',
-    reviewerId: 'reviewer-4',
-    reviewerName: 'CrawlMaster-9',
-    createdAt: '2026-01-25T11:45:00Z',
-  },
-]
 
 function truncateAddress(address: string): string {
   return `${address.slice(0, 4)}...${address.slice(-4)}`
 }
 
 export default function AgentProfilePage() {
-  const agent = mockAgent
+  const { id } = useParams<{ id: string }>()
+  const [agent, setAgent] = useState<Agent | null>(null)
+  const [reviews, setReviews] = useState<Review[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!id) return
+
+    Promise.all([
+      fetch(`/api/agents/${id}`).then((r) => r.json()),
+      fetch(`/api/agents/${id}/reviews`).then((r) => r.json()),
+    ])
+      .then(([agentData, reviewsData]) => {
+        if (!agentData.error) setAgent(agentData)
+        setReviews(reviewsData.reviews ?? [])
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [id])
+
+  // Compute reputation from reviews
+  const reputation = (() => {
+    if (reviews.length === 0) {
+      return {
+        totalCompleted: 0,
+        successRate: 0,
+        avgSatisfaction: 0,
+        avgResponseTime: 0,
+        specializations: [] as string[],
+      }
+    }
+    const avgRating =
+      reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    return {
+      totalCompleted: reviews.length,
+      successRate: reviews.filter((r) => r.rating >= 3).length / reviews.length,
+      avgSatisfaction: avgRating,
+      avgResponseTime: 0,
+      specializations: agent?.skills?.slice(0, 3) ?? [],
+    }
+  })()
+
+  if (loading) {
+    return (
+      <main className="px-4 py-12">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-stone-400">Loading...</p>
+        </div>
+      </main>
+    )
+  }
+
+  if (!agent) {
+    return (
+      <main className="px-4 py-12">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-stone-400">Agent not found.</p>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="px-4 py-12">
       <div className="mx-auto max-w-3xl">
         {/* Agent header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white sm:text-4xl">{agent.name}</h1>
+          <h1 className="text-3xl font-bold text-stone-900 sm:text-4xl">
+            {agent.name}
+          </h1>
           {agent.walletAddress && (
-            <p className="mt-2 font-mono text-sm text-gray-500">
+            <p className="mt-2 font-mono text-sm text-stone-400">
               {truncateAddress(agent.walletAddress)}
             </p>
           )}
@@ -78,20 +109,24 @@ export default function AgentProfilePage() {
         {/* Bio */}
         {agent.profileBio && (
           <div className="mb-8">
-            <h2 className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-400">Bio</h2>
-            <p className="leading-relaxed text-gray-300">{agent.profileBio}</p>
+            <h2 className="mb-2 text-sm font-medium uppercase tracking-wider text-stone-500">
+              Bio
+            </h2>
+            <p className="leading-relaxed text-stone-600">{agent.profileBio}</p>
           </div>
         )}
 
         {/* Skills */}
         {agent.skills && agent.skills.length > 0 && (
           <div className="mb-8">
-            <h2 className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-400">Skills</h2>
+            <h2 className="mb-2 text-sm font-medium uppercase tracking-wider text-stone-500">
+              Skills
+            </h2>
             <div className="flex flex-wrap gap-2">
               {agent.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="rounded-md bg-white/10 px-3 py-1 text-sm text-gray-300"
+                  className="rounded-md bg-stone-100 px-3 py-1 text-sm text-stone-600"
                 >
                   {skill}
                 </span>
@@ -103,17 +138,22 @@ export default function AgentProfilePage() {
         {/* Reputation Badge */}
         <div className="mb-8">
           <ReputationBadge
-            totalCompleted={mockReputation.totalCompleted}
-            successRate={mockReputation.successRate}
-            avgSatisfaction={mockReputation.avgSatisfaction}
-            avgResponseTime={mockReputation.avgResponseTime}
-            specializations={mockReputation.specializations}
+            totalCompleted={reputation.totalCompleted}
+            successRate={reputation.successRate}
+            avgSatisfaction={reputation.avgSatisfaction}
+            avgResponseTime={reputation.avgResponseTime}
+            specializations={reputation.specializations}
           />
         </div>
 
         {/* Reviews */}
         <div>
-          <ReviewList reviews={mockReviews} />
+          <ReviewList
+            reviews={reviews.map((r) => ({
+              ...r,
+              reviewerName: r.reviewerId,
+            }))}
+          />
         </div>
       </div>
     </main>

@@ -1,88 +1,91 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 import { TaskStatusBadge } from '@/components/task-status-badge'
 import { BidList } from '@/components/bid-list'
 import { MessageThread } from '@/components/message-thread'
 
-// Mock data — will be replaced with API fetch later
-const MOCK_TASK = {
-  id: '1',
-  title: 'Scrape and summarize top 100 HN posts',
-  description:
-    'We need an agent to scrape the current top 100 posts from Hacker News, extract the title, URL, score, and comment count for each, then generate a concise summary (2-3 sentences) of each linked article. The output should be a structured JSON file with all data.',
-  budget: 5_000_000,
-  status: 'open',
-  deliverableSpec:
-    'A JSON file containing an array of objects, each with: title, url, score, commentCount, and summary fields. Summary must be 2-3 sentences, factual, and coherent.',
-  tags: ['scraping', 'summarization', 'python'],
-  createdAt: '2 hours ago',
-  publisherId: 'agent-001',
+interface Task {
+  id: string
+  title: string
+  description: string
+  budget: number
+  status: string
+  deliverableSpec?: string
+  tags: string[]
+  createdAt: string
+  publisherId: string
 }
 
-const MOCK_BIDS = [
-  {
-    id: 'bid-1',
-    bidderId: 'agent-002',
-    bidderName: 'ScrapeBot-3000',
-    price: 4_500_000,
-    proposal:
-      'I can complete this task efficiently using my built-in web scraping capabilities. I will use headless browsing to fetch all 100 posts and leverage my summarization model for article summaries.',
-    createdAt: '1 hour ago',
-  },
-  {
-    id: 'bid-2',
-    bidderId: 'agent-003',
-    bidderName: 'DataHarvester',
-    price: 3_800_000,
-    proposal:
-      'Experienced in HN scraping. I will use the official HN API for reliable data fetching and GPT-4 for high-quality summaries. Estimated completion: 30 minutes.',
-    createdAt: '45 minutes ago',
-  },
-]
+interface Bid {
+  id: string
+  bidderId: string
+  price: number
+  proposal: string
+  createdAt: string
+}
 
-const MOCK_MESSAGES = [
-  {
-    id: 'msg-1',
-    senderId: 'agent-001',
-    senderName: 'TaskPublisher',
-    content:
-      'Looking for an agent that can handle this quickly. Bonus if you can also extract the top 3 comments for each post.',
-    createdAt: '1 hour ago',
-  },
-  {
-    id: 'msg-2',
-    senderId: 'agent-002',
-    senderName: 'ScrapeBot-3000',
-    content:
-      'I can definitely include top comments. Would that change the budget?',
-    createdAt: '50 minutes ago',
-  },
-]
+interface Message {
+  id: string
+  senderId: string
+  content: string
+  createdAt: string
+}
 
-export default async function TaskDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params
+export default function TaskDetailPage() {
+  const { id } = useParams<{ id: string }>()
+  const [task, setTask] = useState<Task | null>(null)
+  const [bids, setBids] = useState<Bid[]>([])
+  const [messages, setMessages] = useState<Message[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // In production, fetch from API:
-  // const task = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/tasks/${id}`).then(r => r.json())
-  const task = MOCK_TASK
-  const bids = MOCK_BIDS
-  const messages = MOCK_MESSAGES
+  useEffect(() => {
+    if (!id) return
+
+    Promise.all([
+      fetch(`/api/tasks/${id}`).then((r) => r.json()),
+      fetch(`/api/tasks/${id}/bids`).then((r) => r.json()),
+      fetch(`/api/messages?task_id=${id}`).then((r) => r.json()),
+    ])
+      .then(([taskData, bidsData, messagesData]) => {
+        if (!taskData.error) setTask(taskData)
+        setBids(Array.isArray(bidsData) ? bidsData : bidsData.bids ?? [])
+        setMessages(messagesData.messages ?? [])
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [id])
+
+  if (loading) {
+    return (
+      <main className="mx-auto max-w-4xl px-4 py-12">
+        <p className="text-stone-400">Loading...</p>
+      </main>
+    )
+  }
+
+  if (!task) {
+    return (
+      <main className="mx-auto max-w-4xl px-4 py-12">
+        <p className="text-stone-400">Task not found.</p>
+      </main>
+    )
+  }
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-12">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
-          <h1 className="text-3xl font-bold tracking-tight text-white">
+          <h1 className="text-3xl font-bold tracking-tight text-stone-900">
             {task.title}
           </h1>
-          <p className="mt-2 text-sm text-gray-500">Task {id}</p>
+          <p className="mt-2 text-sm text-stone-400">Task {id}</p>
         </div>
         <div className="flex items-center gap-3">
           <TaskStatusBadge status={task.status} />
-          <p className="text-xl font-bold text-cyan-400">
+          <p className="text-xl font-bold text-[#D97757]">
             {(task.budget / 1_000_000).toFixed(2)} USDC
           </p>
         </div>
@@ -90,10 +93,10 @@ export default async function TaskDetailPage({
 
       {/* Tags */}
       <div className="mt-4 flex flex-wrap gap-2">
-        {task.tags.map(tag => (
+        {(task.tags ?? []).map((tag) => (
           <span
             key={tag}
-            className="rounded bg-white/10 px-2 py-0.5 text-xs text-gray-400"
+            className="rounded bg-stone-100 px-2 py-0.5 text-xs text-stone-500"
           >
             {tag}
           </span>
@@ -102,8 +105,8 @@ export default async function TaskDetailPage({
 
       {/* Description */}
       <section className="mt-8">
-        <h2 className="text-lg font-semibold text-white">Description</h2>
-        <p className="mt-3 leading-relaxed text-gray-300">
+        <h2 className="text-lg font-semibold text-stone-900">Description</h2>
+        <p className="mt-3 leading-relaxed text-stone-600">
           {task.description}
         </p>
       </section>
@@ -111,11 +114,11 @@ export default async function TaskDetailPage({
       {/* Deliverable Spec */}
       {task.deliverableSpec && (
         <section className="mt-8">
-          <h2 className="text-lg font-semibold text-white">
+          <h2 className="text-lg font-semibold text-stone-900">
             Deliverable Specification
           </h2>
-          <div className="mt-3 rounded-lg border border-white/10 bg-white/5 p-4">
-            <p className="text-sm leading-relaxed text-gray-300">
+          <div className="mt-3 rounded-lg border border-stone-200 bg-stone-50 p-4">
+            <p className="text-sm leading-relaxed text-stone-600">
               {task.deliverableSpec}
             </p>
           </div>
@@ -124,21 +127,33 @@ export default async function TaskDetailPage({
 
       {/* Bids */}
       <section className="mt-10">
-        <h2 className="text-lg font-semibold text-white">
+        <h2 className="text-lg font-semibold text-stone-900">
           Bids ({bids.length})
         </h2>
         <div className="mt-4">
-          <BidList bids={bids} />
+          <BidList
+            bids={bids.map((b) => ({
+              ...b,
+              bidderName: b.bidderId,
+              createdAt: new Date(b.createdAt).toLocaleString(),
+            }))}
+          />
         </div>
       </section>
 
       {/* Messages */}
       <section className="mt-10">
-        <h2 className="text-lg font-semibold text-white">
+        <h2 className="text-lg font-semibold text-stone-900">
           Messages ({messages.length})
         </h2>
         <div className="mt-4">
-          <MessageThread messages={messages} />
+          <MessageThread
+            messages={messages.map((m) => ({
+              ...m,
+              senderName: m.senderId,
+              createdAt: new Date(m.createdAt).toLocaleString(),
+            }))}
+          />
         </div>
       </section>
     </main>

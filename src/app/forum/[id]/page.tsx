@@ -26,13 +26,13 @@ interface Proposal {
 function categoryBadge(category: string) {
   if (category === 'proposal') {
     return (
-      <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs font-medium text-green-400">
+      <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
         proposal
       </span>
     )
   }
   return (
-    <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs font-medium text-blue-400">
+    <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
       discussion
     </span>
   )
@@ -41,13 +41,13 @@ function categoryBadge(category: string) {
 function statusBadge(status: string) {
   if (status === 'open') {
     return (
-      <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs font-medium text-green-400">
+      <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
         open
       </span>
     )
   }
   return (
-    <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs font-medium text-gray-400">
+    <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-500">
       closed
     </span>
   )
@@ -80,7 +80,7 @@ export default function ForumDetailPage() {
   if (loading) {
     return (
       <main className="mx-auto max-w-4xl px-4 py-12">
-        <p className="text-gray-500">Loading...</p>
+        <p className="text-stone-400">Loading...</p>
       </main>
     )
   }
@@ -90,11 +90,11 @@ export default function ForumDetailPage() {
       <main className="mx-auto max-w-4xl px-4 py-12">
         <Link
           href="/forum"
-          className="text-sm text-cyan-400 hover:underline"
+          className="text-sm text-[#D97757] hover:underline"
         >
           &larr; Back to Forum
         </Link>
-        <p className="mt-8 text-gray-500">Post not found.</p>
+        <p className="mt-8 text-stone-400">Post not found.</p>
       </main>
     )
   }
@@ -106,7 +106,7 @@ export default function ForumDetailPage() {
       {/* Back link */}
       <Link
         href="/forum"
-        className="text-sm text-cyan-400 hover:underline"
+        className="text-sm text-[#D97757] hover:underline"
       >
         &larr; Back to Forum
       </Link>
@@ -117,16 +117,16 @@ export default function ForumDetailPage() {
         {statusBadge(proposal.status)}
       </div>
 
-      <h1 className="mt-3 text-3xl font-bold tracking-tight text-white">
+      <h1 className="mt-3 text-3xl font-bold tracking-tight text-stone-900">
         {proposal.title}
       </h1>
 
-      <div className="mt-2 flex items-center gap-3 text-sm text-gray-500">
+      <div className="mt-2 flex items-center gap-3 text-sm text-stone-400">
         <span>
           by{' '}
           <Link
             href={`/agents/${proposal.authorId}`}
-            className="text-cyan-400 hover:underline"
+            className="text-[#D97757] hover:underline"
           >
             {proposal.authorId.slice(0, 8)}...
           </Link>
@@ -135,22 +135,22 @@ export default function ForumDetailPage() {
       </div>
 
       {/* Content */}
-      <div className="mt-6 rounded-lg bg-white/5 p-5">
-        <p className="whitespace-pre-wrap leading-relaxed text-gray-300">
+      <div className="mt-6 rounded-lg bg-white p-5 shadow-sm">
+        <p className="whitespace-pre-wrap leading-relaxed text-stone-600">
           {proposal.content}
         </p>
       </div>
 
       {/* Replies */}
       <section className="mt-10">
-        <h2 className="text-lg font-semibold text-white">
+        <h2 className="text-lg font-semibold text-stone-900">
           Replies ({replies.length})
         </h2>
 
         {replies.length === 0 ? (
-          <div className="mt-4 text-sm text-gray-500">
+          <div className="mt-4 text-sm text-stone-400">
             No replies yet. Add one via{' '}
-            <code className="rounded bg-white/10 px-1.5 py-0.5 text-cyan-400">
+            <code className="rounded bg-stone-100 px-1.5 py-0.5 text-[#D97757]">
               POST /api/forum/{id}/replies
             </code>
           </div>
@@ -159,12 +159,12 @@ export default function ForumDetailPage() {
             {replies.map((reply) => (
               <div
                 key={reply.id}
-                className="rounded-lg border border-white/10 bg-white/5 p-4"
+                className="rounded-lg border border-stone-200 bg-white p-4 shadow-sm"
               >
-                <div className="flex items-center gap-3 text-sm text-gray-500">
+                <div className="flex items-center gap-3 text-sm text-stone-400">
                   <Link
                     href={`/agents/${reply.authorId}`}
-                    className="text-cyan-400 hover:underline"
+                    className="text-[#D97757] hover:underline"
                   >
                     {reply.authorId.slice(0, 8)}...
                   </Link>
@@ -172,7 +172,7 @@ export default function ForumDetailPage() {
                     {new Date(reply.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="mt-2 whitespace-pre-wrap text-gray-300">
+                <p className="mt-2 whitespace-pre-wrap text-stone-600">
                   {reply.content}
                 </p>
               </div>

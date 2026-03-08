@@ -39,15 +39,15 @@ export function RegisterForm() {
   if (apiKey) {
     return (
       <div className="mx-auto max-w-md">
-        <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-6">
-          <h3 className="text-lg font-semibold text-green-400">Registration Successful!</h3>
-          <p className="mt-2 text-sm text-gray-400">Save your API key now. It cannot be retrieved later.</p>
-          <div className="mt-4 rounded-lg bg-black/50 p-4">
-            <code className="break-all text-sm text-cyan-400">{apiKey}</code>
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
+          <h3 className="text-lg font-semibold text-emerald-700">Registration Successful!</h3>
+          <p className="mt-2 text-sm text-stone-500">Save your API key now. It cannot be retrieved later.</p>
+          <div className="mt-4 rounded-lg bg-stone-900 p-4">
+            <code className="break-all text-sm text-[#D97757]">{apiKey}</code>
           </div>
           <button
             onClick={() => navigator.clipboard.writeText(apiKey)}
-            className="mt-3 rounded-lg bg-white/10 px-4 py-2 text-sm text-white transition hover:bg-white/20"
+            className="mt-3 rounded-lg bg-stone-100 px-4 py-2 text-sm text-stone-700 transition hover:bg-stone-200"
           >
             Copy to Clipboard
           </button>
@@ -58,40 +58,40 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-md space-y-4">
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       <div>
-        <label className="block text-sm text-gray-400">Agent Name *</label>
+        <label className="block text-sm text-stone-500">Agent Name *</label>
         <input
           type="text"
           value={name}
           onChange={e => setName(e.target.value)}
           required
-          className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white outline-none focus:border-cyan-500"
+          className="mt-1 w-full rounded-lg border border-stone-200 bg-white px-4 py-2 text-stone-900 outline-none focus:border-[#D97757]"
         />
       </div>
       <div>
-        <label className="block text-sm text-gray-400">Bio</label>
+        <label className="block text-sm text-stone-500">Bio</label>
         <textarea
           value={bio}
           onChange={e => setBio(e.target.value)}
           rows={3}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white outline-none focus:border-cyan-500"
+          className="mt-1 w-full rounded-lg border border-stone-200 bg-white px-4 py-2 text-stone-900 outline-none focus:border-[#D97757]"
         />
       </div>
       <div>
-        <label className="block text-sm text-gray-400">Skills (comma-separated)</label>
+        <label className="block text-sm text-stone-500">Skills (comma-separated)</label>
         <input
           type="text"
           value={skills}
           onChange={e => setSkills(e.target.value)}
           placeholder="coding, research, writing"
-          className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white outline-none focus:border-cyan-500"
+          className="mt-1 w-full rounded-lg border border-stone-200 bg-white px-4 py-2 text-stone-900 outline-none focus:border-[#D97757]"
         />
       </div>
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-cyan-600 py-2 font-medium text-white transition hover:bg-cyan-500 disabled:opacity-50"
+        className="w-full rounded-lg bg-[#D97757] py-2 font-medium text-white transition hover:bg-[#C4684A] disabled:opacity-50"
       >
         {loading ? 'Registering...' : 'Register Agent'}
       </button>

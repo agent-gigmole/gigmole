@@ -15,7 +15,7 @@ function StarRating({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((star) => (
         <svg
           key={star}
-          className={`h-4 w-4 ${star <= rating ? 'text-yellow-400' : 'text-gray-600'}`}
+          className={`h-4 w-4 ${star <= rating ? 'text-yellow-400' : 'text-stone-200'}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -29,33 +29,33 @@ function StarRating({ rating }: { rating: number }) {
 export function ReviewList({ reviews }: { reviews: Review[] }) {
   if (reviews.length === 0) {
     return (
-      <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-        <h3 className="mb-4 text-sm font-medium uppercase tracking-wider text-gray-400">Reviews</h3>
-        <p className="text-sm text-gray-500">No reviews yet.</p>
+      <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+        <h3 className="mb-4 text-sm font-medium uppercase tracking-wider text-stone-500">Reviews</h3>
+        <p className="text-sm text-stone-400">No reviews yet.</p>
       </div>
     )
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-      <h3 className="mb-4 text-sm font-medium uppercase tracking-wider text-gray-400">
+    <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+      <h3 className="mb-4 text-sm font-medium uppercase tracking-wider text-stone-500">
         Reviews ({reviews.length})
       </h3>
       <div className="space-y-4">
         {reviews.map((review) => (
-          <div key={review.id} className="border-t border-white/5 pt-4 first:border-0 first:pt-0">
+          <div key={review.id} className="border-t border-stone-100 pt-4 first:border-0 first:pt-0">
             <div className="flex items-center justify-between">
               <StarRating rating={review.rating} />
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-stone-400">
                 {new Date(review.createdAt).toLocaleDateString()}
               </span>
             </div>
             {review.comment && (
-              <p className="mt-2 text-sm text-gray-300">{review.comment}</p>
+              <p className="mt-2 text-sm text-stone-600">{review.comment}</p>
             )}
             <Link
               href={`/agents/${review.reviewerId}`}
-              className="mt-1 inline-block text-xs text-cyan-500 transition hover:text-cyan-400"
+              className="mt-1 inline-block text-xs text-[#D97757] transition hover:text-[#C4684A]"
             >
               by {review.reviewerName}
             </Link>

@@ -6,10 +6,10 @@ function slugify(name: string): string {
 
 function MethodBadge({ method }: { method: ApiEndpoint['method'] }) {
   const colors: Record<string, string> = {
-    GET: 'bg-green-500/20 text-green-400 border-green-500/30',
-    POST: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-    PATCH: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-    DELETE: 'bg-red-500/20 text-red-400 border-red-500/30',
+    GET: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    POST: 'bg-blue-50 text-blue-700 border-blue-200',
+    PATCH: 'bg-amber-50 text-amber-700 border-amber-200',
+    DELETE: 'bg-red-50 text-red-700 border-red-200',
   }
 
   return (
@@ -23,7 +23,7 @@ function MethodBadge({ method }: { method: ApiEndpoint['method'] }) {
 
 function AuthBadge() {
   return (
-    <span className="inline-block rounded border border-purple-500/30 bg-purple-500/20 px-2 py-0.5 text-xs font-medium text-purple-400">
+    <span className="inline-block rounded border border-purple-200 bg-purple-50 px-2 py-0.5 text-xs font-medium text-purple-700">
       Auth
     </span>
   )
@@ -34,7 +34,7 @@ function ParamsTable({ params }: { params: NonNullable<ApiEndpoint['params']> })
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-white/10 text-left text-white/40">
+          <tr className="border-b border-stone-200 text-left text-stone-400">
             <th className="pb-2 pr-4 font-medium">Name</th>
             <th className="pb-2 pr-4 font-medium">Type</th>
             <th className="pb-2 pr-4 font-medium">Required</th>
@@ -43,17 +43,17 @@ function ParamsTable({ params }: { params: NonNullable<ApiEndpoint['params']> })
         </thead>
         <tbody>
           {params.map((p) => (
-            <tr key={p.name} className="border-b border-white/5">
-              <td className="py-2 pr-4 font-mono text-cyan-400">{p.name}</td>
-              <td className="py-2 pr-4 text-white/60">{p.type}</td>
+            <tr key={p.name} className="border-b border-stone-100">
+              <td className="py-2 pr-4 font-mono text-[#D97757]">{p.name}</td>
+              <td className="py-2 pr-4 text-stone-500">{p.type}</td>
               <td className="py-2 pr-4">
                 {p.required ? (
                   <span className="text-red-400">yes</span>
                 ) : (
-                  <span className="text-white/30">no</span>
+                  <span className="text-stone-300">no</span>
                 )}
               </td>
-              <td className="py-2 text-white/60">{p.description}</td>
+              <td className="py-2 text-stone-500">{p.description}</td>
             </tr>
           ))}
         </tbody>
@@ -70,16 +70,16 @@ function JsonBlock({
   variant: 'request' | 'response'
 }) {
   const borderColor =
-    variant === 'request' ? 'border-green-500/30' : 'border-blue-500/30'
+    variant === 'request' ? 'border-emerald-200' : 'border-blue-200'
   const label = variant === 'request' ? 'Request' : 'Response'
   const labelColor =
-    variant === 'request' ? 'text-green-400' : 'text-blue-400'
+    variant === 'request' ? 'text-emerald-700' : 'text-blue-700'
 
   return (
     <div>
       <p className={`mb-1 text-xs font-medium ${labelColor}`}>{label}</p>
       <pre
-        className={`overflow-x-auto rounded-lg border bg-black/50 p-4 text-sm text-white/80 ${borderColor}`}
+        className={`overflow-x-auto rounded-lg border bg-stone-900 p-4 text-sm text-stone-100 ${borderColor}`}
       >
         {JSON.stringify(data, null, 2)}
       </pre>
@@ -89,26 +89,26 @@ function JsonBlock({
 
 function EndpointCard({ endpoint }: { endpoint: ApiEndpoint }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+    <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
       {/* Header: method badge + path + auth badge */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <MethodBadge method={endpoint.method} />
-        <code className="text-sm font-semibold text-white">
+        <code className="text-sm font-semibold text-stone-900">
           {endpoint.path}
         </code>
         {endpoint.auth && <AuthBadge />}
       </div>
 
       {/* Summary */}
-      <h4 className="mb-1 text-lg font-semibold text-white">
+      <h4 className="mb-1 text-lg font-semibold text-stone-900">
         {endpoint.summary}
       </h4>
-      <p className="mb-4 text-sm text-white/60">{endpoint.description}</p>
+      <p className="mb-4 text-sm text-stone-500">{endpoint.description}</p>
 
       {/* Params table */}
       {endpoint.params && endpoint.params.length > 0 && (
         <div className="mb-4">
-          <h5 className="mb-2 text-xs font-medium uppercase tracking-wider text-white/40">
+          <h5 className="mb-2 text-xs font-medium uppercase tracking-wider text-stone-400">
             Parameters
           </h5>
           <ParamsTable params={endpoint.params} />
@@ -128,14 +128,14 @@ function EndpointCard({ endpoint }: { endpoint: ApiEndpoint }) {
       {/* Error codes */}
       {endpoint.errorCodes && endpoint.errorCodes.length > 0 && (
         <div className="mt-4">
-          <h5 className="mb-2 text-xs font-medium uppercase tracking-wider text-white/40">
+          <h5 className="mb-2 text-xs font-medium uppercase tracking-wider text-stone-400">
             Error Codes
           </h5>
           <div className="flex flex-wrap gap-2">
             {endpoint.errorCodes.map((ec) => (
               <span
                 key={`${ec.status}-${ec.description}`}
-                className="rounded border border-red-500/20 bg-red-500/10 px-2 py-1 text-xs text-red-300"
+                className="rounded border border-red-200 bg-red-50 px-2 py-1 text-xs text-red-700"
               >
                 {ec.status} — {ec.description}
               </span>
@@ -153,7 +153,7 @@ export default function DocsPage() {
       {/* Left nav — sticky, hidden on mobile */}
       <nav className="hidden w-56 shrink-0 md:block">
         <div className="sticky top-24">
-          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-white/40">
+          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-stone-400">
             API Reference
           </h2>
           <ul className="space-y-1">
@@ -161,17 +161,17 @@ export default function DocsPage() {
               <li key={group.name}>
                 <a
                   href={`#${slugify(group.name)}`}
-                  className="block rounded px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/5 hover:text-white"
+                  className="block rounded px-3 py-1.5 text-sm text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-900"
                 >
                   {group.name}
                 </a>
               </li>
             ))}
           </ul>
-          <div className="mt-6 border-t border-white/10 pt-4">
+          <div className="mt-6 border-t border-stone-200 pt-4">
             <a
               href="/api/openapi.json"
-              className="block rounded px-3 py-1.5 text-sm text-cyan-400 transition-colors hover:bg-white/5 hover:text-cyan-300"
+              className="block rounded px-3 py-1.5 text-sm text-[#D97757] transition-colors hover:bg-stone-50 hover:text-[#C4684A]"
             >
               OpenAPI Spec (JSON)
             </a>
@@ -181,8 +181,8 @@ export default function DocsPage() {
 
       {/* Right content */}
       <main className="min-w-0 flex-1">
-        <h1 className="mb-2 text-3xl font-bold text-white">API Documentation</h1>
-        <p className="mb-10 text-white/60">
+        <h1 className="mb-2 text-3xl font-bold text-stone-900">API Documentation</h1>
+        <p className="mb-10 text-stone-500">
           Complete reference for the aglabor AI Agent Labor Market API.
           All budget/price values are in USDC lamports (1 USDC = 1,000,000
           lamports).
@@ -191,10 +191,10 @@ export default function DocsPage() {
         <div className="space-y-16">
           {apiDocs.map((group) => (
             <section key={group.name} id={slugify(group.name)}>
-              <h2 className="mb-2 text-2xl font-bold text-white">
+              <h2 className="mb-2 text-2xl font-bold text-stone-900">
                 {group.name}
               </h2>
-              <p className="mb-6 text-sm text-white/60">{group.description}</p>
+              <p className="mb-6 text-sm text-stone-500">{group.description}</p>
 
               {group.endpoints.length > 0 ? (
                 <div className="space-y-6">
@@ -206,8 +206,8 @@ export default function DocsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-                  <p className="text-sm text-white/60">
+                <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+                  <p className="text-sm text-stone-500">
                     This section describes authentication. See the description above for usage details.
                   </p>
                 </div>

@@ -50,5 +50,10 @@ next-env.d.ts
 # drizzle
 /drizzle/meta/
 
+# Anchor / Solana
+/target
+test-ledger/
+
 # OS
 .DS_Store
+programs/escrow/target/
