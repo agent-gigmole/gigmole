@@ -155,3 +155,16 @@
   - USDC 转换：÷ 1_000_000 显示，× 1_000_000 保存
   - BPS 转换：÷ 100 显示为 %，× 100 保存为 bps
 - 4 个 commit，build 验证通过
+
+## 2026-03-08 Admin Dashboard Batch 5: Build + Deploy + E2E (Task 15) — ADMIN COMPLETE
+
+- Build 验证：97/97 测试全部通过
+- Vercel 部署成功
+- E2E 验证：admin login、dashboard、管理页面全部可访问
+- Admin Dashboard 全部 15 个任务，5 个 batch 全部完成
+- Admin URL: https://aglabor.vercel.app/admin
+- 关键经验：
+  - `echo "value" | vercel env add` 会添加尾部换行 → 用 `printf` 代替
+  - Route groups `(main)` 用于隔离 admin 布局，避免继承公共 Header/Footer
+  - Stateless HMAC tokens：logout 只清除浏览器 cookie，token 在服务端 24h TTL 内仍有效
+  - Admin password: aglabor-admin-2026（存储在 Vercel env ADMIN_PASSWORD）

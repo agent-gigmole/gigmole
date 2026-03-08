@@ -34,14 +34,14 @@
 
 ## 已知最佳结果
 
-- 40+ 单元测试全部通过（含 8 个 OpenAPI 测试）
+- 97 个测试全部通过（含 admin auth、schema、OpenAPI 等）
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
-- 22+ API 端点已实现（含 Forum CRUD、OpenAPI spec、Stats）
-- 10 个网站页面已构建（含 /docs、/plugins、/forum、/forum/[id]）
+- 35+ API 端点已实现（含 13 个 admin 端点：login/logout, stats, finance, agents CRUD, tasks CRUD, forum, config）
+- 15+ 网站页面已构建（含 /docs, /plugins, /forum, /forum/[id], /admin/*, 5 个管理页面）
 - Header 导航包含 Docs/Plugins/Forum 链接
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh）
-- 数据库 8 张表已在 Supabase 中创建
+- 数据库 9 张表已在 Supabase 中创建（含 platform_config）
 - Vercel 部署成功，生产地址可访问
 - Plugin registry (plugins/registry.json) 已建立
 - **网站设计风格重做：暗黑主题 → Claude.ai 温暖极简风格**
@@ -52,38 +52,20 @@
   - 修改 25 个前端文件（globals.css, layout.tsx, 所有组件和页面）
   - 已部署到 https://aglabor.vercel.app
 
-- **Admin Dashboard Batch 1 完成（Tasks 1-3: Schema + Auth）**
-  - agents 表新增 banned/banned_at 字段
-  - 新建 platform_config 表（listing_fee, transaction_bps）
-  - Admin auth middleware（HMAC session tokens, cookie-based）
-  - authenticateRequest 增加 banned 检查（返回 403）
-  - 9 个新测试全部通过
-  - 数据库已同步到 Supabase（9 张表 + platform_config 默认行）
-
-- **Admin Dashboard Batch 2 完成（Tasks 4-8: All API Endpoints）**
-  - 全部 admin API 端点已实现
-
-- **Admin Dashboard Batch 3 完成（Tasks 9-10: Layout + Dashboard）**
-  - 使用 Next.js route groups 重构：公共页面移至 `src/app/(main)/`，admin 不继承 Header/Footer
-  - Admin layout (`src/app/admin/layout.tsx`)：侧边栏导航 + cookie-based auth 检查
-  - Admin login 页面 (`src/app/admin/login/page.tsx`)：密码表单
-  - Admin dashboard 页面 (`src/app/admin/page.tsx`)：KPI 卡片 + 状态分布 + 7 天活跃度
-  - Build 验证通过
-
-- **Admin Dashboard Batch 4 完成（Tasks 11-14: Management Pages）**
-  - Agents 管理页面：搜索、分页表格、ban/unban 操作
-  - Tasks 管理页面：状态筛选、分页表格、强制状态变更
-  - Forum 管理页面：分页表格、关闭帖子操作
-  - Finance 页面：4 个统计卡片 + 按状态金额表
-  - Config 页面：listing fee + transaction fee 表单编辑
-  - Build 验证通过，4 个 commit
+- **Admin Dashboard 全部完成并部署（15 个任务，5 个 batch）**
+  - Batch 1 (Tasks 1-3): Schema 扩展 (agents banned 字段 + platform_config 表) + Admin auth middleware (HMAC tokens) + banned 检查
+  - Batch 2 (Tasks 4-8): 全部 13 个 admin API 端点 (login/logout, stats, finance, agents CRUD, tasks CRUD, forum, config)
+  - Batch 3 (Tasks 9-10): Route group 重构 ((main) group 隔离 admin) + Admin layout (侧边栏) + Login 页面 + Dashboard 页面 (KPI 卡片)
+  - Batch 4 (Tasks 11-14): 全部管理页面 (Agents ban/unban, Tasks force status, Forum close, Finance overview, Config form)
+  - Batch 5 (Task 15): Build 验证 (97/97 tests pass) + Vercel 部署 + E2E 验证通过
+  - Admin URL: https://aglabor.vercel.app/admin
 
 ## 当前阶段
 
-- Admin Dashboard Batch 4 完成，所有管理页面已实现
-- Batch 1-4 全部完成（schema+auth → APIs → layout+dashboard → management pages）
-- 剩余：Batch 5 (build + deploy + E2E test)
+- Admin Dashboard 全部完成并已部署到生产环境
+- 项目所有计划功能已实现
 
 ## 下一步
 
-- Admin Dashboard Batch 5: Build + Deploy + E2E Test (Task 15)
+- 无待办任务，项目处于维护阶段
+- 可考虑：性能优化、更多 E2E 测试覆盖、用户反馈迭代

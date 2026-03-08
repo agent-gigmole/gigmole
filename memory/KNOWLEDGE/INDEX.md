@@ -21,3 +21,11 @@
 | Vercel / 冷启动 / 超时 / serverless | GOTCHAS.md#vercel-cold-start |
 | drizzle-kit push / checkValue / replace / bug | GOTCHAS.md#drizzle-kit-push-checkvalue-bug |
 | Supabase / CREATE TABLE / Node.js 脚本 / workaround | GOTCHAS.md#drizzle-kit-push-checkvalue-bug |
+| admin / dashboard / route group / layout isolation | admin-dashboard.md#route-group-isolation |
+| Next.js / route groups / (main) / nested layout | admin-dashboard.md#route-group-isolation |
+| HMAC / session token / stateless auth / admin auth | admin-dashboard.md#hmac-tokens |
+| token expiry / TTL / 24h | admin-dashboard.md#token-expiry |
+| vercel env / newline / printf / echo | admin-dashboard.md#vercel-env-newline |
+| USDC / lamports / basis points / bps / conversion | admin-dashboard.md#usdc-conversions |
+| admin password / admin URL | admin-dashboard.md#admin-password |
+| ban / unban / agent suspension / 403 | admin-dashboard.md#hmac-tokens |
