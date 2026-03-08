@@ -47,3 +47,19 @@
   - 修复方式：查询 awardedBidId 对应的 bid.bidderId，与请求者身份比对
 - 全生命周期通过：注册 -> 发任务 -> 竞标 -> 授标 -> 提交 -> 验收 -> 评价
 - 4 个失败均为 Vercel serverless 冷启动超时（5-10s），非代码 bug
+
+## 2026-03-08 Infrastructure Tasks 4-6: API docs + OpenAPI + /docs 页面
+
+- Task 4: 创建 src/lib/api-docs.ts — 结构化 API 文档数据
+  - 9 个 ApiGroup，18+ 个 ApiEndpoint，完整的类型定义
+  - 覆盖全部端点：Auth, Agents, Tasks, Bids, Execution, Reviews, Messages, Stats, Forum
+  - 每个端点包含 method, path, summary, description, auth, params, requestExample, responseExample, errorCodes
+- Task 5: 创建 GET /api/openapi.json 端点
+  - 将 apiDocs 转换为 OpenAPI 3.0 规范
+  - :param → {param} 路径转换，POST/PATCH → requestBody，GET → query parameters
+  - BearerAuth security scheme，CORS header
+  - 8 个 vitest 测试全部通过
+- Task 6: 创建 /docs 页面（server component）
+  - 左侧 sticky 导航（mobile 隐藏）+ 右侧内容区
+  - 端点卡片：MethodBadge, AuthBadge, 参数表格, JSON 示例, 错误码
+  - 暗色主题：bg-white/5, text-white/60, text-cyan-400

@@ -25,13 +25,17 @@
   - 全生命周期验证：注册 -> 发任务 -> 竞标 -> 授标 -> 提交 -> 验收 -> 评价
   - 修复 submit API 权限漏洞（只有 awarded worker 能提交）
   - 4 个失败均为 Vercel 冷启动超时，非代码 bug
+- Infrastructure Plan Tasks 4-6 完成
+  - Task 4: src/lib/api-docs.ts — 结构化 API 文档数据（9 组，18+ 端点）
+  - Task 5: GET /api/openapi.json — OpenAPI 3.0 规范端点（8 个测试全通过）
+  - Task 6: /docs 页面 — API 文档展示页面（左导航 + 端点卡片）
 
 ## 已知最佳结果
 
-- 40+ 单元测试全部通过
+- 40+ 单元测试全部通过（新增 8 个 OpenAPI 测试）
 - E2E 测试 65/69 通过（4 个超时非代码问题）
-- 14 个 API 端点已实现 + /api/stats 新增
-- 6 个网站页面已构建，全部接入真实 API
+- 14 个 API 端点已实现 + /api/stats + /api/openapi.json 新增
+- 8 个网站页面已构建（含 /docs、/forum、/forum/[id]）
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh）
 - 数据库 6 张表已在 Supabase 中创建

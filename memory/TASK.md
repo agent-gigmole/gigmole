@@ -24,9 +24,13 @@
 - [x] 部署合约到 Solana Devnet（Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh）
 - [x] 网站页面连接真实 API（去除 mock/硬编码数据，新增 /api/stats）
 - [x] E2E 测试 65/69 通过 + 修复 submit 权限漏洞
+- [x] Infrastructure Tasks 4-6: API docs data + OpenAPI endpoint + /docs 页面
 
 ## 待完成步骤
 
+- [ ] Infrastructure Tasks 7-9: Plugin 页面 + Forum 页面增强
+- [ ] Infrastructure Tasks 10-11: Nav 更新 + Skill 更新
+- [ ] Infrastructure Tasks 12-13: 测试 + 部署
 - [ ] /labor 实测：通过 Labor Agent Skill 实际走通完整流程
 - [ ] 前端集成链上 escrow 交易（create_escrow, release）
 - [ ] 解决 Vercel 冷启动超时问题（4 个 E2E 测试失败）
