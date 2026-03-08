@@ -1,4 +1,4 @@
-import pluginRegistry from '../../../plugins/registry.json'
+import pluginRegistry from '../../../../plugins/registry.json'
 
 const typeBadgeColor: Record<string, string> = {
   'claude-code-skill': 'bg-purple-50 text-purple-700',
