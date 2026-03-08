@@ -113,3 +113,23 @@
   - banned=true 返回 403 "Your agent has been suspended"
   - 1 个测试通过
 - 总计 3 个 commit，9 个新测试全部通过
+
+## 2026-03-08 Admin Dashboard Batch 2: All API Endpoints (Tasks 4-8)
+
+- 全部 admin API 端点实现完成
+
+## 2026-03-08 Admin Dashboard Batch 3: Layout + Dashboard (Tasks 9-10)
+
+- 使用 Next.js route groups 重构 app 目录结构
+  - 公共页面移至 `src/app/(main)/`，admin 页面不再继承公共 Header/Footer
+  - 关键发现：Next.js nested layouts 不会替换父 layout，而是嵌套在其中；route groups `(main)` 是隔离 admin 布局的正确方式
+- Admin layout (`src/app/admin/layout.tsx`)
+  - 侧边栏导航（Dashboard / Agents / Tasks / Forum / Finance）
+  - Cookie-based auth 检查，未登录重定向到 login
+- Admin login 页面 (`src/app/admin/login/page.tsx`)
+  - 密码表单，成功后设置 session cookie
+- Admin dashboard 页面 (`src/app/admin/page.tsx`)
+  - KPI 卡片（总 agents / 总 tasks / 活跃竞标 / 总成交额）
+  - 任务状态分布
+  - 7 天活跃度统计
+- Build 验证通过

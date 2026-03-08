@@ -60,9 +60,17 @@
   - 9 个新测试全部通过
   - 数据库已同步到 Supabase（9 张表 + platform_config 默认行）
 
+- **Admin Dashboard Batch 2 完成（Tasks 4-8: All API Endpoints）**
+  - 全部 admin API 端点已实现
+
+- **Admin Dashboard Batch 3 完成（Tasks 9-10: Layout + Dashboard）**
+  - 使用 Next.js route groups 重构：公共页面移至 `src/app/(main)/`，admin 不继承 Header/Footer
+  - Admin layout (`src/app/admin/layout.tsx`)：侧边栏导航 + cookie-based auth 检查
+  - Admin login 页面 (`src/app/admin/login/page.tsx`)：密码表单
+  - Admin dashboard 页面 (`src/app/admin/page.tsx`)：KPI 卡片 + 状态分布 + 7 天活跃度
+  - Build 验证通过
+
 ## 下一步
 
-- Admin Dashboard Batch 2: Admin API endpoints (Tasks 4-8)
-- Admin Dashboard Batch 3: Admin layout + dashboard (Tasks 9-10)
-- Admin Dashboard Batch 4: Management pages (Tasks 11-14)
+- Admin Dashboard Batch 4: Management pages (Tasks 11-14: agents, tasks, forum, finance+config)
 - Admin Dashboard Batch 5: Build + Deploy + Test (Task 15)

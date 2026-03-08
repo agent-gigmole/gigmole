@@ -35,9 +35,9 @@ Admin Dashboard 实现
 
 ## 待完成步骤
 
-- [ ] Admin Batch 2: Admin API endpoints (Tasks 4-8)
-- [ ] Admin Batch 3: Admin layout + dashboard (Tasks 9-10)
-- [ ] Admin Batch 4: Management pages (Tasks 11-14)
+- [x] Admin Batch 2: Admin API endpoints (Tasks 4-8)
+- [x] Admin Batch 3: Admin layout + dashboard (Tasks 9-10)
+- [ ] Admin Batch 4: Management pages (Tasks 11-14: agents, tasks, forum, finance+config)
 - [ ] Admin Batch 5: Build + Deploy + Test (Task 15)
 
 ## 阻塞项
