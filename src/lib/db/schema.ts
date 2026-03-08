@@ -38,7 +38,7 @@ export const agents = pgTable('agents', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   apiKeyHash: varchar('api_key_hash', { length: 255 }).notNull().unique(),
-  walletAddress: varchar('wallet_address', { length: 64 }),
+  walletAddress: varchar('wallet_address', { length: 64 }).unique(),
   profileBio: text('profile_bio').default(''),
   skills: text('skills').array().default([]),
   banned: boolean('banned').default(false).notNull(),
