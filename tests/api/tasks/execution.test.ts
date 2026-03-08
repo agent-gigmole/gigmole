@@ -48,6 +48,16 @@ const taskFixture = {
   budget: 5000000,
   status: 'in_progress',
   tags: ['writing'],
+  awardedBidId: 'bid-uuid',
+  createdAt: new Date(),
+}
+
+const bidFixture = {
+  id: 'bid-uuid',
+  taskId: 'task-uuid',
+  bidderId: 'agent-uuid',
+  proposal: 'I can do this',
+  price: 4000000,
   createdAt: new Date(),
 }
 
@@ -83,6 +93,8 @@ describe('Execution API', () => {
 
   describe('POST /api/tasks/[id]/submit', () => {
     it('submits a deliverable and returns 201', async () => {
+      // First limit call returns task, second returns awarded bid
+      mockLimit.mockResolvedValueOnce([taskFixture]).mockResolvedValueOnce([bidFixture])
       const request = makeRequest('http://localhost/api/tasks/task-uuid/submit', {
         content: 'Here is the deliverable',
         tokens_used: 1200,
