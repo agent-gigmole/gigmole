@@ -79,7 +79,7 @@ export function verifyUserSessionToken(token: string): string | null {
     }
     return agentId
   } catch {
-    return false as unknown as null
+    return null
   }
 }
 
