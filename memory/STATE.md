@@ -32,40 +32,35 @@
   - Batch 4 (Tasks 10-11): Header 导航更新 (Docs/Plugins/Forum 链接) + skill/labor.md 更新 (forum 命令 + reference implementation)
   - Batch 5 (Tasks 12-13): E2E 测试更新 (新增 forum + openapi + 新页面测试) + schema push + build + deploy
 
+- 网站设计风格重做：暗黑主题 → Claude.ai 温暖极简风格
+
+- **Admin Dashboard 全部完成并部署（15 个任务，5 个 batch）**
+  - Admin URL: https://aglabor.vercel.app/admin
+
+- **User System Batch 1 完成 (Tasks 1-3)**
+  - Task 1: 安装 wallet adapter + tweetnacl 依赖
+  - Task 2: schema.ts walletAddress 加 .unique()，清理重复测试数据后推送 constraint 到 Supabase
+  - Task 3: 创建 src/lib/auth/wallet.ts（nonce 生成、签名验证、session token、authenticateUser）+ 测试
+
 ## 已知最佳结果
 
-- 97 个测试全部通过（含 admin auth、schema、OpenAPI 等）
+- 104 个测试全部通过
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
-- 35+ API 端点已实现（含 13 个 admin 端点：login/logout, stats, finance, agents CRUD, tasks CRUD, forum, config）
-- 15+ 网站页面已构建（含 /docs, /plugins, /forum, /forum/[id], /admin/*, 5 个管理页面）
-- Header 导航包含 Docs/Plugins/Forum 链接
+- 35+ API 端点已实现（含 13 个 admin 端点）
+- 15+ 网站页面已构建
 - Solana escrow PDA 推导已验证
-- Anchor 合约已部署到 Devnet（Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh）
+- Anchor 合约已部署到 Devnet
 - 数据库 9 张表已在 Supabase 中创建（含 platform_config）
 - Vercel 部署成功，生产地址可访问
 - Plugin registry (plugins/registry.json) 已建立
-- **网站设计风格重做：暗黑主题 → Claude.ai 温暖极简风格**
-  - 背景: #0a0a0a → #FAF9F5 (暖米色)
-  - 卡片: 半透明边框 → 白色 + subtle shadow
-  - 强调色: cyan → terracotta #D97757
-  - 文字: white → stone 系列暖色调
-  - 修改 25 个前端文件（globals.css, layout.tsx, 所有组件和页面）
-  - 已部署到 https://aglabor.vercel.app
-
-- **Admin Dashboard 全部完成并部署（15 个任务，5 个 batch）**
-  - Batch 1 (Tasks 1-3): Schema 扩展 (agents banned 字段 + platform_config 表) + Admin auth middleware (HMAC tokens) + banned 检查
-  - Batch 2 (Tasks 4-8): 全部 13 个 admin API 端点 (login/logout, stats, finance, agents CRUD, tasks CRUD, forum, config)
-  - Batch 3 (Tasks 9-10): Route group 重构 ((main) group 隔离 admin) + Admin layout (侧边栏) + Login 页面 + Dashboard 页面 (KPI 卡片)
-  - Batch 4 (Tasks 11-14): 全部管理页面 (Agents ban/unban, Tasks force status, Forum close, Finance overview, Config form)
-  - Batch 5 (Task 15): Build 验证 (97/97 tests pass) + Vercel 部署 + E2E 验证通过
-  - Admin URL: https://aglabor.vercel.app/admin
 
 ## 当前阶段
 
-- Admin Dashboard 全部完成并已部署到生产环境
-- 项目所有计划功能已实现
+- User System 实施中，Batch 1 (Tasks 1-3) 已完成
+- walletAddress unique constraint 已推送到 Supabase
+- wallet auth 模块（nonce、签名验证、session token）已实现并测试
 
 ## 下一步
 
-- 无待办任务，项目处于维护阶段
-- 可考虑：性能优化、更多 E2E 测试覆盖、用户反馈迭代
+- User System Batch 2: 实现 wallet 连接前端 + 登录/注册 API 端点
+- 继续 User System 后续 batch

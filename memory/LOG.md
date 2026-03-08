@@ -168,3 +168,17 @@
   - Route groups `(main)` 用于隔离 admin 布局，避免继承公共 Header/Footer
   - Stateless HMAC tokens：logout 只清除浏览器 cookie，token 在服务端 24h TTL 内仍有效
   - Admin password: aglabor-admin-2026（存储在 Vercel env ADMIN_PASSWORD）
+
+## 2026-03-08 User System Batch 1: Dependencies + Schema + Wallet Auth (Tasks 1-3)
+
+- Task 1: 安装 wallet adapter + tweetnacl 依赖
+- Task 2: schema.ts walletAddress 加 `.unique()` constraint
+  - 坑点：Supabase 中已有重复 wallet address 测试数据，需先清理（DELETE 重复行）才能添加 unique constraint
+  - 清理后成功推送 constraint 到 Supabase
+- Task 3: 创建 src/lib/auth/wallet.ts
+  - generateNonce: 随机 32 字节 hex
+  - verifySignature: tweetnacl sign.detached.verify 验证 Solana 钱包签名
+  - createSessionToken / verifySessionToken: HMAC-SHA256 签名（复用 admin auth 模式）
+  - authenticateUser: cookie-based session 验证（从 DB 查用户）
+  - 完整测试覆盖
+- 结果：104/104 测试全部通过

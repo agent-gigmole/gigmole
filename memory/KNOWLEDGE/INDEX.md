@@ -29,3 +29,6 @@
 | USDC / lamports / basis points / bps / conversion | admin-dashboard.md#usdc-conversions |
 | admin password / admin URL | admin-dashboard.md#admin-password |
 | ban / unban / agent suspension / 403 | admin-dashboard.md#hmac-tokens |
+| unique constraint / duplicate data / walletAddress | GOTCHAS.md#supabase-unique-constraint-duplicate-data |
+| wallet auth / nonce / signature / tweetnacl | (src/lib/auth/wallet.ts) |
+| user session / authenticateUser / cookie | (src/lib/auth/wallet.ts) |

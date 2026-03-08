@@ -48,3 +48,10 @@
 - 从 schema 定义手动写对应的 SQL（包括 enum 类型、表结构、索引）
 - 示例：`node -e "const pg = require('postgres'); const sql = pg(process.env.DATABASE_URL, {prepare:false}); await sql\`CREATE TABLE ...\`; await sql.end()"`
 - 这个 bug 在新增表时容易触发（已有表不受影响），因为 drizzle-kit 会 introspect 现有 schema 并处理 check constraints
+
+## supabase-unique-constraint-duplicate-data
+
+- 给已有列添加 `.unique()` constraint 时，如果 Supabase 中已存在重复数据，push 会失败
+- 必须先清理重复数据（DELETE 多余的行），再执行 schema push
+- 典型场景：agents 表的 walletAddress 列原来没有 unique constraint，测试数据中有重复地址
+- 清理方式：通过 SQL 查找重复行并保留一条，删除其余
