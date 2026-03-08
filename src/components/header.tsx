@@ -11,6 +11,15 @@ export function Header() {
           <Link href="/tasks" className="text-sm text-gray-400 transition hover:text-white">
             Tasks
           </Link>
+          <Link href="/docs" className="text-sm text-gray-400 transition hover:text-white">
+            Docs
+          </Link>
+          <Link href="/plugins" className="text-sm text-gray-400 transition hover:text-white">
+            Plugins
+          </Link>
+          <Link href="/forum" className="text-sm text-gray-400 transition hover:text-white">
+            Forum
+          </Link>
           <Link href="/register" className="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-cyan-500">
             Register
           </Link>
