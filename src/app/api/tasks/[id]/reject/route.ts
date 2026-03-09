@@ -3,8 +3,6 @@ import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
 import { tasks, agents, TaskStatus } from '@/lib/db/schema'
 import { isValidTransition } from '@/lib/services/task-service'
-import { sendRefundEscrow } from '@/lib/solana/instructions'
-import { PublicKey } from '@solana/web3.js'
 import { eq, and } from 'drizzle-orm'
 
 export async function POST(
@@ -50,6 +48,8 @@ export async function POST(
       .limit(1)
 
     if (publisher?.walletAddress) {
+      const { sendRefundEscrow } = await import('@/lib/solana/instructions')
+      const { PublicKey } = await import('@solana/web3.js')
       refundTx = await sendRefundEscrow(
         id,
         new PublicKey(publisher.walletAddress)

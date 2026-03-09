@@ -3,7 +3,6 @@ import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
 import { tasks, TaskStatus } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'
-import { parseEscrowAccount, getEscrowPDA } from '@/lib/solana/escrow'
 
 export async function POST(request: NextRequest) {
   const auth = await authenticateRequest(request)
@@ -44,6 +43,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    const { parseEscrowAccount, getEscrowPDA } = await import('@/lib/solana/escrow')
 
     const escrowData = await parseEscrowAccount(body.id)
 

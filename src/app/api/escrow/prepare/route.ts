@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateRequest } from '@/lib/auth/middleware'
-import { getEscrowPDA } from '@/lib/solana/escrow'
-import { PublicKey } from '@solana/web3.js'
-import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 
 export async function GET(request: NextRequest) {
   const auth = await authenticateRequest(request)
@@ -17,6 +14,10 @@ export async function GET(request: NextRequest) {
       { status: 400 }
     )
   }
+
+  const { getEscrowPDA } = await import('@/lib/solana/escrow')
+  const { PublicKey } = await import('@solana/web3.js')
+  const { getAssociatedTokenAddressSync } = await import('@solana/spl-token')
 
   const [escrowPda, bump] = getEscrowPDA(taskId)
   const usdcMint = new PublicKey(process.env.USDC_MINT_ADDRESS!)

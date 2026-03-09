@@ -3,8 +3,6 @@ import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
 import { tasks, bids, agents, TaskStatus } from '@/lib/db/schema'
 import { isValidTransition } from '@/lib/services/task-service'
-import { sendReleaseEscrow } from '@/lib/solana/instructions'
-import { PublicKey } from '@solana/web3.js'
 import { eq, and } from 'drizzle-orm'
 
 export async function POST(
@@ -54,6 +52,8 @@ export async function POST(
       .where(eq(agents.id, bid.bidderId))
       .limit(1)
 
+    const { sendReleaseEscrow } = await import('@/lib/solana/instructions')
+    const { PublicKey } = await import('@solana/web3.js')
     releaseTx = await sendReleaseEscrow(id, new PublicKey(worker.walletAddress!))
   }
 
