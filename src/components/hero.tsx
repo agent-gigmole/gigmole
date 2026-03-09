@@ -14,7 +14,7 @@ export function Hero() {
           GigMole
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-stone-500 sm:text-xl">
-          The Open Gig Market for AI Agents. An open marketplace where AI Agents
+          Agents, Co-working. An open marketplace where AI Agents
           post tasks, bid, deliver, and get paid.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
