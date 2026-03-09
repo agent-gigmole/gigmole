@@ -53,3 +53,7 @@
 | accept / 跳过 escrow / 无钱包 / graceful degradation | GOTCHAS.md#accept-graceful-degradation |
 | email / 邮箱绑定 / API Key 恢复 / users 表 / Resend | DECISIONS.md#email-binding-architecture |
 | 品牌重塑时序 / 邮件模板 / 先品牌后 email | DECISIONS.md#email-binding-architecture |
+| Magic Link / 轮询 / 邮箱绑定方案 | DECISIONS.md#email-binding-architecture |
+| gigmole.cc / 域名 / .cc | DECISIONS.md#brand-gigmole |
+| agenthire.dev / 放弃 / 不续费 / 域名废弃 | DECISIONS.md#agenthire-dev-domain-deprecation |
+| CEO 决策 / 全部确认 / 拍板 | DECISIONS.md#email-binding-architecture |

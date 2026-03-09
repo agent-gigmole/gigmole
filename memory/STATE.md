@@ -64,7 +64,7 @@
   - Task 12: 更新 api-docs.ts
   - Task 13: 生成 platform authority keypair，添加环境变量到 .env
   - **Vercel 部署修复**: 5 个 API route 文件的 Solana 顶层 import 改为动态 import，解决构建错误
-  - **生产环境已上线**: https://agenthire.dev
+  - **生产环境已上线**: https://gigmole.cc (原 agenthire.dev)
 
 - **referredBy 字段添加完成**
   - agents 表新增 nullable referredBy 字段（自引用 agents.id）
@@ -86,7 +86,20 @@
   - MVP 只做 email + wallet 登录，不做 Google/GitHub OAuth
   - API Key 恢复流程：邮箱验证码方式
   - 预估工作量 ~18 小时
-  - 6 个决策点等 CEO 拍板
+
+- **CEO 全部决策项已确认（10 项）**
+  - 品牌名：GigMole ✅
+  - 域名：gigmole.cc（已注册）✅
+  - users/agents 分表：确认拆分 ✅
+  - Email：选填 ✅
+  - 邮件服务：Resend ✅
+  - 邮箱绑定方案：Magic Link + 轮询 ✅
+  - 验证码：6位数字 ✅
+  - 执行顺序：先品牌重塑，再 email 功能 ✅
+  - agenthire.dev：放弃，不做跳转，不续费 ✅
+  - Tagline：仍在讨论，CEO 在考虑 "co-work" 概念方向
+
+- **品牌重塑启动中：AgentHire → GigMole, agenthire.dev → gigmole.cc**
 
 ## 已知最佳结果
 
@@ -98,14 +111,18 @@
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（含 platform_authority 模式）
 - 数据库 9 张表已在 Supabase 中创建（含 platform_config）
-- Vercel 部署成功，生产地址 agenthire.dev 可访问，Escrow 集成已上线
+- Vercel 部署成功，生产地址可访问，Escrow 集成已上线
 - Plugin registry (plugins/registry.json) 已建立
 - Next.js build 通过
 
 ## 当前阶段
 
+- **品牌重塑进行中：AgentHire → GigMole, agenthire.dev → gigmole.cc**
+  - CTO 已启动代码层面品牌替换
+  - 域名 gigmole.cc 已注册
+  - agenthire.dev 放弃，不续费，不做跳转
+- CEO 全部决策项已确认（除 Tagline 仍在讨论）
 - P0 安全修复完成，143 个测试全部通过
-- 邮箱绑定 + API Key 恢复方案评估完成，等 CEO 拍板 6 个决策点
 - Escrow Integration 全部 13 个任务完成并部署到生产环境
 - User System 全部 13 个任务完成并部署
 - Admin Dashboard 全部 15 个任务完成并部署
@@ -116,17 +133,14 @@
 - **经营决策文档建立（docs/business/）**
   - 创建 6 个文档：README.md, positioning.md, market-analysis.md, cold-start.md, launch-checklist.md, decisions.md
   - 核心决策：弱化 Web3 定位，Solana 只是支付实现手段，品牌层不强调链
-  - Tagline 首选：Where Agents Hire Agents
   - 差异化：支付中立 + API-first + 不发币
   - 冷启动策略：供给侧先行（自造示范 Agent + 任务）
 
-- **品牌重大调整：AgentHire → GigMole**
-  - 原品牌 AgentHire 太正式缺乏传播性，GigMole 有趣有画面感（鼹鼠隐喻）
-  - 域名 gigmole.com 待注册（$10.44/年）
-  - 核心差异化升级：别的 Agent 平台只有代码能力，GigMole 的 Agent 可以拥有真实世界资源
-  - 定位：人拥有资源（粉丝、账号、数据），Agent 代人工作，平台始终是 Agent-to-Agent
-  - 降低门槛不是让人上来打工，而是让人更容易创建代表自己资源的 Agent
-  - 更新了 positioning.md（v2）、intro-article.md、decisions.md
+- **品牌：GigMole**
+  - 域名：gigmole.cc（已注册）
+  - 鼹鼠隐喻，品牌传播性 > 专业感
+  - 核心差异化：Agent 不仅有代码能力，还可拥有真实世界资源（粉丝、账号、数据）
+  - 定位：人拥有资源，Agent 代人工作，平台始终是 Agent-to-Agent
 
 - **示范 Agent 注册 + 示范任务发布（冷启动供给侧）**
   - 注册 5 个示范 Agent：CodeReviewer, DocTranslator, DataScraper, TestWriter, SummaryBot
@@ -149,13 +163,15 @@
 - **Tagline 待定**
   - 不应偏向 worker 或 publisher 任一方
   - 应描述平台经济/网络整体
-  - 平台稀缺资源是 publisher（需求方），不是 worker
+  - CEO 在考虑 "co-work" 概念方向
 
 ## 下一步
 
-- CEO 拍板邮箱绑定方案的 6 个决策点
-- 如果品牌重塑在近期，应先做品牌重塑再做 email 功能（避免邮件模板改两次）
-- 注册 gigmole.com 域名
-- 全站品牌重塑：AgentHire → GigMole（代码、部署、域名）
-- 确定新 Tagline（描述平台经济整体，不偏向任一方）
-- 待定：用户提出新需求
+1. **完成品牌重塑**：全站 AgentHire → GigMole, agenthire.dev → gigmole.cc（代码、部署、Vercel 域名配置）
+2. **确定 Tagline**：CEO 仍在考虑 "co-work" 方向
+3. **邮箱绑定 + API Key 恢复功能开发**（~18h，品牌重塑完成后启动）
+   - users/agents 分表
+   - Magic Link + 轮询绑定方案
+   - 6位数字验证码
+   - Resend 邮件服务
+4. 待定：用户提出新需求

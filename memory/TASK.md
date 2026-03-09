@@ -2,11 +2,11 @@
 
 ## 当前任务
 
-无 — 等待 CEO 拍板邮箱方案决策点 + 品牌重塑排期
+品牌重塑：AgentHire → GigMole, agenthire.dev → gigmole.cc
 
 ## 目标
 
-P0 安全修复完成，邮箱方案评估完成。等 CEO 拍板 6 个决策点，以及品牌重塑排期。
+全站代码、配置、部署从 AgentHire/agenthire.dev 切换到 GigMole/gigmole.cc
 
 ## 已完成步骤
 
@@ -35,21 +35,30 @@ P0 安全修复完成，邮箱方案评估完成。等 CEO 拍板 6 个决策点
 - [x] **P0 修复：accept 路由 walletAddress! 强制解包 bug**（降级处理 + walletWarning，3 个测试）
 - [x] **P0 修复：POST /api/tasks escrow 无钱包校验**（2 个测试）
 - [x] **邮箱绑定 + API Key 恢复方案评估**（~18h，6 个决策点待 CEO 拍板）
+- [x] **CEO 全部决策项确认**（10 项，除 tagline 外全部拍板）
 
 ## 待完成步骤
 
-- [ ] CEO 拍板邮箱方案 6 个决策点
-- [ ] 注册 gigmole.com 域名
-- [ ] 全站品牌重塑：AgentHire → GigMole（代码、部署、域名）
-- [ ] 确定新 Tagline（描述平台经济整体，不偏向任一方）
-- [ ] 邮箱绑定 + API Key 恢复功能开发（~18h，待 CEO 决策后启动）
+- [ ] **品牌重塑：AgentHire → GigMole**（CTO 已启动）
+  - [ ] 源码中所有 "AgentHire" → "GigMole"
+  - [ ] 源码中所有 "agenthire.dev" → "gigmole.cc"
+  - [ ] 签名消息前缀更新
+  - [ ] OpenAPI spec server URL 更新
+  - [ ] Vercel 域名配置 gigmole.cc
+  - [ ] 测试通过 + build 通过
+  - [ ] 部署到 gigmole.cc
+- [ ] 确定新 Tagline（CEO 在考虑 "co-work" 方向）
+- [ ] **邮箱绑定 + API Key 恢复功能开发**（~18h，品牌重塑后启动）
+  - [ ] users/agents 分表
+  - [ ] Magic Link + 轮询绑定方案
+  - [ ] 6位数字验证码
+  - [ ] Resend 邮件服务集成
 
 ## 状态
 
-P0 修复完成（143 测试通过）。邮箱方案评估完成，等 CEO 拍板。品牌重塑待排期（建议先于 email 功能）。
+CEO 全部决策确认。CTO 已启动品牌重塑（AgentHire → GigMole）。品牌重塑完成后进入 email 功能开发。
 
 ## 阻塞项
 
-- gigmole.com 域名需要用户手动注册
-- 邮箱方案 6 个决策点等 CEO 拍板
-- 品牌重塑时序问题：如果近期做品牌重塑，应先于 email 功能（避免邮件模板改两次）
+- Tagline 仍在讨论（CEO 考虑 "co-work" 方向）
+- Vercel 域名配置需要 DNS 设置

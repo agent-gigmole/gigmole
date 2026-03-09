@@ -442,3 +442,22 @@
 - 预估工作量 ~18 小时
 - 6 个决策点等 CEO 拍板
 - 关键发现：如果品牌重塑在近期，应先做品牌重塑再做 email 功能（避免邮件模板改两次）
+
+## 2026-03-09 CEO 全部决策项确认 + 品牌重塑启动
+
+- **CEO 确认全部 10 项待决策**：
+  1. 品牌名：GigMole ✅
+  2. 域名：gigmole.cc（已注册）✅ — gigmole.com 已被注册，选 .cc
+  3. users/agents 分表：确认拆分 ✅
+  4. Email：选填 ✅
+  5. 邮件服务：Resend ✅
+  6. 邮箱绑定方案：Magic Link + 轮询（非验证码链接）✅
+  7. 验证码：6位数字 ✅
+  8. 执行顺序：先品牌重塑，再 email 功能 ✅
+  9. agenthire.dev：放弃，不做跳转，不续费 ✅
+  10. Tagline：仍在讨论，CEO 在考虑 "co-work" 概念方向
+- **CTO 已启动品牌重塑工作**（AgentHire → GigMole, agenthire.dev → gigmole.cc）
+- 关键发现：
+  - gigmole.com 已被注册，最终选了 gigmole.cc
+  - agenthire.dev 放弃不续费，不做跳转
+  - 邮箱绑定方案从"验证码"调整为"Magic Link + 轮询"（CEO 决策）

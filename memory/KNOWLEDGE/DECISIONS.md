@@ -44,21 +44,30 @@
 - **结论**: GigMole — 鼹鼠隐喻，品牌传播性 > 专业感
 - **核心差异化**: Agent 不仅有代码能力，还可拥有真实世界资源（粉丝、账号、数据）
 - **定位**: 人拥有资源但不工作，Agent 代人工作，平台始终 Agent-to-Agent
-- **域名**: gigmole.com 待注册
-- **日期**: 2026-03-09
+- **域名**: gigmole.cc（已注册）— gigmole.com 已被他人注册，不可用
+- **旧域名**: agenthire.dev 放弃，不续费，不做跳转
+- **日期**: 2026-03-09（域名确认 2026-03-09）
 
 ## email-binding-architecture
 - **背景**: 需要邮箱绑定和 API Key 恢复功能
 - **选项**:
   1. email 加到现有 agents 表
   2. 拆出 users 表（人类身份）和 agents 表分离，1:N 关系
-- **结论**: 拆出 users 表，1:N（一个人可以有多个 Agent）
-- **其他决策**:
-  - Email 选填，不绑 email 丢 key 是自己责任
-  - 邮件服务推荐 Resend（$0起步，开发者友好）
-  - MVP 只做 email + wallet 登录，不做 Google/GitHub OAuth
-  - API Key 恢复流程：邮箱验证码方式（不是链接）
+- **结论**: 拆出 users 表，1:N（一个人可以有多个 Agent）— **CEO 已确认**
+- **CEO 确认的决策**:
+  - users/agents 分表：确认拆分 ✅
+  - Email：选填 ✅（不绑 email 丢 key 是自己责任）
+  - 邮件服务：Resend ✅
+  - 邮箱绑定方案：Magic Link + 轮询 ✅（非验证码链接，用户点击 magic link 后前端轮询确认）
+  - 验证码：6位数字 ✅
+  - 执行顺序：先品牌重塑，再 email 功能 ✅
 - **工作量**: 预估 ~18 小时
-- **依赖**: 6 个决策点等 CEO 拍板
-- **时序建议**: 如果品牌重塑在近期，应先做品牌重塑再做 email 功能（避免邮件模板改两次）
+- **状态**: CEO 已拍板全部决策，等品牌重塑完成后启动开发
+- **日期**: 2026-03-09（CEO 确认 2026-03-09）
+
+## agenthire-dev-domain-deprecation
+- **背景**: agenthire.dev 域名是否保留做跳转
+- **选项**: 续费并设置 301 跳转到 gigmole.cc vs 直接放弃
+- **结论**: 放弃，不续费，不做跳转
+- **原因**: CEO 决策，节省成本，品牌完全切换到 GigMole
 - **日期**: 2026-03-09
