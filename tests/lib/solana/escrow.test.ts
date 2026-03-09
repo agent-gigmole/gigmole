@@ -1,6 +1,13 @@
-import { describe, it, expect } from 'vitest'
-import { getEscrowPDA } from '@/lib/solana/escrow'
+import { describe, it, expect, vi } from 'vitest'
 import { PublicKey } from '@solana/web3.js'
+
+vi.mock('@/lib/solana/client', () => ({
+  connection: {
+    getAccountInfo: vi.fn(),
+  },
+}))
+
+import { getEscrowPDA } from '@/lib/solana/escrow'
 
 describe('Escrow PDA', () => {
   it('derives deterministic PDA for task id', () => {
@@ -18,5 +25,69 @@ describe('Escrow PDA', () => {
   it('returns valid PublicKey', () => {
     const [pda] = getEscrowPDA('task-test')
     expect(pda).toBeInstanceOf(PublicKey)
+  })
+})
+
+describe('parseEscrowAccount', () => {
+  it('parses a funded escrow account correctly', async () => {
+    const { parseEscrowAccount } = await import('@/lib/solana/escrow')
+    const { connection } = await import('@/lib/solana/client')
+
+    const publisher = PublicKey.unique()
+    const platformAuth = PublicKey.unique()
+    const taskId = 'test-task-123'
+
+    const discriminator = Buffer.alloc(8)
+    const amount = Buffer.alloc(8)
+    amount.writeBigUInt64LE(5000000n)
+    const listingFee = Buffer.alloc(8)
+    listingFee.writeBigUInt64LE(2000000n)
+    const feeBps = Buffer.alloc(2)
+    feeBps.writeUInt16LE(500)
+    const taskIdBytes = Buffer.from(taskId, 'utf-8')
+    const taskIdLen = Buffer.alloc(4)
+    taskIdLen.writeUInt32LE(taskIdBytes.length)
+    const status = Buffer.from([0]) // Funded
+    const bump = Buffer.from([255])
+
+    const data = Buffer.concat([
+      discriminator,
+      publisher.toBuffer(),
+      platformAuth.toBuffer(),
+      amount,
+      listingFee,
+      feeBps,
+      taskIdLen,
+      taskIdBytes,
+      status,
+      bump,
+    ])
+
+    vi.mocked(connection.getAccountInfo).mockResolvedValue({
+      data,
+      executable: false,
+      lamports: 1000000,
+      owner: new PublicKey('F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh'),
+    } as any)
+
+    const result = await parseEscrowAccount(taskId)
+    expect(result).not.toBeNull()
+    expect(result!.publisher).toBe(publisher.toBase58())
+    expect(result!.platformAuthority).toBe(platformAuth.toBase58())
+    expect(result!.amount).toBe(5000000)
+    expect(result!.listingFee).toBe(2000000)
+    expect(result!.feeBps).toBe(500)
+    expect(result!.taskId).toBe(taskId)
+    expect(result!.status).toBe('Funded')
+    expect(result!.bump).toBe(255)
+  })
+
+  it('returns null for non-existent account', async () => {
+    const { parseEscrowAccount } = await import('@/lib/solana/escrow')
+    const { connection } = await import('@/lib/solana/client')
+    vi.mocked(connection.getAccountInfo).mockResolvedValue(null)
+
+    const result = await parseEscrowAccount('nonexistent-task')
+    expect(result).toBeNull()
   })
 })
