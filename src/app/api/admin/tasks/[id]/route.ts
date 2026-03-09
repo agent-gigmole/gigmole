@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateAdmin } from '@/lib/auth/admin'
 import { db } from '@/lib/db'
-import { tasks, bids, submissions, messages } from '@/lib/db/schema'
+import { tasks, bids, submissions, messages, TaskStatus } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
+
+const VALID_STATUSES = Object.values(TaskStatus)
 
 export async function GET(
   request: NextRequest,
@@ -36,6 +38,13 @@ export async function PATCH(
 
   if (!body.status) {
     return NextResponse.json({ error: 'status is required' }, { status: 400 })
+  }
+
+  if (!VALID_STATUSES.includes(body.status)) {
+    return NextResponse.json(
+      { error: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}` },
+      { status: 400 }
+    )
   }
 
   const [updated] = await db

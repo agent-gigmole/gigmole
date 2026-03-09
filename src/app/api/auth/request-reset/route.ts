@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { apiKeyResetTokens, users } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { eq, and, gt, sql } from 'drizzle-orm'
 import {
   isValidEmail,
   generateVerificationCode,
@@ -9,6 +9,9 @@ import {
   CODE_EXPIRY_MS,
 } from '@/lib/services/email-verification-service'
 import { sendApiKeyResetEmail } from '@/lib/email/resend'
+
+// Max reset requests per email per hour
+const MAX_RESETS_PER_HOUR = 3
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}))
@@ -33,6 +36,23 @@ export async function POST(request: NextRequest) {
   const successResponse = NextResponse.json({
     message: 'If an account with this email exists, a reset code has been sent.',
   })
+
+  // Rate limit: check recent reset requests for this email
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+  const [{ count: recentCount }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(apiKeyResetTokens)
+    .where(
+      and(
+        eq(apiKeyResetTokens.email, email),
+        gt(apiKeyResetTokens.createdAt, oneHourAgo)
+      )
+    )
+
+  if (recentCount >= MAX_RESETS_PER_HOUR) {
+    // Still return success to not leak info
+    return successResponse
+  }
 
   // Look up user
   const [user] = await db

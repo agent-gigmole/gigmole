@@ -9,5 +9,13 @@ export function hashApiKey(apiKey: string): string {
 }
 
 export function verifyApiKey(apiKey: string, hash: string): boolean {
-  return hashApiKey(apiKey) === hash
+  const candidateHash = hashApiKey(apiKey)
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(candidateHash, 'hex'),
+      Buffer.from(hash, 'hex')
+    )
+  } catch {
+    return false
+  }
 }
