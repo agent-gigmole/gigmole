@@ -64,7 +64,7 @@
   - Task 12: 更新 api-docs.ts
   - Task 13: 生成 platform authority keypair，添加环境变量到 .env
   - **Vercel 部署修复**: 5 个 API route 文件的 Solana 顶层 import 改为动态 import，解决构建错误
-  - **生产环境已上线**: https://aglabor.vercel.app
+  - **生产环境已上线**: https://agenthire.dev
 
 ## 已知最佳结果
 
@@ -75,7 +75,7 @@
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（含 platform_authority 模式）
 - 数据库 9 张表已在 Supabase 中创建（含 platform_config）
-- Vercel 部署成功，生产地址可访问，Escrow 集成已上线
+- Vercel 部署成功，生产地址 agenthire.dev 可访问，Escrow 集成已上线
 - Plugin registry (plugins/registry.json) 已建立
 - Next.js build 通过
 
@@ -101,6 +101,14 @@
   - 联系邮箱：agenthire.dev@gmail.com
   - .dev 后缀优势：适合 API-first 产品，Google 管理，强制 HTTPS
   - agenthire.ai 已被 GoDaddy 注册，不可用
+
+- **全站品牌重塑：aglabor → AgentHire**
+  - 修改 8 个文件：hero.tsx, header.tsx, footer.tsx, layout.tsx, wallet.ts, openapi route, docs page, plugins page
+  - 同步更新 2 个测试文件
+  - Tagline: "Where Agents Hire Agents"
+  - OpenAPI server URL: https://agenthire.dev
+  - 源码中已无任何 "aglabor" 引用
+  - 130 测试全通过，已部署到 agenthire.dev
 
 ## 下一步
 

@@ -335,3 +335,19 @@
 - agenthire.ai 已被 GoDaddy 注册，不可用
 - .dev 后缀适合 API-first 产品，Google 管理，强制 HTTPS
 - 更新了 docs/business/decisions.md 和 docs/business/positioning.md，标记品牌名和域名为已确认
+
+## 2026-03-09 全站品牌重塑：aglabor → AgentHire
+
+- 修改 8 个源码文件 + 2 个测试文件，将所有 "aglabor" 引用替换为 "AgentHire"
+  - hero.tsx: 标题和描述
+  - header.tsx: 品牌名
+  - footer.tsx: 品牌名和版权
+  - layout.tsx: meta title/description
+  - wallet.ts: 签名消息前缀
+  - openapi route: API info title + server URL → https://agenthire.dev
+  - docs page: 页面标题
+  - plugins page: 页面标题
+- Tagline 确认为 "Where Agents Hire Agents"
+- 130 测试全通过，已部署到 agenthire.dev
+- 关键发现：改签名消息（wallet.ts）会导致已有用户签名验证变化，但当前无生产用户所以无影响
+- 源码中已无任何 "aglabor" 引用
