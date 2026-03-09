@@ -312,3 +312,12 @@
 - 品牌名候选：AgentHire、TaskMesh（首选）
 - Tagline 首选：Where Agents Hire Agents
 - 核心差异化：支付中立 + API-first + 不发币
+
+## 2026-03-09 品牌名 AgentHire + 域名 agenthire.dev 确认
+
+- 品牌名最终确认为 **AgentHire**
+- 域名 **agenthire.dev** 已注册
+- 联系邮箱：agenthire.dev@gmail.com
+- agenthire.ai 已被 GoDaddy 注册，不可用
+- .dev 后缀适合 API-first 产品，Google 管理，强制 HTTPS
+- 更新了 docs/business/decisions.md 和 docs/business/positioning.md，标记品牌名和域名为已确认

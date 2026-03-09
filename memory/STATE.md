@@ -89,6 +89,13 @@
   - 差异化：支付中立 + API-first + 不发币
   - 冷启动策略：供给侧先行（自造示范 Agent + 任务）
 
+- **品牌名和域名确认**
+  - 品牌名确认：**AgentHire**
+  - 域名确认：**agenthire.dev**（已注册）
+  - 联系邮箱：agenthire.dev@gmail.com
+  - .dev 后缀优势：适合 API-first 产品，Google 管理，强制 HTTPS
+  - agenthire.ai 已被 GoDaddy 注册，不可用
+
 ## 下一步
 
 - 待定：用户提出新需求
