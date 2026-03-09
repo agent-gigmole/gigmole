@@ -16,7 +16,7 @@
   - 8 张表全部在 Supabase 中创建（原 6 张 + proposals + proposal_replies）
 - Vercel 生产环境部署
   - 项目已 link，4 个环境变量已设置
-  - 生产地址：https://aglabor.vercel.app
+  - 生产地址：https://gigmole.cc
 - Anchor escrow 合约部署到 Solana Devnet
   - Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh
   - anchor-lang 0.30.1，IDL 已上链
@@ -35,7 +35,7 @@
 - 网站设计风格重做：暗黑主题 → Claude.ai 温暖极简风格
 
 - **Admin Dashboard 全部完成并部署（15 个任务，5 个 batch）**
-  - Admin URL: https://aglabor.vercel.app/admin
+  - Admin URL: https://gigmole.cc/admin
 
 - **User System 全部完成并部署（13 个任务，5 个 batch）**
   - Batch 1 (Tasks 1-3): 依赖安装 + schema unique constraint + wallet auth 库
@@ -64,7 +64,7 @@
   - Task 12: 更新 api-docs.ts
   - Task 13: 生成 platform authority keypair，添加环境变量到 .env
   - **Vercel 部署修复**: 5 个 API route 文件的 Solana 顶层 import 改为动态 import，解决构建错误
-  - **生产环境已上线**: https://gigmole.cc (原 agenthire.dev)
+  - **生产环境已上线**: https://gigmole.cc
 
 - **referredBy 字段添加完成**
   - agents 表新增 nullable referredBy 字段（自引用 agents.id）
@@ -74,7 +74,7 @@
   - 130 个测试全部通过
 
 - **P0 安全修复 + 降级处理（3 个问题，13 个新测试）**
-  - bind-wallet 端点加签名验证（nonce + ed25519 signature），签名消息格式 "Bind wallet to AgentHire agent {agentId}\nNonce: {nonce}"，防伪造绑定，409 处理钱包已被占用
+  - bind-wallet 端点加签名验证（nonce + ed25519 signature），签名消息格式 "Bind wallet to GigMole agent {agentId}\nNonce: {nonce}"，防伪造绑定，409 处理钱包已被占用
   - accept 路由修复 walletAddress! 强制解包 bug，worker 无钱包时状态正常推进到 accepted 但跳过 escrow release，返回 walletWarning
   - POST /api/tasks 带 escrow_tx 但无钱包时返回 400
   - 新增 13 个测试（bind-wallet 8个 + accept-no-wallet 3个 + escrow-no-wallet 2个），全部 143 个测试通过
@@ -97,9 +97,13 @@
   - 验证码：6位数字 ✅
   - 执行顺序：先品牌重塑，再 email 功能 ✅
   - agenthire.dev：放弃，不做跳转，不续费 ✅
-  - Tagline：仍在讨论，CEO 在考虑 "co-work" 概念方向
+  - Tagline：确认 "Agents, Co-working." ✅
 
-- **品牌重塑启动中：AgentHire → GigMole, agenthire.dev → gigmole.cc**
+- **品牌重塑完成：AgentHire → GigMole, agenthire.dev → gigmole.cc**
+  - 11 个文件修改，143 测试全过
+  - Commits: c7e099b（品牌重塑）+ d2b776b（tagline 更新）
+  - Tagline: "Agents, Co-working."
+  - 待推送 GitHub
 
 ## 已知最佳结果
 
@@ -117,11 +121,10 @@
 
 ## 当前阶段
 
-- **品牌重塑进行中：AgentHire → GigMole, agenthire.dev → gigmole.cc**
-  - CTO 已启动代码层面品牌替换
-  - 域名 gigmole.cc 已注册
-  - agenthire.dev 放弃，不续费，不做跳转
-- CEO 全部决策项已确认（除 Tagline 仍在讨论）
+- **品牌重塑已完成：GigMole, gigmole.cc, "Agents, Co-working."**
+  - 代码层面全部替换完成，143 测试通过
+  - 待推送 GitHub（自动触发 Vercel 部署）
+- CEO 全部决策项已确认（含 Tagline）
 - P0 安全修复完成，143 个测试全部通过
 - Escrow Integration 全部 13 个任务完成并部署到生产环境
 - User System 全部 13 个任务完成并部署
@@ -138,6 +141,7 @@
 
 - **品牌：GigMole**
   - 域名：gigmole.cc（已注册）
+  - Tagline: "Agents, Co-working."
   - 鼹鼠隐喻，品牌传播性 > 专业感
   - 核心差异化：Agent 不仅有代码能力，还可拥有真实世界资源（粉丝、账号、数据）
   - 定位：人拥有资源，Agent 代人工作，平台始终是 Agent-to-Agent
@@ -158,20 +162,15 @@
   - 预计工作量 43-48 小时，中等复杂度
   - 建议初期方案：off-chain（数据库记录佣金，定期手动结算）
   - 后期再考虑链上佣金合约
-  - 暂不启动开发，等品牌重塑完成后再排期
-
-- **Tagline 待定**
-  - 不应偏向 worker 或 publisher 任一方
-  - 应描述平台经济/网络整体
-  - CEO 在考虑 "co-work" 概念方向
+  - 暂不启动开发，等 email 功能完成后再排期
 
 ## 下一步
 
-1. **完成品牌重塑**：全站 AgentHire → GigMole, agenthire.dev → gigmole.cc（代码、部署、Vercel 域名配置）
-2. **确定 Tagline**：CEO 仍在考虑 "co-work" 方向
-3. **邮箱绑定 + API Key 恢复功能开发**（~18h，品牌重塑完成后启动）
+1. **推送品牌重塑到 GitHub**（触发 Vercel 自动部署到 gigmole.cc）
+2. **邮箱绑定 + API Key 恢复功能开发**（~18h，CEO 安排整晚工作）
    - users/agents 分表
    - Magic Link + 轮询绑定方案
    - 6位数字验证码
-   - Resend 邮件服务
+   - Resend 邮件服务集成
+3. **安全方向 code review**（email 功能完成后）
 4. 待定：用户提出新需求

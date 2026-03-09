@@ -2,11 +2,11 @@
 
 ## 当前任务
 
-品牌重塑：AgentHire → GigMole, agenthire.dev → gigmole.cc
+邮箱绑定 + API Key 恢复功能开发
 
 ## 目标
 
-全站代码、配置、部署从 AgentHire/agenthire.dev 切换到 GigMole/gigmole.cc
+实现 email 绑定功能，让用户可以通过邮箱恢复 API Key，使用 Resend 邮件服务和 Magic Link + 轮询方案。
 
 ## 已完成步骤
 
@@ -35,30 +35,34 @@
 - [x] **P0 修复：accept 路由 walletAddress! 强制解包 bug**（降级处理 + walletWarning，3 个测试）
 - [x] **P0 修复：POST /api/tasks escrow 无钱包校验**（2 个测试）
 - [x] **邮箱绑定 + API Key 恢复方案评估**（~18h，6 个决策点待 CEO 拍板）
-- [x] **CEO 全部决策项确认**（10 项，除 tagline 外全部拍板）
+- [x] **CEO 全部决策项确认**（10 项，全部拍板，含 Tagline）
+- [x] **品牌重塑：AgentHire → GigMole**（11 个文件，143 测试通过）
+  - [x] 源码中所有 "AgentHire" → "GigMole"
+  - [x] 源码中所有 "agenthire.dev" → "gigmole.cc"
+  - [x] 签名消息前缀更新
+  - [x] OpenAPI spec server URL 更新
+  - [x] Tagline 确认："Agents, Co-working."
+  - [x] 测试通过（143）+ build 通过
+- [x] **Tagline 确认**："Agents, Co-working."
 
 ## 待完成步骤
 
-- [ ] **品牌重塑：AgentHire → GigMole**（CTO 已启动）
-  - [ ] 源码中所有 "AgentHire" → "GigMole"
-  - [ ] 源码中所有 "agenthire.dev" → "gigmole.cc"
-  - [ ] 签名消息前缀更新
-  - [ ] OpenAPI spec server URL 更新
-  - [ ] Vercel 域名配置 gigmole.cc
-  - [ ] 测试通过 + build 通过
-  - [ ] 部署到 gigmole.cc
-- [ ] 确定新 Tagline（CEO 在考虑 "co-work" 方向）
-- [ ] **邮箱绑定 + API Key 恢复功能开发**（~18h，品牌重塑后启动）
-  - [ ] users/agents 分表
-  - [ ] Magic Link + 轮询绑定方案
-  - [ ] 6位数字验证码
+- [ ] **推送品牌重塑到 GitHub**（触发 Vercel 自动部署）
+- [ ] **邮箱绑定 + API Key 恢复功能开发**（~18h）
+  - [ ] users 表设计 + 创建（人类身份，1:N agents）
   - [ ] Resend 邮件服务集成
+  - [ ] Magic Link 生成 + 发送端点
+  - [ ] Magic Link 验证 + 轮询端点
+  - [ ] Email 绑定 API（绑定/解绑邮箱）
+  - [ ] API Key 恢复流程（邮箱验证 → 重新生成 key）
+  - [ ] 前端页面（绑定邮箱 UI、恢复 key UI）
+  - [ ] 测试 + build + 部署
+- [ ] **安全方向 code review**（email 完成后）
 
 ## 状态
 
-CEO 全部决策确认。CTO 已启动品牌重塑（AgentHire → GigMole）。品牌重塑完成后进入 email 功能开发。
+品牌重塑全部完成（代码 + tagline），待推送 GitHub。CEO 安排整晚工作：先开发 email 绑定功能，再做安全 code review。CEO 今天休息。
 
 ## 阻塞项
 
-- Tagline 仍在讨论（CEO 考虑 "co-work" 方向）
-- Vercel 域名配置需要 DNS 设置
+- 无（所有决策已确认）

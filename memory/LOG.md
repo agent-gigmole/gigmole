@@ -461,3 +461,18 @@
   - gigmole.com 已被注册，最终选了 gigmole.cc
   - agenthire.dev 放弃不续费，不做跳转
   - 邮箱绑定方案从"验证码"调整为"Magic Link + 轮询"（CEO 决策）
+
+## 2026-03-09 品牌重塑完成：AgentHire → GigMole + Tagline 确认
+
+- **品牌重塑全部完成**
+  - 11 个文件修改：所有 "AgentHire" → "GigMole"，所有 "agenthire.dev" → "gigmole.cc"
+  - 签名消息前缀更新、OpenAPI spec server URL 更新
+  - 143 个测试全部通过
+  - Commits: c7e099b（品牌重塑）+ d2b776b（tagline 更新）
+- **Tagline 确认**："Agents, Co-working."
+  - CEO 最终确认 "co-work" 方向
+- **待推送 GitHub**，推送后 Vercel 自动部署到 gigmole.cc
+- **CEO 安排整晚工作计划**：
+  1. 开发 email 绑定功能（users 表 + Resend + Magic Link + 轮询）
+  2. email 完成后：安全方向 code review
+  3. CEO 今天工作结束，休息
