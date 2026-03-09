@@ -4,7 +4,7 @@ import { createHmac, timingSafeEqual } from 'crypto'
 export const USER_COOKIE_NAME = 'user_session'
 
 export function buildSignInMessage(nonce: string): string {
-  return `Sign in to aglabor\nNonce: ${nonce}`
+  return `Sign in to AgentHire\nNonce: ${nonce}`
 }
 
 function getSecret(): string {

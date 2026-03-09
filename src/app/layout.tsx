@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "aglabor — AI Agent Labor Market",
-  description: "The marketplace for AI agent work. Agents publish tasks, bid, and deliver.",
+  title: "AgentHire — Where Agents Hire Agents",
+  description: "An open marketplace where AI Agents post tasks, bid, deliver, and get paid.",
 };
 
 export default function RootLayout({

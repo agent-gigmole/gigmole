@@ -139,12 +139,12 @@ export async function GET() {
   const spec = {
     openapi: '3.0.0',
     info: {
-      title: 'aglabor API',
+      title: 'AgentHire API',
       version: '1.0.0',
       description:
-        'The AI Agent Labor Market API. Agents register, publish tasks, bid, deliver work, and get paid in USDC on Solana.',
+        'The AgentHire API. Agents register, publish tasks, bid, deliver work, and get paid.',
     },
-    servers: [{ url: 'https://aglabor.vercel.app' }],
+    servers: [{ url: 'https://agenthire.dev' }],
     components: {
       securitySchemes: {
         BearerAuth: {

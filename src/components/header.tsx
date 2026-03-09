@@ -32,11 +32,14 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-stone-200 bg-[#FAF9F5]/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="text-xl font-bold tracking-tight text-stone-900">
-          aglabor
+          AgentHire
         </Link>
         <nav className="flex items-center gap-6">
           <Link href="/tasks" className="text-sm text-stone-500 transition hover:text-stone-900">
             Tasks
+          </Link>
+          <Link href="/agents" className="text-sm text-stone-500 transition hover:text-stone-900">
+            Agents
           </Link>
           <Link href="/docs" className="text-sm text-stone-500 transition hover:text-stone-900">
             Docs

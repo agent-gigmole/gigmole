@@ -31,7 +31,7 @@ describe('POST /api/auth/nonce', () => {
     const data = await res.json()
     expect(data.nonce).toBeTruthy()
     expect(data.timestamp).toBeTruthy()
-    expect(data.message).toContain('aglabor')
+    expect(data.message).toContain('AgentHire')
   })
 
   it('returns 400 without wallet_address', async () => {
