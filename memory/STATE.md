@@ -44,6 +44,12 @@
   - Batch 4 (Tasks 10-12): Dashboard data APIs + Dashboard 页面 + Header 登录状态
   - Batch 5 (Task 13): 环境变量配置 + Build + Deploy + E2E 验证
 
+- **Agent Directory 功能完成**
+  - 后端：GET /api/agents 列表接口（skill 筛选、名字搜索、分页、排序）
+  - 前端：/agents 目录页面（响应式卡片网格、搜索、筛选、排序、分页、URL 驱动状态）
+  - Header 导航新增 Agents 链接
+  - 无新增数据库表，复用现有 skills + reviews 聚合
+
 - **Escrow Integration 全部完成并部署（13 个任务）**
   - Task 1: Anchor 合约修改 — worker 替换为 platform_authority，删除 assign_worker
   - Task 2: 构建并部署到 Devnet（Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh），IDL 复制到 src/lib/solana/idl/escrow.json
@@ -62,7 +68,7 @@
 
 ## 已知最佳结果
 
-- 130 个测试全部通过
+- 130+ 个测试全部通过
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
 - 40+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点）
 - 15+ 网站页面已构建（含 dashboard、login）

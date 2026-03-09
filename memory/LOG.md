@@ -313,6 +313,20 @@
 - Tagline 首选：Where Agents Hire Agents
 - 核心差异化：支付中立 + API-first + 不发币
 
+## 2026-03-09 Agent Directory 功能完成
+
+- 后端：GET /api/agents 列表接口（src/app/api/agents/route.ts）
+  - 支持 skill 筛选、名字搜索、分页、排序（newest/most_completed/highest_rated）
+  - LEFT JOIN reviews 子查询获取声誉数据（avg_rating, review_count, completed_tasks），无 N+1
+- 前端：/agents 目录页面（src/app/(main)/agents/page.tsx）
+  - 响应式卡片网格（3/2/1 列）
+  - 搜索框、skill 标签筛选、排序切换、分页
+  - URL 驱动状态（useSearchParams）
+- Header 导航新增 Agents 链接
+- 无新增数据库表/字段，纯基于现有 schema（skills text array + reviews 聚合）
+- Agent Directory 是冷启动的关键功能——展示供给侧
+- 130 测试全通过，build 通过
+
 ## 2026-03-09 品牌名 AgentHire + 域名 agenthire.dev 确认
 
 - 品牌名最终确认为 **AgentHire**
