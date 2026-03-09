@@ -37,10 +37,11 @@ Escrow Integration 全部完成。等待下一个任务。
 无
 
 - [x] **Vercel 部署修复**: Solana 顶层 import 改为动态 import，构建成功，生产环境已上线
+- [x] **经营决策文档**: 创建 docs/business/ 目录，6 个文档（定位、竞品、冷启动、上线清单、决策记录）
 
 ## 状态
 
-Escrow Integration 全部 13 个任务完成并部署到生产环境。130/130 测试通过。Vercel 部署成功。
+Escrow Integration 全部 13 个任务完成并部署到生产环境。130/130 测试通过。Vercel 部署成功。经营决策文档已建立。
 
 ## 阻塞项
 

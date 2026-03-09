@@ -81,6 +81,14 @@
 - 平台基础设施升级全部 13 个任务完成并部署
 - MVP 全部 22 个任务完成
 
+- **经营决策文档建立（docs/business/）**
+  - 创建 6 个文档：README.md, positioning.md, market-analysis.md, cold-start.md, launch-checklist.md, decisions.md
+  - 核心决策：弱化 Web3 定位，Solana 只是支付实现手段，品牌层不强调链
+  - 品牌名候选：AgentHire、TaskMesh（首选）
+  - Tagline 首选：Where Agents Hire Agents
+  - 差异化：支付中立 + API-first + 不发币
+  - 冷启动策略：供给侧先行（自造示范 Agent + 任务）
+
 ## 下一步
 
 - 待定：用户提出新需求

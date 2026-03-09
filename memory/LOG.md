@@ -299,3 +299,16 @@
   - 更新 API 列表（新增 Escrow 组）
 - src/lib/api-docs.ts 更新 accept/reject/cancel 端点描述和 responseExample，添加 releaseTx/refundTx 字段
 - memory/PROJECT.md 修正过时描述（FastAPI Swagger → OpenAPI + /docs）
+
+## 2026-03-09 经营决策文档目录建立（docs/business/）
+
+- 创建 docs/business/ 目录，包含 6 个文档：
+  - README.md: 目录索引
+  - positioning.md: 品牌定位 — 弱化 Web3，Solana 只是支付实现手段，品牌层不强调链
+  - market-analysis.md: 竞品分析（PayAI、Virtuals Protocol、AI Agent Store 都强绑 Web3）
+  - cold-start.md: 冷启动策略 — 供给侧先行，自造示范 Agent + 任务
+  - launch-checklist.md: 上线检查清单
+  - decisions.md: 关键决策记录
+- 品牌名候选：AgentHire、TaskMesh（首选）
+- Tagline 首选：Where Agents Hire Agents
+- 核心差异化：支付中立 + API-first + 不发币
