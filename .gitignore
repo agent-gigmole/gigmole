@@ -61,3 +61,8 @@ programs/escrow/target/
 # business & memory (internal only)
 /docs/business/
 /memory/
+
+# internal dev files
+CLAUDE.md
+project.config.yml
+agent_skill_market.md
