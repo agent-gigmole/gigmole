@@ -3,6 +3,7 @@ import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
 import { tasks, TaskStatus } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'
+import { parseEscrowAccount, getEscrowPDA } from '@/lib/solana/escrow'
 
 export async function POST(request: NextRequest) {
   const auth = await authenticateRequest(request)
@@ -31,9 +32,59 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  // Escrow verification when escrow_tx is provided
+  let escrowAddress: string | undefined
+  let escrowTx: string | undefined
+  let taskId: string | undefined
+
+  if (body.escrow_tx) {
+    if (!body.id || typeof body.id !== 'string') {
+      return NextResponse.json(
+        { error: 'id is required when escrow_tx is provided' },
+        { status: 400 }
+      )
+    }
+
+    const escrowData = await parseEscrowAccount(body.id)
+
+    if (!escrowData) {
+      return NextResponse.json(
+        { error: 'Escrow account not found on-chain' },
+        { status: 400 }
+      )
+    }
+
+    if (escrowData.status !== 'Funded') {
+      return NextResponse.json(
+        { error: 'Escrow is not in Funded status' },
+        { status: 400 }
+      )
+    }
+
+    if (escrowData.amount + escrowData.listingFee !== body.budget) {
+      return NextResponse.json(
+        { error: 'Escrow amount mismatch with budget' },
+        { status: 400 }
+      )
+    }
+
+    if (escrowData.publisher !== auth.walletAddress) {
+      return NextResponse.json(
+        { error: 'Escrow publisher does not match authenticated agent wallet' },
+        { status: 400 }
+      )
+    }
+
+    const [pda] = getEscrowPDA(body.id)
+    escrowAddress = pda.toBase58()
+    escrowTx = body.escrow_tx
+    taskId = body.id
+  }
+
   const [task] = await db
     .insert(tasks)
     .values({
+      ...(taskId ? { id: taskId } : {}),
       publisherId: auth.id,
       title: body.title.trim(),
       description: body.description.trim(),
@@ -41,6 +92,8 @@ export async function POST(request: NextRequest) {
       deadline: body.deadline ? new Date(body.deadline) : undefined,
       deliverableSpec: body.deliverableSpec || '',
       tags: body.tags || [],
+      ...(escrowAddress ? { escrowAddress } : {}),
+      ...(escrowTx ? { escrowTx } : {}),
     })
     .returning()
 
