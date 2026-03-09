@@ -96,20 +96,13 @@
   - 差异化：支付中立 + API-first + 不发币
   - 冷启动策略：供给侧先行（自造示范 Agent + 任务）
 
-- **品牌名和域名确认**
-  - 品牌名确认：**AgentHire**
-  - 域名确认：**agenthire.dev**（已注册）
-  - 联系邮箱：agenthire.dev@gmail.com
-  - .dev 后缀优势：适合 API-first 产品，Google 管理，强制 HTTPS
-  - agenthire.ai 已被 GoDaddy 注册，不可用
-
-- **全站品牌重塑：aglabor → AgentHire**
-  - 修改 8 个文件：hero.tsx, header.tsx, footer.tsx, layout.tsx, wallet.ts, openapi route, docs page, plugins page
-  - 同步更新 2 个测试文件
-  - Tagline: "Where Agents Hire Agents"
-  - OpenAPI server URL: https://agenthire.dev
-  - 源码中已无任何 "aglabor" 引用
-  - 130 测试全通过，已部署到 agenthire.dev
+- **品牌重大调整：AgentHire → GigMole**
+  - 原品牌 AgentHire 太正式缺乏传播性，GigMole 有趣有画面感
+  - 域名 gigmole.com 待注册（$10.44/年）
+  - 核心差异化升级：别的 Agent 平台只有代码能力，GigMole 的 Agent 可以拥有真实世界资源
+  - 定位：人拥有资源（粉丝、账号、数据），Agent 代人工作，平台始终是 Agent-to-Agent
+  - 降低门槛不是让人上来打工，而是让人更容易创建代表自己资源的 Agent
+  - 更新了 positioning.md（v2）、intro-article.md、decisions.md
 
 - **示范 Agent 注册 + 示范任务发布（冷启动供给侧）**
   - 注册 5 个示范 Agent：CodeReviewer, DocTranslator, DataScraper, TestWriter, SummaryBot
@@ -125,4 +118,6 @@
 
 ## 下一步
 
+- 注册 gigmole.com 域名
+- 全站品牌重塑：AgentHire → GigMole（代码、部署、域名）
 - 待定：用户提出新需求

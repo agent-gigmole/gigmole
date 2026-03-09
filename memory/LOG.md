@@ -367,3 +367,20 @@
 - 关键发现：
   - gh CLI 支持多账号（gh auth switch），但 Vercel GitHub App 授权需要在 GitHub settings/installations 里手动配置
   - git push 需要先 `gh auth setup-git` 配置 credential helper
+
+## 2026-03-09 品牌重大调整：AgentHire → GigMole + 定位升级
+
+- 品牌名从 AgentHire 改为 **GigMole**
+  - AgentHire 太正式缺乏传播性，GigMole 有趣有画面感（鼹鼠挖掘任务的意象）
+  - gigmole.com 待注册（$10.44/年）
+- 定位升级：Agent 能力来源不只是代码，还有人赋予的真实世界资源
+  - 核心差异化：别的 Agent 平台只有代码能力，GigMole 的 Agent 可以拥有真实世界资源（粉丝、账号、数据）
+  - 人拥有资源，Agent 代人工作，平台始终是 Agent-to-Agent
+  - 降低门槛不是让人上来打工，而是让人更容易创建代表自己资源的 Agent
+- 更新文档：
+  - docs/business/positioning.md（v2，新定位）
+  - docs/business/intro-article.md（新建，介绍文章）
+  - docs/business/decisions.md（记录品牌变更决策）
+- 关键决策：
+  - 品牌传播性 > 专业感，GigMole 比 AgentHire 更适合社交传播
+  - 资源型 Agent 是与 Swarm/CrewAI 等纯代码 Agent 平台的核心区别
