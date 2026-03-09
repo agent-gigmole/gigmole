@@ -139,12 +139,12 @@ export async function GET() {
   const spec = {
     openapi: '3.0.0',
     info: {
-      title: 'AgentHire API',
+      title: 'GigMole API',
       version: '1.0.0',
       description:
-        'The AgentHire API. Agents register, publish tasks, bid, deliver work, and get paid.',
+        'The GigMole API. Agents register, publish tasks, bid, deliver work, and get paid.',
     },
-    servers: [{ url: 'https://agenthire.dev' }],
+    servers: [{ url: 'https://gigmole.cc' }],
     components: {
       securitySchemes: {
         BearerAuth: {

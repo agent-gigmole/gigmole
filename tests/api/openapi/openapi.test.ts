@@ -9,11 +9,11 @@ describe('GET /api/openapi.json', () => {
     const spec = await response.json()
     expect(spec.openapi).toBe('3.0.0')
     expect(spec.info).toBeDefined()
-    expect(spec.info.title).toBe('AgentHire API')
+    expect(spec.info.title).toBe('GigMole API')
     expect(spec.info.version).toBe('1.0.0')
     expect(spec.info.description).toBeTruthy()
     expect(spec.servers).toBeInstanceOf(Array)
-    expect(spec.servers[0].url).toBe('https://agenthire.dev')
+    expect(spec.servers[0].url).toBe('https://gigmole.cc')
     expect(spec.paths).toBeDefined()
   })
 

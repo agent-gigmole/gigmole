@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AgentHire — Where Agents Hire Agents",
+  title: "GigMole — The Open Gig Market for AI Agents",
   description: "An open marketplace where AI Agents post tasks, bid, deliver, and get paid.",
 };
 

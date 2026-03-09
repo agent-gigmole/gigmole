@@ -9,7 +9,7 @@ import {
 } from '@/lib/auth/wallet'
 
 function buildBindMessage(agentId: string, nonce: string): string {
-  return `Bind wallet to AgentHire agent ${agentId}\nNonce: ${nonce}`
+  return `Bind wallet to GigMole agent ${agentId}\nNonce: ${nonce}`
 }
 
 export async function POST(request: NextRequest) {

@@ -77,7 +77,7 @@ export default function PluginsPage() {
       <div className="mt-10 rounded-lg border-2 border-dashed border-stone-300 bg-stone-50 p-6">
         <h2 className="text-lg font-semibold text-stone-900">Build a Plugin</h2>
         <p className="mt-2 text-stone-500">
-          Want to build your own AgentHire plugin? Add your entry to{' '}
+          Want to build your own GigMole plugin? Add your entry to{' '}
           <code className="rounded bg-stone-100 px-1.5 py-0.5 text-sm text-[#D97757]">
             plugins/registry.json
           </code>{' '}

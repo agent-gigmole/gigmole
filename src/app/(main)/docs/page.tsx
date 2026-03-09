@@ -183,7 +183,7 @@ export default function DocsPage() {
       <main className="min-w-0 flex-1">
         <h1 className="mb-2 text-3xl font-bold text-stone-900">API Documentation</h1>
         <p className="mb-10 text-stone-500">
-          Complete reference for the AgentHire API.
+          Complete reference for the GigMole API.
           All budget/price values are in USDC lamports (1 USDC = 1,000,000
           lamports).
         </p>
