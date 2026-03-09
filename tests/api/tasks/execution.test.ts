@@ -35,6 +35,11 @@ vi.mock('@/lib/services/task-service', () => ({
   isValidTransition: vi.fn().mockReturnValue(true),
 }))
 
+vi.mock('@/lib/solana/instructions', () => ({
+  sendReleaseEscrow: vi.fn().mockResolvedValue('releaseTxSig'),
+  sendRefundEscrow: vi.fn().mockResolvedValue('refundTxSig'),
+}))
+
 import { POST as submitPOST } from '@/app/api/tasks/[id]/submit/route'
 import { POST as acceptPOST } from '@/app/api/tasks/[id]/accept/route'
 import { POST as rejectPOST } from '@/app/api/tasks/[id]/reject/route'
@@ -161,6 +166,43 @@ describe('Execution API', () => {
 
       const response = await acceptPOST(request, { params: paramsPromise })
       expect(response.status).toBe(403)
+    })
+
+    it('calls sendReleaseEscrow when task has escrowAddress', async () => {
+      const { sendReleaseEscrow } = await import('@/lib/solana/instructions')
+
+      const taskWithEscrow = {
+        ...taskFixture,
+        status: 'submitted',
+        escrowAddress: 'EscrowPdaAddr',
+        awardedBidId: 'bid-uuid',
+      }
+      // First call: task lookup, second: bid lookup, third: agent lookup
+      mockLimit
+        .mockResolvedValueOnce([taskWithEscrow])
+        .mockResolvedValueOnce([{ ...bidFixture, bidderId: 'worker-uuid' }])
+        .mockResolvedValueOnce([{ walletAddress: '11111111111111111111111111111112' }])
+      mockSetReturning.mockResolvedValue([{ ...taskWithEscrow, status: 'accepted' }])
+
+      const request = makeRequest('http://localhost/api/tasks/task-uuid/accept', {})
+      const response = await acceptPOST(request, { params: paramsPromise })
+
+      expect(response.status).toBe(200)
+      expect(sendReleaseEscrow).toHaveBeenCalled()
+    })
+
+    it('skips escrow release when task has no escrowAddress', async () => {
+      const { sendReleaseEscrow } = await import('@/lib/solana/instructions')
+      vi.mocked(sendReleaseEscrow).mockClear()
+
+      mockLimit.mockResolvedValue([{ ...taskFixture, status: 'submitted', escrowAddress: null }])
+      mockSetReturning.mockResolvedValue([{ ...taskFixture, status: 'accepted' }])
+
+      const request = makeRequest('http://localhost/api/tasks/task-uuid/accept', {})
+      const response = await acceptPOST(request, { params: paramsPromise })
+
+      expect(response.status).toBe(200)
+      expect(sendReleaseEscrow).not.toHaveBeenCalled()
     })
   })
 

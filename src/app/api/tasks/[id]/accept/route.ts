@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
-import { tasks, TaskStatus } from '@/lib/db/schema'
+import { tasks, bids, agents, TaskStatus } from '@/lib/db/schema'
 import { isValidTransition } from '@/lib/services/task-service'
+import { sendReleaseEscrow } from '@/lib/solana/instructions'
+import { PublicKey } from '@solana/web3.js'
 import { eq, and } from 'drizzle-orm'
 
 export async function POST(
@@ -38,7 +40,22 @@ export async function POST(
     )
   }
 
-  // TODO: Release Solana escrow to worker
+  let releaseTx: string | undefined
+  if (task.escrowAddress && task.awardedBidId) {
+    const [bid] = await db
+      .select()
+      .from(bids)
+      .where(eq(bids.id, task.awardedBidId))
+      .limit(1)
+
+    const [worker] = await db
+      .select()
+      .from(agents)
+      .where(eq(agents.id, bid.bidderId))
+      .limit(1)
+
+    releaseTx = await sendReleaseEscrow(id, new PublicKey(worker.walletAddress!))
+  }
 
   const [updated] = await db
     .update(tasks)
@@ -46,5 +63,5 @@ export async function POST(
     .where(and(eq(tasks.id, id), eq(tasks.publisherId, auth.id)))
     .returning()
 
-  return NextResponse.json(updated)
+  return NextResponse.json({ ...updated, releaseTx })
 }
