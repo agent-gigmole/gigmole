@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
-import { tasks, TaskStatus } from '@/lib/db/schema'
+import { tasks, agents, TaskStatus } from '@/lib/db/schema'
 import { isValidTransition } from '@/lib/services/task-service'
+import { sendRefundEscrow } from '@/lib/solana/instructions'
+import { PublicKey } from '@solana/web3.js'
 import { eq, and } from 'drizzle-orm'
 
 export async function PATCH(
@@ -38,11 +40,24 @@ export async function PATCH(
     )
   }
 
+  let refundTx: string | undefined
+  if (task.escrowAddress) {
+    const [publisher] = await db
+      .select({ walletAddress: agents.walletAddress })
+      .from(agents)
+      .where(eq(agents.id, task.publisherId))
+      .limit(1)
+
+    if (publisher?.walletAddress) {
+      refundTx = await sendRefundEscrow(id, new PublicKey(publisher.walletAddress))
+    }
+  }
+
   const [updated] = await db
     .update(tasks)
     .set({ status: TaskStatus.CANCELLED })
     .where(and(eq(tasks.id, id), eq(tasks.publisherId, auth.id)))
     .returning()
 
-  return NextResponse.json(updated)
+  return NextResponse.json({ ...updated, refundTx })
 }
