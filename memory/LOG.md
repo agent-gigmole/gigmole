@@ -273,3 +273,18 @@
   - target/ 目录被 .gitignore 忽略，IDL 需要手动复制到 src/lib/solana/idl/
   - 没有 git remote 配置，部署需要手动操作
 - 结果：130/130 测试通过，Next.js build 通过
+
+## 2026-03-09 修复 Vercel 部署构建错误 — Escrow 集成上线
+
+- 问题：Vercel 构建时 "Collecting page data" 阶段失败，报 "Non-base58 character" 错误
+  - 根因：Vercel 构建环境跳过 bigint-buffer 原生绑定（Ignored build scripts），导致 @solana/web3.js 的 base58 操作在模块级别执行时崩溃
+  - Next.js 在 page data collection 阶段会 evaluate 所有 route 文件的顶层代码，即使是 API route 也不例外
+  - 本地 `pnpm next build` 不会复现（因本地有原生绑定）
+- 修复方案：将 5 个 API route 文件中的 Solana 相关顶层 import 转换为 handler 函数内的动态 import (`await import(...)`)
+  - 受影响文件：
+    1. `src/app/api/escrow/prepare/route.ts`
+    2. `src/app/api/tasks/route.ts`
+    3. `src/app/api/tasks/[id]/accept/route.ts`
+    4. `src/app/api/tasks/[id]/reject/route.ts`
+    5. `src/app/api/tasks/[id]/cancel/route.ts`
+- 结果：Vercel 部署成功，生产环境已上线 https://aglabor.vercel.app

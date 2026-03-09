@@ -44,7 +44,7 @@
   - Batch 4 (Tasks 10-12): Dashboard data APIs + Dashboard 页面 + Header 登录状态
   - Batch 5 (Task 13): 环境变量配置 + Build + Deploy + E2E 验证
 
-- **Escrow Integration 全部完成（13 个任务）**
+- **Escrow Integration 全部完成并部署（13 个任务）**
   - Task 1: Anchor 合约修改 — worker 替换为 platform_authority，删除 assign_worker
   - Task 2: 构建并部署到 Devnet（Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh），IDL 复制到 src/lib/solana/idl/escrow.json
   - Task 3: Platform authority keypair loader（src/lib/solana/platform-authority.ts）
@@ -57,6 +57,8 @@
   - Task 11: Cancel 路由调用 sendRefundEscrow
   - Task 12: 更新 api-docs.ts
   - Task 13: 生成 platform authority keypair，添加环境变量到 .env
+  - **Vercel 部署修复**: 5 个 API route 文件的 Solana 顶层 import 改为动态 import，解决构建错误
+  - **生产环境已上线**: https://aglabor.vercel.app
 
 ## 已知最佳结果
 
@@ -67,13 +69,13 @@
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（含 platform_authority 模式）
 - 数据库 9 张表已在 Supabase 中创建（含 platform_config）
-- Vercel 部署成功，生产地址可访问
+- Vercel 部署成功，生产地址可访问，Escrow 集成已上线
 - Plugin registry (plugins/registry.json) 已建立
 - Next.js build 通过
 
 ## 当前阶段
 
-- Escrow Integration 全部 13 个任务完成
+- Escrow Integration 全部 13 个任务完成并部署到生产环境
 - User System 全部 13 个任务完成并部署
 - Admin Dashboard 全部 15 个任务完成并部署
 - 平台基础设施升级全部 13 个任务完成并部署

@@ -49,6 +49,30 @@
 - 示例：`node -e "const pg = require('postgres'); const sql = pg(process.env.DATABASE_URL, {prepare:false}); await sql\`CREATE TABLE ...\`; await sql.end()"`
 - 这个 bug 在新增表时容易触发（已有表不受影响），因为 drizzle-kit 会 introspect 现有 schema 并处理 check constraints
 
+## vercel-solana-dynamic-import
+
+- **问题**: Vercel 构建环境跳过原生绑定（`Ignored build scripts`），导致 `bigint-buffer` 缺失。`@solana/web3.js` 在模块加载时会执行 base58 操作，触发 `Non-base58 character` 错误
+- **触发时机**: Next.js 构建的 "Collecting page data" 阶段会 evaluate 所有 route 文件的**顶层代码**，即使是 API route 也不例外
+- **本地不可复现**: `pnpm next build` 在本地不会出错，因为本地有原生绑定。只在 Vercel 构建环境中出现
+- **修复方案**: 将 `@solana/web3.js`、`@solana/spl-token`、`@/lib/solana/*` 的 import 从顶层移到 handler 函数内部，使用 `await import(...)` 动态加载
+  ```ts
+  // 错误 ❌ — 顶层 import 会在 page data collection 时执行
+  import { Connection } from '@solana/web3.js';
+
+  // 正确 ✅ — handler 内动态 import，只在请求时执行
+  export async function POST(req: Request) {
+    const { Connection } = await import('@solana/web3.js');
+    // ...
+  }
+  ```
+- **受影响文件（本项目 5 个）**:
+  - `src/app/api/escrow/prepare/route.ts`
+  - `src/app/api/tasks/route.ts`
+  - `src/app/api/tasks/[id]/accept/route.ts`
+  - `src/app/api/tasks/[id]/reject/route.ts`
+  - `src/app/api/tasks/[id]/cancel/route.ts`
+- **推广规则**: 任何依赖原生绑定（native addon）的包，在 Vercel API route 中都应使用动态 import，避免构建阶段加载
+
 ## supabase-unique-constraint-duplicate-data
 
 - 给已有列添加 `.unique()` constraint 时，如果 Supabase 中已存在重复数据，push 会失败

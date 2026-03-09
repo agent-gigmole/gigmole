@@ -36,9 +36,11 @@ Escrow Integration 全部完成。等待下一个任务。
 
 无
 
+- [x] **Vercel 部署修复**: Solana 顶层 import 改为动态 import，构建成功，生产环境已上线
+
 ## 状态
 
-Escrow Integration 全部 13 个任务完成。130/130 测试通过。Next.js build 通过。
+Escrow Integration 全部 13 个任务完成并部署到生产环境。130/130 测试通过。Vercel 部署成功。
 
 ## 阻塞项
 

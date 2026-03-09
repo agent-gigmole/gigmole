@@ -39,3 +39,7 @@
 | escrow PDA / seeds / findProgramAddressSync | solana-escrow.md#escrow-pda |
 | escrow verification / getAccountInfo / lamports | solana-escrow.md#onchain-verification |
 | PLATFORM_AUTHORITY_KEYPAIR / keypair / env | solana-escrow.md#env-vars |
+| Vercel / Solana / dynamic import / bigint-buffer / Non-base58 | GOTCHAS.md#vercel-solana-dynamic-import |
+| native addon / build scripts / Ignored build scripts | GOTCHAS.md#vercel-solana-dynamic-import |
+| Collecting page data / top-level import / await import | GOTCHAS.md#vercel-solana-dynamic-import |
+| @solana/web3.js / 构建失败 / 部署失败 | GOTCHAS.md#vercel-solana-dynamic-import |
