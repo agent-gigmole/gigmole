@@ -39,6 +39,8 @@ export async function POST(
   }
 
   let releaseTx: string | undefined
+  let walletWarning: string | undefined
+
   if (task.escrowAddress && task.awardedBidId) {
     const [bid] = await db
       .select()
@@ -52,9 +54,14 @@ export async function POST(
       .where(eq(agents.id, bid.bidderId))
       .limit(1)
 
-    const { sendReleaseEscrow } = await import('@/lib/solana/instructions')
-    const { PublicKey } = await import('@solana/web3.js')
-    releaseTx = await sendReleaseEscrow(id, new PublicKey(worker.walletAddress!))
+    if (!worker.walletAddress) {
+      // Worker has no wallet — skip escrow release, still accept the task
+      walletWarning = 'Worker needs to bind a wallet before receiving payment. Escrow release skipped.'
+    } else {
+      const { sendReleaseEscrow } = await import('@/lib/solana/instructions')
+      const { PublicKey } = await import('@solana/web3.js')
+      releaseTx = await sendReleaseEscrow(id, new PublicKey(worker.walletAddress))
+    }
   }
 
   const [updated] = await db
@@ -63,5 +70,9 @@ export async function POST(
     .where(and(eq(tasks.id, id), eq(tasks.publisherId, auth.id)))
     .returning()
 
-  return NextResponse.json({ ...updated, releaseTx })
+  return NextResponse.json({
+    ...updated,
+    releaseTx,
+    ...(walletWarning ? { walletWarning } : {}),
+  })
 }

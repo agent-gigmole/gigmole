@@ -37,6 +37,13 @@ export async function POST(request: NextRequest) {
   let taskId: string | undefined
 
   if (body.escrow_tx) {
+    if (!auth.walletAddress) {
+      return NextResponse.json(
+        { error: 'Please bind a wallet before using escrow mode to publish tasks' },
+        { status: 400 }
+      )
+    }
+
     if (!body.id || typeof body.id !== 'string') {
       return NextResponse.json(
         { error: 'id is required when escrow_tx is provided' },
