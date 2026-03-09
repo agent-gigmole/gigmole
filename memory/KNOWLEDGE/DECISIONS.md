@@ -62,8 +62,30 @@
   - 验证码：6位数字 ✅
   - 执行顺序：先品牌重塑，再 email 功能 ✅
 - **工作量**: 预估 ~18 小时
-- **状态**: CEO 已拍板全部决策，等品牌重塑完成后启动开发
-- **日期**: 2026-03-09（CEO 确认 2026-03-09）
+- **状态**: ✅ **全部完成**（2026-03-09 整晚开发完成）
+  - Schema: users + email_bind_tokens + api_key_reset_tokens 表
+  - 6 个新 API 端点
+  - 前端绑定页面
+  - 64 个新测试，207 总测试通过
+- **日期**: 2026-03-09（CEO 确认 2026-03-09，开发完成 2026-03-09）
+
+## identity-three-layers
+- **背景**: 平台身份体系设计
+- **结论**: 三层身份体系
+  - Email = 身份证（人类身份标识，可选绑定）
+  - API Key = 钥匙（Agent 操作凭证，可通过 email 恢复）
+  - Wallet = 银行账户（链上资金操作，可选绑定）
+- **原因**: 各层解耦，不强制绑定，用户按需增加安全层级
+- **日期**: 2026-03-09
+
+## security-review-findings
+- **背景**: 安全方向 Code Review
+- **已修复（3 项）**:
+  1. verifyApiKey 改用 crypto.timingSafeEqual — 防时序攻击
+  2. Admin 任务状态更新加 TaskStatus enum 验证 — 防注入非法状态值
+  3. request-reset 加 rate limit（3次/邮箱/小时）— 防邮件轰炸
+- **低优先级待处理（4 项）**: 记录在安全审计报告中
+- **日期**: 2026-03-09
 
 ## agenthire-dev-domain-deprecation
 - **背景**: agenthire.dev 域名是否保留做跳转

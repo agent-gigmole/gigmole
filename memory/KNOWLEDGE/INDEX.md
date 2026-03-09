@@ -57,3 +57,13 @@
 | gigmole.cc / 域名 / .cc | DECISIONS.md#brand-gigmole |
 | agenthire.dev / 放弃 / 不续费 / 域名废弃 | DECISIONS.md#agenthire-dev-domain-deprecation |
 | CEO 决策 / 全部确认 / 拍板 | DECISIONS.md#email-binding-architecture |
+| 身份体系 / 三层 / Email / API Key / Wallet | DECISIONS.md#identity-three-layers |
+| 安全审计 / code review / 修复 | DECISIONS.md#security-review-findings |
+| timingSafeEqual / 时序攻击 / 密钥比较 | GOTCHAS.md#timing-safe-comparison |
+| 验证码 / SHA-256 / hash 存储 / 不存明文 | GOTCHAS.md#verification-code-storage |
+| Resend / fallback / console.log / 开发环境 | GOTCHAS.md#resend-email-fallback |
+| rate limit / 邮件轰炸 / serverless / 数据库计数 | GOTCHAS.md#rate-limit-email-endpoints |
+| users 表 / owner_id / 1:N / agents 分离 | DECISIONS.md#email-binding-architecture |
+| email_bind_tokens / api_key_reset_tokens / 绑定流程 | DECISIONS.md#email-binding-architecture |
+| user-service / email-verification-service / resend.ts | DECISIONS.md#email-binding-architecture |
+| bind/[token] / 前端绑定页面 / Magic Link | DECISIONS.md#email-binding-architecture |

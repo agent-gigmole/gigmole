@@ -2,11 +2,11 @@
 
 ## 当前任务
 
-邮箱绑定 + API Key 恢复功能开发
+部署 + 后续功能排期
 
 ## 目标
 
-实现 email 绑定功能，让用户可以通过邮箱恢复 API Key，使用 Resend 邮件服务和 Magic Link + 轮询方案。
+推送品牌重塑 + email 绑定到 GitHub，配置生产环境，排期后续功能。
 
 ## 已完成步骤
 
@@ -44,25 +44,37 @@
   - [x] Tagline 确认："Agents, Co-working."
   - [x] 测试通过（143）+ build 通过
 - [x] **Tagline 确认**："Agents, Co-working."
+- [x] **邮箱绑定 + API Key 恢复功能开发**（整晚完成）
+  - [x] users 表设计 + 创建（人类身份，1:N agents）
+  - [x] agents 表新增 owner_id FK → users.id
+  - [x] email_bind_tokens 表 + api_key_reset_tokens 表
+  - [x] Drizzle migration: drizzle/0002_sparkling_mindworm.sql
+  - [x] Resend 邮件服务集成（fallback console.log）
+  - [x] 验证码服务（SHA-256 hash，timing-safe 比较）
+  - [x] Magic Link + 轮询绑定方案（4 个端点）
+  - [x] API Key 恢复流程（2 个端点）
+  - [x] 注册 API 支持可选 email 参数
+  - [x] 前端绑定页面：bind/[token]/page.tsx
+  - [x] 64 个新测试，总计 207 个测试全部通过
+- [x] **安全 Code Review**
+  - [x] verifyApiKey 改用 crypto.timingSafeEqual
+  - [x] Admin 任务状态更新加 TaskStatus enum 验证
+  - [x] request-reset 加 rate limit（3次/邮箱/小时）
+  - [x] 12 个安全领域验证通过
 
 ## 待完成步骤
 
-- [ ] **推送品牌重塑到 GitHub**（触发 Vercel 自动部署）
-- [ ] **邮箱绑定 + API Key 恢复功能开发**（~18h）
-  - [ ] users 表设计 + 创建（人类身份，1:N agents）
-  - [ ] Resend 邮件服务集成
-  - [ ] Magic Link 生成 + 发送端点
-  - [ ] Magic Link 验证 + 轮询端点
-  - [ ] Email 绑定 API（绑定/解绑邮箱）
-  - [ ] API Key 恢复流程（邮箱验证 → 重新生成 key）
-  - [ ] 前端页面（绑定邮箱 UI、恢复 key UI）
-  - [ ] 测试 + build + 部署
-- [ ] **安全方向 code review**（email 完成后）
+- [ ] **推送品牌重塑 + email 绑定到 GitHub**（触发 Vercel 自动部署）
+- [ ] **生产环境配置**
+  - [ ] Supabase schema push（新增 3 张表 + agents 表变更）
+  - [ ] Vercel 添加 RESEND_API_KEY 环境变量
+- [ ] **安全审计 4 个低优先级项**（后续处理）
+- [ ] **分销/佣金系统开发**（待排期，43-48h）
 
 ## 状态
 
-品牌重塑全部完成（代码 + tagline），待推送 GitHub。CEO 安排整晚工作：先开发 email 绑定功能，再做安全 code review。CEO 今天休息。
+整晚 CTO 工作全部完成。Email 绑定系统开发 + 安全 Code Review 均已完成。207 个测试全部通过。待推送 GitHub 并配置生产环境。
 
 ## 阻塞项
 
-- 无（所有决策已确认）
+- 无（所有开发工作已完成，待部署）

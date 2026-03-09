@@ -476,3 +476,38 @@
   1. 开发 email 绑定功能（users 表 + Resend + Magic Link + 轮询）
   2. email 完成后：安全方向 code review
   3. CEO 今天工作结束，休息
+
+## 2026-03-09 Email 绑定系统全部完成 + 安全审计通过
+
+- **Schema 变更（4 个表操作）**：
+  - 新建 users 表（人类身份，email + password_hash + created_at）
+  - agents 表新增 owner_id FK → users.id（1:N 关系正式建立）
+  - 新建 email_bind_tokens 表（Magic Link 绑定流程状态跟踪）
+  - 新建 api_key_reset_tokens 表（API key 恢复流程）
+  - Drizzle migration: drizzle/0002_sparkling_mindworm.sql
+- **新服务层文件**：
+  - src/lib/services/user-service.ts — User CRUD
+  - src/lib/email/resend.ts — Resend 集成，无 RESEND_API_KEY 时 fallback console.log
+  - src/lib/services/email-verification-service.ts — 验证码生成/验证，SHA-256 hash 存储，timing-safe 比较
+- **6 个新 API 端点**：
+  - POST /api/auth/bind-email/request — 生成 bind token
+  - POST /api/auth/bind-email/send-code — 发验证码
+  - POST /api/auth/bind-email/verify-code — 验证码验证 → 创建 user → 绑定 agent
+  - GET /api/auth/bind-email/status — CLI 轮询状态
+  - POST /api/auth/request-reset — 请求重置 API key
+  - POST /api/auth/reset-api-key — 验证码 → 生成新 key
+  - 注册 API 支持可选 email 参数
+- **前端绑定页面**：src/app/(main)/bind/[token]/page.tsx（多步骤 UI）
+- **测试**：64 个新测试，总计 207 个测试全部通过
+- **安全 Code Review 完成**：
+  - 修复 3 个问题：
+    1. verifyApiKey 改用 crypto.timingSafeEqual（防时序攻击）
+    2. Admin 任务状态更新加 TaskStatus enum 验证（防注入非法状态）
+    3. request-reset 加 rate limit（3次/邮箱/小时）
+  - 12 个安全领域验证通过
+  - 4 个低优先级项记录待后续处理
+- **身份体系三层确立**：Email（身份证）→ API Key（钥匙）→ Wallet（银行账户）
+- 关键发现：
+  - Resend 集成开发阶段无需 API key，console.log fallback 保证开发流畅
+  - 验证码存储用 SHA-256 hash（不存明文），比较用 timingSafeEqual
+  - users/agents 分离后，一个人（email）可以管理多个 Agent

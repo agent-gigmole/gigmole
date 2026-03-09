@@ -95,3 +95,41 @@
 - 返回 `walletWarning` 字段通知调用方 worker 尚未绑定钱包
 - 这种降级设计适用于：链上操作是可选的增强功能，核心业务流程不应因链上依赖而阻塞
 - 类似的设计也应用于 POST /api/tasks：带 escrow_tx 但请求者无钱包时返回 400（前置校验）
+
+## timing-safe-comparison
+
+- **所有密钥/token 比较必须使用 crypto.timingSafeEqual**，不能用 `===`
+- `===` 比较会在第一个不匹配字符处短路返回，攻击者可通过响应时间差逐字节猜测 API key
+- 需要注意 timingSafeEqual 要求两个 Buffer 长度相同，不同长度时需要先 hash 再比较
+- 受影响的场景：verifyApiKey、验证码比较、token 验证
+- 代码示例：
+  ```ts
+  // 错误 ❌
+  if (storedHash === inputHash) { ... }
+
+  // 正确 ✅
+  const a = Buffer.from(storedHash, 'hex');
+  const b = Buffer.from(inputHash, 'hex');
+  if (crypto.timingSafeEqual(a, b)) { ... }
+  ```
+
+## verification-code-storage
+
+- 验证码（6位数字）存储时必须用 SHA-256 hash，不能存明文
+- 数据库泄露时明文验证码直接暴露，hash 后即使数据库泄露也安全
+- 比较时对用户输入做同样的 hash，再用 timingSafeEqual 比较 hash 值
+- 验证码要有过期时间（如 10 分钟）+ 使用次数限制
+
+## resend-email-fallback
+
+- Resend 邮件服务在开发环境可能没有 API key 配置
+- 解决方案：无 RESEND_API_KEY 环境变量时，fallback 到 console.log 打印邮件内容
+- 这样开发/测试时无需配置邮件服务，生产环境必须配置
+- 代码位置：src/lib/email/resend.ts
+
+## rate-limit-email-endpoints
+
+- 所有发送邮件的端点必须加 rate limit，防止邮件轰炸
+- request-reset 端点：3次/邮箱/小时
+- 实现方式：数据库查询最近 1 小时内该邮箱的请求次数
+- 不要依赖内存中的 rate limiter（serverless 环境每次请求可能是新实例）

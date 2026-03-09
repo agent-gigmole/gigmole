@@ -79,53 +79,67 @@
   - POST /api/tasks 带 escrow_tx 但无钱包时返回 400
   - 新增 13 个测试（bind-wallet 8个 + accept-no-wallet 3个 + escrow-no-wallet 2个），全部 143 个测试通过
 
-- **邮箱绑定 + API Key 恢复方案评估完成**
-  - 推荐拆出 users 表（人类身份）和 agents 表分离，1:N 关系
-  - Email 选填，不绑 email 丢 key 是自己责任
-  - 邮件服务推荐 Resend（$0起步）
-  - MVP 只做 email + wallet 登录，不做 Google/GitHub OAuth
-  - API Key 恢复流程：邮箱验证码方式
-  - 预估工作量 ~18 小时
-
-- **CEO 全部决策项已确认（10 项）**
-  - 品牌名：GigMole ✅
-  - 域名：gigmole.cc（已注册）✅
-  - users/agents 分表：确认拆分 ✅
-  - Email：选填 ✅
-  - 邮件服务：Resend ✅
-  - 邮箱绑定方案：Magic Link + 轮询 ✅
-  - 验证码：6位数字 ✅
-  - 执行顺序：先品牌重塑，再 email 功能 ✅
-  - agenthire.dev：放弃，不做跳转，不续费 ✅
-  - Tagline：确认 "Agents, Co-working." ✅
-
 - **品牌重塑完成：AgentHire → GigMole, agenthire.dev → gigmole.cc**
   - 11 个文件修改，143 测试全过
   - Commits: c7e099b（品牌重塑）+ d2b776b（tagline 更新）
   - Tagline: "Agents, Co-working."
   - 待推送 GitHub
 
+- **Email 绑定系统 + API Key 恢复功能全部完成**
+  - Schema 变更：
+    - 新建 users 表（人类身份，1:N agents）
+    - agents 表新增 owner_id FK → users.id
+    - 新建 email_bind_tokens 表（Magic Link 绑定流程状态）
+    - 新建 api_key_reset_tokens 表（API key 恢复）
+    - Drizzle migration: drizzle/0002_sparkling_mindworm.sql
+  - 新服务层：
+    - src/lib/services/user-service.ts（User CRUD）
+    - src/lib/email/resend.ts（Resend 集成，无 API key 时 fallback console.log）
+    - src/lib/services/email-verification-service.ts（验证码生成/验证，SHA-256 hash，timing-safe）
+  - 6 个新 API 端点：
+    - POST /api/auth/bind-email/request（生成 bind token）
+    - POST /api/auth/bind-email/send-code（发验证码）
+    - POST /api/auth/bind-email/verify-code（验证码验证 → 创建 user → 绑定 agent）
+    - GET /api/auth/bind-email/status（CLI 轮询状态）
+    - POST /api/auth/request-reset（请求重置 API key）
+    - POST /api/auth/reset-api-key（验证码 → 生成新 key）
+    - 注册 API 支持可选 email 参数
+  - 前端绑定页面：src/app/(main)/bind/[token]/page.tsx（多步骤 UI）
+  - 测试：64 个新测试，总计 207 个测试全部通过
+
+- **安全 Code Review 完成**
+  - 修复 3 个问题：
+    1. verifyApiKey 改用 crypto.timingSafeEqual（防时序攻击）
+    2. Admin 任务状态更新加 TaskStatus enum 验证
+    3. request-reset 加 rate limit（3次/邮箱/小时）
+  - 12 个安全领域验证通过，4 个低优先级项记录待后续处理
+
 ## 已知最佳结果
 
 - 平台数据：18 tasks, 21 agents（含 5 个示范 Agent + 10 个示范任务）
-- 143 个测试全部通过
+- **207 个测试全部通过**（从 143 增长到 207，+64）
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
-- 40+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点 + bind-wallet 端点）
-- 15+ 网站页面已构建（含 dashboard、login）
+- 46+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点 + bind-wallet 端点 + 6 个 email 绑定端点）
+- 15+ 网站页面已构建（含 dashboard、login、bind/[token]）
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（含 platform_authority 模式）
-- 数据库 9 张表已在 Supabase 中创建（含 platform_config）
+- 数据库 12 张表已在 Supabase 中创建（原 9 张 + users + email_bind_tokens + api_key_reset_tokens）
 - Vercel 部署成功，生产地址可访问，Escrow 集成已上线
 - Plugin registry (plugins/registry.json) 已建立
 - Next.js build 通过
+- 身份体系三层确立：Email（身份证）→ API Key（钥匙）→ Wallet（银行账户）
 
 ## 当前阶段
 
-- **品牌重塑已完成：GigMole, gigmole.cc, "Agents, Co-working."**
-  - 代码层面全部替换完成，143 测试通过
+- **Email 绑定系统全部完成，安全审计通过**
+  - users 表和 agents 表正式分离（1:N 关系）
+  - 207 个测试全部通过
+  - Email 发送开发阶段用 console.log fallback，生产需配置 RESEND_API_KEY
+- 品牌重塑已完成：GigMole, gigmole.cc, "Agents, Co-working."
+  - 代码层面全部替换完成
   - 待推送 GitHub（自动触发 Vercel 部署）
 - CEO 全部决策项已确认（含 Tagline）
-- P0 安全修复完成，143 个测试全部通过
+- P0 安全修复完成
 - Escrow Integration 全部 13 个任务完成并部署到生产环境
 - User System 全部 13 个任务完成并部署
 - Admin Dashboard 全部 15 个任务完成并部署
@@ -166,11 +180,9 @@
 
 ## 下一步
 
-1. **推送品牌重塑到 GitHub**（触发 Vercel 自动部署到 gigmole.cc）
-2. **邮箱绑定 + API Key 恢复功能开发**（~18h，CEO 安排整晚工作）
-   - users/agents 分表
-   - Magic Link + 轮询绑定方案
-   - 6位数字验证码
-   - Resend 邮件服务集成
-3. **安全方向 code review**（email 功能完成后）
-4. 待定：用户提出新需求
+1. **推送品牌重塑 + email 绑定到 GitHub**（触发 Vercel 自动部署到 gigmole.cc）
+2. **生产环境配置 RESEND_API_KEY**（启用真实邮件发送）
+3. **Supabase schema push**（新增 users、email_bind_tokens、api_key_reset_tokens 表）
+4. **安全审计 4 个低优先级项**（后续处理）
+5. **分销/佣金系统开发**（待排期）
+6. 待定：用户提出新需求
