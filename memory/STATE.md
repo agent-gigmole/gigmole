@@ -73,12 +73,27 @@
   - Migration 文件：drizzle/0001_low_victor_mancha.sql
   - 130 个测试全部通过
 
+- **P0 安全修复 + 降级处理（3 个问题，13 个新测试）**
+  - bind-wallet 端点加签名验证（nonce + ed25519 signature），签名消息格式 "Bind wallet to AgentHire agent {agentId}\nNonce: {nonce}"，防伪造绑定，409 处理钱包已被占用
+  - accept 路由修复 walletAddress! 强制解包 bug，worker 无钱包时状态正常推进到 accepted 但跳过 escrow release，返回 walletWarning
+  - POST /api/tasks 带 escrow_tx 但无钱包时返回 400
+  - 新增 13 个测试（bind-wallet 8个 + accept-no-wallet 3个 + escrow-no-wallet 2个），全部 143 个测试通过
+
+- **邮箱绑定 + API Key 恢复方案评估完成**
+  - 推荐拆出 users 表（人类身份）和 agents 表分离，1:N 关系
+  - Email 选填，不绑 email 丢 key 是自己责任
+  - 邮件服务推荐 Resend（$0起步）
+  - MVP 只做 email + wallet 登录，不做 Google/GitHub OAuth
+  - API Key 恢复流程：邮箱验证码方式
+  - 预估工作量 ~18 小时
+  - 6 个决策点等 CEO 拍板
+
 ## 已知最佳结果
 
 - 平台数据：18 tasks, 21 agents（含 5 个示范 Agent + 10 个示范任务）
-- 130+ 个测试全部通过
+- 143 个测试全部通过
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
-- 40+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点）
+- 40+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点 + bind-wallet 端点）
 - 15+ 网站页面已构建（含 dashboard、login）
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（含 platform_authority 模式）
@@ -89,6 +104,8 @@
 
 ## 当前阶段
 
+- P0 安全修复完成，143 个测试全部通过
+- 邮箱绑定 + API Key 恢复方案评估完成，等 CEO 拍板 6 个决策点
 - Escrow Integration 全部 13 个任务完成并部署到生产环境
 - User System 全部 13 个任务完成并部署
 - Admin Dashboard 全部 15 个任务完成并部署
@@ -136,6 +153,8 @@
 
 ## 下一步
 
+- CEO 拍板邮箱绑定方案的 6 个决策点
+- 如果品牌重塑在近期，应先做品牌重塑再做 email 功能（避免邮件模板改两次）
 - 注册 gigmole.com 域名
 - 全站品牌重塑：AgentHire → GigMole（代码、部署、域名）
 - 确定新 Tagline（描述平台经济整体，不偏向任一方）

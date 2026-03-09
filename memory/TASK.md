@@ -2,11 +2,11 @@
 
 ## 当前任务
 
-无 — 等待新需求
+无 — 等待 CEO 拍板邮箱方案决策点 + 品牌重塑排期
 
 ## 目标
 
-referredBy 字段完成，品牌决策 GigMole 确认。等待域名注册和品牌重塑。
+P0 安全修复完成，邮箱方案评估完成。等 CEO 拍板 6 个决策点，以及品牌重塑排期。
 
 ## 已完成步骤
 
@@ -31,17 +31,25 @@ referredBy 字段完成，品牌决策 GigMole 确认。等待域名注册和品
 - [x] **referredBy 推荐人字段**：schema + 两个注册 API + migration
 - [x] **分销/佣金系统评估**：43-48h 工作量，建议初期 off-chain
 - [x] **定位调整 v2**：Agent 拥有真实世界资源
+- [x] **P0 修复：bind-wallet 签名验证**（nonce + ed25519，8 个测试）
+- [x] **P0 修复：accept 路由 walletAddress! 强制解包 bug**（降级处理 + walletWarning，3 个测试）
+- [x] **P0 修复：POST /api/tasks escrow 无钱包校验**（2 个测试）
+- [x] **邮箱绑定 + API Key 恢复方案评估**（~18h，6 个决策点待 CEO 拍板）
 
 ## 待完成步骤
 
+- [ ] CEO 拍板邮箱方案 6 个决策点
 - [ ] 注册 gigmole.com 域名
 - [ ] 全站品牌重塑：AgentHire → GigMole（代码、部署、域名）
 - [ ] 确定新 Tagline（描述平台经济整体，不偏向任一方）
+- [ ] 邮箱绑定 + API Key 恢复功能开发（~18h，待 CEO 决策后启动）
 
 ## 状态
 
-referredBy 推荐人字段已完成（schema + API + migration + 测试）。品牌 GigMole 确认，域名待注册。分销系统评估完成，暂不开发。
+P0 修复完成（143 测试通过）。邮箱方案评估完成，等 CEO 拍板。品牌重塑待排期（建议先于 email 功能）。
 
 ## 阻塞项
 
 - gigmole.com 域名需要用户手动注册
+- 邮箱方案 6 个决策点等 CEO 拍板
+- 品牌重塑时序问题：如果近期做品牌重塑，应先于 email 功能（避免邮件模板改两次）

@@ -412,3 +412,33 @@
 - 关键发现：
   - CTO 任务应用后台 agent 执行，不阻塞 CEO 对话
   - Tagline 策略：平台稀缺资源是 publisher，tagline 不应偏向任一方
+
+## 2026-03-09 P0 安全修复 + 降级处理（3 个问题，13 个新测试）
+
+- **bind-wallet 签名验证修复**
+  - 端点加了 nonce + ed25519 signature 验证，防伪造绑定
+  - 签名消息格式："Bind wallet to AgentHire agent {agentId}\nNonce: {nonce}"
+  - 和登录签名消息不同，防跨场景重放攻击
+  - 409 处理钱包已被其他 agent 占用
+  - 8 个新测试
+- **accept 路由 walletAddress! 强制解包 bug 修复**
+  - worker 无钱包时原来会崩溃（! 强制解包 null）
+  - 修复后：状态正常推进到 accepted，但跳过 escrow release 链上操作
+  - 返回 walletWarning 字段通知调用方
+  - 3 个新测试
+- **POST /api/tasks escrow 无钱包校验**
+  - 带 escrow_tx 但请求者无钱包时返回 400
+  - 2 个新测试
+- 结果：全部 143 个测试通过
+
+## 2026-03-09 邮箱绑定 + API Key 恢复方案评估
+
+- CTO 完成方案评估，推荐架构：
+  - 拆出 users 表（人类身份）和 agents 表分离，1:N 关系
+  - Email 选填，不绑 email 丢 key 是自己责任
+  - 邮件服务推荐 Resend（$0起步）
+  - MVP 只做 email + wallet 登录，不做 Google/GitHub OAuth
+  - API Key 恢复流程：邮箱验证码方式
+- 预估工作量 ~18 小时
+- 6 个决策点等 CEO 拍板
+- 关键发现：如果品牌重塑在近期，应先做品牌重塑再做 email 功能（避免邮件模板改两次）

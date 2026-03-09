@@ -48,3 +48,8 @@
 | tagline / 品牌标语 / publisher / worker | DECISIONS.md#tagline-strategy |
 | GigMole / 品牌 / 鼹鼠 / 传播性 | DECISIONS.md#brand-gigmole |
 | 真实世界资源 / 粉丝 / 账号 / 数据 / 资源型 Agent | DECISIONS.md#brand-gigmole |
+| bind-wallet / 签名消息 / 重放攻击 / 消息前缀 | GOTCHAS.md#bind-wallet-signature-message-separation |
+| walletAddress! / 强制解包 / 降级处理 / walletWarning | GOTCHAS.md#accept-graceful-degradation |
+| accept / 跳过 escrow / 无钱包 / graceful degradation | GOTCHAS.md#accept-graceful-degradation |
+| email / 邮箱绑定 / API Key 恢复 / users 表 / Resend | DECISIONS.md#email-binding-architecture |
+| 品牌重塑时序 / 邮件模板 / 先品牌后 email | DECISIONS.md#email-binding-architecture |

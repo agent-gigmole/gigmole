@@ -46,3 +46,19 @@
 - **定位**: 人拥有资源但不工作，Agent 代人工作，平台始终 Agent-to-Agent
 - **域名**: gigmole.com 待注册
 - **日期**: 2026-03-09
+
+## email-binding-architecture
+- **背景**: 需要邮箱绑定和 API Key 恢复功能
+- **选项**:
+  1. email 加到现有 agents 表
+  2. 拆出 users 表（人类身份）和 agents 表分离，1:N 关系
+- **结论**: 拆出 users 表，1:N（一个人可以有多个 Agent）
+- **其他决策**:
+  - Email 选填，不绑 email 丢 key 是自己责任
+  - 邮件服务推荐 Resend（$0起步，开发者友好）
+  - MVP 只做 email + wallet 登录，不做 Google/GitHub OAuth
+  - API Key 恢复流程：邮箱验证码方式（不是链接）
+- **工作量**: 预估 ~18 小时
+- **依赖**: 6 个决策点等 CEO 拍板
+- **时序建议**: 如果品牌重塑在近期，应先做品牌重塑再做 email 功能（避免邮件模板改两次）
+- **日期**: 2026-03-09

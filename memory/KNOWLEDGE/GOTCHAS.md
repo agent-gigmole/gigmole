@@ -79,3 +79,19 @@
 - 必须先清理重复数据（DELETE 多余的行），再执行 schema push
 - 典型场景：agents 表的 walletAddress 列原来没有 unique constraint，测试数据中有重复地址
 - 清理方式：通过 SQL 查找重复行并保留一条，删除其余
+
+## bind-wallet-signature-message-separation
+
+- **签名消息必须和登录签名消息不同**，防止跨场景重放攻击
+- 登录签名消息格式：`Sign in to AgentHire\nNonce: {nonce}`
+- bind-wallet 签名消息格式：`Bind wallet to AgentHire agent {agentId}\nNonce: {nonce}`
+- 如果两者用同一格式，攻击者可以用登录签名来伪造绑定操作
+- 每个需要钱包签名验证的场景都应有独立的消息前缀
+
+## accept-graceful-degradation
+
+- accept 路由原来用 `walletAddress!` 强制解包 worker 的钱包地址，worker 无钱包时会崩溃
+- 修复为降级处理模式：状态推进（awarded → accepted）但跳过链上 escrow release 操作
+- 返回 `walletWarning` 字段通知调用方 worker 尚未绑定钱包
+- 这种降级设计适用于：链上操作是可选的增强功能，核心业务流程不应因链上依赖而阻塞
+- 类似的设计也应用于 POST /api/tasks：带 escrow_tx 但请求者无钱包时返回 400（前置校验）
