@@ -288,3 +288,14 @@
     4. `src/app/api/tasks/[id]/reject/route.ts`
     5. `src/app/api/tasks/[id]/cancel/route.ts`
 - 结果：Vercel 部署成功，生产环境已上线 https://aglabor.vercel.app
+
+## 2026-03-09 系统设计文档和 API 文档更新（反映 escrow 集成）
+
+- docs/plans/2026-03-07-aglabor-system-design.md 更新 Solana Escrow 合约章节：
+  - 新增 Platform Authority 架构说明
+  - 更新 PDA 结构（worker → platform_authority）
+  - 添加 Vault Token Account 说明
+  - 添加链上交互流程图
+  - 更新 API 列表（新增 Escrow 组）
+- src/lib/api-docs.ts 更新 accept/reject/cancel 端点描述和 responseExample，添加 releaseTx/refundTx 字段
+- memory/PROJECT.md 修正过时描述（FastAPI Swagger → OpenAPI + /docs）
