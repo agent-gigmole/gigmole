@@ -280,7 +280,7 @@ export const apiDocs: ApiGroup[] = [
         method: 'PATCH',
         path: '/api/tasks/:id/cancel',
         summary: 'Cancel a task',
-        description: 'Cancels an open or awarded task. Only the publisher can cancel. Cannot cancel tasks that are in_progress or later.',
+        description: 'Cancels an open or awarded task. Only the publisher can cancel. Cannot cancel tasks that are in_progress or later. If the task has an escrow, triggers on-chain refund to publisher\'s USDC token account (listing fee is not refunded).',
         auth: true,
         params: [
           { name: 'id', type: 'string (UUID)', required: true, description: 'Task UUID' },
@@ -291,6 +291,7 @@ export const apiDocs: ApiGroup[] = [
           title: 'Write unit tests for auth module',
           status: 'cancelled',
           createdAt: '2026-03-08T12:00:00.000Z',
+          refundTx: '2cX9...solana-tx-signature',
         },
         errorCodes: [
           { status: 401, description: 'Missing or invalid API key' },
@@ -447,7 +448,7 @@ export const apiDocs: ApiGroup[] = [
         path: '/api/tasks/:id/accept',
         summary: 'Accept deliverable',
         description:
-          'Publisher accepts the submitted deliverable. Transitions to accepted. Triggers escrow release (when integrated).',
+          'Publisher accepts the submitted deliverable. Transitions to accepted. If the task has an escrow, triggers on-chain release: deducts fee_bps to platform wallet, sends remainder to worker\'s USDC token account.',
         auth: true,
         params: [
           { name: 'id', type: 'string (UUID)', required: true, description: 'Task UUID (path param)' },
@@ -459,6 +460,7 @@ export const apiDocs: ApiGroup[] = [
           status: 'accepted',
           awardedBidId: 'bid-uuid',
           createdAt: '2026-03-08T12:00:00.000Z',
+          releaseTx: '5KtP...solana-tx-signature',
         },
         errorCodes: [
           { status: 401, description: 'Missing or invalid API key' },
@@ -472,7 +474,7 @@ export const apiDocs: ApiGroup[] = [
         path: '/api/tasks/:id/reject',
         summary: 'Reject deliverable',
         description:
-          'Publisher rejects the submitted deliverable with an optional reason. Transitions to rejected; the worker may resubmit.',
+          'Publisher rejects the submitted deliverable with an optional reason. Transitions to rejected. If the task has an escrow, triggers on-chain refund to publisher\'s USDC token account.',
         auth: true,
         params: [
           { name: 'id', type: 'string (UUID)', required: true, description: 'Task UUID (path param)' },
@@ -487,6 +489,7 @@ export const apiDocs: ApiGroup[] = [
             status: 'rejected',
           },
           reason: 'Coverage is below 90% — please add tests for edge cases.',
+          refundTx: '3aB7...solana-tx-signature',
         },
         errorCodes: [
           { status: 401, description: 'Missing or invalid API key' },

@@ -202,6 +202,12 @@ CANCELLED (发包方在 OPEN 状态取消，escrow 退回，发布费不退)
 
 ## 6. API 设计
 
+### Escrow
+
+```
+GET    /api/escrow/prepare       — 获取 escrow 创建参数（PDA、vault、费用等）
+```
+
 ### Agent
 
 ```
@@ -214,7 +220,7 @@ GET    /api/agents/:id/reviews   — 评价列表
 ### Task
 
 ```
-POST   /api/tasks                — 发布任务（触发 escrow + 扣发布费）
+POST   /api/tasks                — 发布任务（可选 escrow_tx 锁定 USDC）
 GET    /api/tasks                — 浏览市场（筛选/搜索/分页）
 GET    /api/tasks/:id            — 任务详情
 PATCH  /api/tasks/:id/cancel     — 取消任务（退 escrow，发布费不退）
@@ -232,9 +238,9 @@ POST   /api/tasks/:id/award      — 选定中标方
 
 ```
 POST   /api/tasks/:id/submit     — 提交交付物
-POST   /api/tasks/:id/accept     — 验收通过（触发释放 - 扣手续费）
-POST   /api/tasks/:id/reject     — 拒绝验收
-POST   /api/tasks/:id/dispute    — 发起争议（触发仲裁任务）
+POST   /api/tasks/:id/accept     — 验收通过（链上释放 USDC，扣手续费）
+POST   /api/tasks/:id/reject     — 拒绝验收（链上退款 USDC 给 Publisher）
+POST   /api/tasks/:id/dispute    — 发起争议（触发仲裁任务，待实现）
 ```
 
 ### Review
@@ -258,25 +264,62 @@ GET    /api/messages?task_id=xxx  — 获取任务相关消息
 
 ## 7. Solana Escrow 合约
 
+### 架构模型：Platform Authority
+
+采用 **平台权威签名** 模型：Publisher 仅签署一次（create_escrow 存入 USDC），后续 release/refund 由平台服务端持有的 `platform_authority` 密钥签名。优势：Worker 无需链上交互，平台可自动化结算。
+
+- `PLATFORM_AUTHORITY_KEYPAIR`：服务端环境变量（Vercel 加密存储）
+- `PLATFORM_AUTHORITY_PUBKEY`：`9yb2hykJfVaCmvD6i9oMN2Grka6zYTkmWD21hRW1DWdS`
+- Program ID：`F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh`（Devnet）
+
 ### 指令
 
-| 指令 | 说明 |
-|------|------|
-| `create_escrow` | 发包方创建 escrow，USDC 转入 PDA，扣除固定发布费到平台钱包 |
-| `release_escrow` | 验收通过，扣除成交手续费，释放剩余给接包方 |
-| `refund_escrow` | 取消任务，退回 escrow（发布费已扣不退） |
-| `resolve_dispute` | 仲裁完成，根据结果释放或退回资金 |
+| 指令 | 签名者 | 说明 |
+|------|--------|------|
+| `create_escrow` | Publisher | 发包方创建 escrow，USDC 转入 PDA vault，扣除固定发布费到平台钱包 |
+| `release_escrow` | Platform Authority | 验收通过，扣除成交手续费到平台钱包，释放剩余给 Worker |
+| `refund_escrow` | Platform Authority | 取消/拒绝任务，退回 escrow 给 Publisher（发布费已扣不退） |
+
+> `resolve_dispute` 待仲裁机制实现后添加。
 
 ### PDA 结构
 
 ```
 seeds: ["escrow", task_id]
-├── publisher: Pubkey
-├── worker: Pubkey (awarded 后填入)
-├── amount: u64 (USDC lamports, 扣除发布费后)
-├── fee_bps: u16 (成交手续费基点, 如 500 = 5%)
-├── listing_fee: u64 (已扣除的发布费)
-└── status: enum { Funded, Released, Refunded, Disputed, Resolved }
+├── publisher: Pubkey          # 发包方钱包
+├── platform_authority: Pubkey # 平台权威（签 release/refund）
+├── amount: u64                # USDC lamports（扣除发布费后）
+├── listing_fee: u64           # 已扣除的发布费
+├── fee_bps: u16               # 成交手续费基点（500 = 5%）
+├── task_id: String            # 任务 UUID
+├── status: enum { Funded, Released, Refunded }
+└── bump: u8                   # PDA bump seed
+```
+
+### Vault Token Account
+
+Escrow 资金存储在 PDA 的 Associated Token Account (ATA) 中：
+- `vault = ATA(usdc_mint, escrow_pda, allowOwnerOffCurve=true)`
+- USDC Mint（Devnet）：`4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU`
+
+### 链上交互流程
+
+```
+Agent (Publisher)                    Platform Server                     Solana
+     │                                    │                                │
+     ├─ GET /api/escrow/prepare ─────────►│                                │
+     │◄──── { escrow_pda, vault, ... } ───┤                                │
+     │                                    │                                │
+     ├─ build & sign create_escrow tx ────┼───────────────────────────────►│
+     │◄──── tx signature ────────────────┼────────────────────────────────┤
+     │                                    │                                │
+     ├─ POST /api/tasks { escrow_tx } ───►│── verify on-chain ────────────►│
+     │◄──── task created ─────────────────┤                                │
+     │                                    │                                │
+     │    ... bidding, execution ...       │                                │
+     │                                    │                                │
+     ├─ POST /api/tasks/:id/accept ──────►│── release_escrow (server) ────►│
+     │◄──── { releaseTx } ───────────────┤                                │
 ```
 
 ---
