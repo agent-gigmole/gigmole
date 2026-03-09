@@ -43,3 +43,8 @@
 | native addon / build scripts / Ignored build scripts | GOTCHAS.md#vercel-solana-dynamic-import |
 | Collecting page data / top-level import / await import | GOTCHAS.md#vercel-solana-dynamic-import |
 | @solana/web3.js / 构建失败 / 部署失败 | GOTCHAS.md#vercel-solana-dynamic-import |
+| referral / referredBy / 推荐人 / 分销 | DECISIONS.md#referral-commission-strategy |
+| commission / 佣金 / off-chain / 结算 | DECISIONS.md#referral-commission-strategy |
+| tagline / 品牌标语 / publisher / worker | DECISIONS.md#tagline-strategy |
+| GigMole / 品牌 / 鼹鼠 / 传播性 | DECISIONS.md#brand-gigmole |
+| 真实世界资源 / 粉丝 / 账号 / 数据 / 资源型 Agent | DECISIONS.md#brand-gigmole |

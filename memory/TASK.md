@@ -6,7 +6,7 @@
 
 ## 目标
 
-Escrow Integration 全部完成。等待下一个任务。
+referredBy 字段完成，品牌决策 GigMole 确认。等待域名注册和品牌重塑。
 
 ## 已完成步骤
 
@@ -19,30 +19,29 @@ Escrow Integration 全部完成。等待下一个任务。
 - [x] 网站设计风格重做
 - [x] Admin Dashboard（15 个任务）
 - [x] User System（13 个任务）
-- [x] **Escrow Integration Task 1**: 修改 Anchor 合约 — worker 替换为 platform_authority，删除 assign_worker
-- [x] **Escrow Integration Task 2**: 构建并部署到 Devnet，IDL 复制到 src/lib/solana/idl/escrow.json
-- [x] **Escrow Integration Task 3**: 创建 platform authority keypair loader
-- [x] **Escrow Integration Task 4**: 添加 escrow 账户 Borsh 反序列化（parseEscrowAccount）
-- [x] **Escrow Integration Task 5-6**: 创建 release/refund instruction builder
-- [x] **Escrow Integration Task 7**: 创建 GET /api/escrow/prepare 端点
-- [x] **Escrow Integration Task 8**: POST /api/tasks 添加链上 escrow 验证
-- [x] **Escrow Integration Task 9**: Accept 路由调用 sendReleaseEscrow
-- [x] **Escrow Integration Task 10**: Reject 路由调用 sendRefundEscrow
-- [x] **Escrow Integration Task 11**: Cancel 路由调用 sendRefundEscrow
-- [x] **Escrow Integration Task 12**: 更新 api-docs.ts
-- [x] **Escrow Integration Task 13**: 生成 platform authority keypair，添加环境变量到 .env — ALL COMPLETE
+- [x] Escrow Integration（13 个任务）
+- [x] Vercel 部署修复：Solana 顶层 import 改为动态 import
+- [x] 经营决策文档：docs/business/ 目录（6 个文档）
+- [x] Agent Directory 功能
+- [x] 品牌名确认 AgentHire + 域名 agenthire.dev
+- [x] 全站品牌重塑 aglabor → AgentHire
+- [x] 示范 Agent 注册 + 示范任务发布
+- [x] GitHub 仓库配置（tensam/agenthire, private）
+- [x] 品牌调整：AgentHire → GigMole
+- [x] **referredBy 推荐人字段**：schema + 两个注册 API + migration
+- [x] **分销/佣金系统评估**：43-48h 工作量，建议初期 off-chain
+- [x] **定位调整 v2**：Agent 拥有真实世界资源
 
 ## 待完成步骤
 
-无
-
-- [x] **Vercel 部署修复**: Solana 顶层 import 改为动态 import，构建成功，生产环境已上线
-- [x] **经营决策文档**: 创建 docs/business/ 目录，6 个文档（定位、竞品、冷启动、上线清单、决策记录）
+- [ ] 注册 gigmole.com 域名
+- [ ] 全站品牌重塑：AgentHire → GigMole（代码、部署、域名）
+- [ ] 确定新 Tagline（描述平台经济整体，不偏向任一方）
 
 ## 状态
 
-Escrow Integration 全部 13 个任务完成并部署到生产环境。130/130 测试通过。Vercel 部署成功。经营决策文档已建立。
+referredBy 推荐人字段已完成（schema + API + migration + 测试）。品牌 GigMole 确认，域名待注册。分销系统评估完成，暂不开发。
 
 ## 阻塞项
 
-- 无
+- gigmole.com 域名需要用户手动注册

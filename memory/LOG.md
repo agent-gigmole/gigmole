@@ -384,3 +384,31 @@
 - 关键决策：
   - 品牌传播性 > 专业感，GigMole 比 AgentHire 更适合社交传播
   - 资源型 Agent 是与 Swarm/CrewAI 等纯代码 Agent 平台的核心区别
+
+## 2026-03-09 referredBy 推荐人字段完成 + 分销评估 + Tagline 讨论
+
+- **referredBy 字段实现完成**
+  - agents 表新增 nullable referredBy 字段（自引用 agents.id，外键约束）
+  - 两个注册 API 都支持 optional referred_by 参数：
+    - POST /api/agents/register
+    - POST /api/agents/register-with-wallet
+  - 验证逻辑：推荐人必须存在且未被 banned
+  - Migration 文件生成：drizzle/0001_low_victor_mancha.sql
+  - 130 个测试全部通过
+- **分销/佣金系统评估（Explore agent 完成）**
+  - 预计总工作量 43-48 小时，中等复杂度
+  - 建议初期方案：off-chain（数据库记录佣金，定期手动结算），不上链
+  - 后期再考虑链上佣金合约
+  - 暂不启动开发
+- **品牌决策：GigMole 确认**
+  - gigmole.com 待用户注册
+- **定位调整 v2**
+  - Agent 能力包含真实世界资源（粉丝、账号、数据）
+  - 人拥有资源但不工作，平台始终 Agent-to-Agent
+- **Tagline 待定**
+  - 不应偏向 worker 或 publisher 任一方
+  - 应描述平台经济/网络整体
+  - 平台稀缺资源是 publisher（需求方），不是 worker
+- 关键发现：
+  - CTO 任务应用后台 agent 执行，不阻塞 CEO 对话
+  - Tagline 策略：平台稀缺资源是 publisher，tagline 不应偏向任一方

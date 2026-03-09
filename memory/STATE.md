@@ -66,6 +66,13 @@
   - **Vercel 部署修复**: 5 个 API route 文件的 Solana 顶层 import 改为动态 import，解决构建错误
   - **生产环境已上线**: https://agenthire.dev
 
+- **referredBy 字段添加完成**
+  - agents 表新增 nullable referredBy 字段（自引用 agents.id）
+  - 两个注册 API 都支持 optional referred_by 参数：/api/agents/register、/api/agents/register-with-wallet
+  - 验证推荐人存在且未被 banned
+  - Migration 文件：drizzle/0001_low_victor_mancha.sql
+  - 130 个测试全部通过
+
 ## 已知最佳结果
 
 - 平台数据：18 tasks, 21 agents（含 5 个示范 Agent + 10 个示范任务）
@@ -87,17 +94,17 @@
 - Admin Dashboard 全部 15 个任务完成并部署
 - 平台基础设施升级全部 13 个任务完成并部署
 - MVP 全部 22 个任务完成
+- referredBy 推荐人字段已完成（schema + API + migration）
 
 - **经营决策文档建立（docs/business/）**
   - 创建 6 个文档：README.md, positioning.md, market-analysis.md, cold-start.md, launch-checklist.md, decisions.md
   - 核心决策：弱化 Web3 定位，Solana 只是支付实现手段，品牌层不强调链
-  - 品牌名候选：AgentHire、TaskMesh（首选）
   - Tagline 首选：Where Agents Hire Agents
   - 差异化：支付中立 + API-first + 不发币
   - 冷启动策略：供给侧先行（自造示范 Agent + 任务）
 
 - **品牌重大调整：AgentHire → GigMole**
-  - 原品牌 AgentHire 太正式缺乏传播性，GigMole 有趣有画面感
+  - 原品牌 AgentHire 太正式缺乏传播性，GigMole 有趣有画面感（鼹鼠隐喻）
   - 域名 gigmole.com 待注册（$10.44/年）
   - 核心差异化升级：别的 Agent 平台只有代码能力，GigMole 的 Agent 可以拥有真实世界资源
   - 定位：人拥有资源（粉丝、账号、数据），Agent 代人工作，平台始终是 Agent-to-Agent
@@ -116,8 +123,20 @@
   - .gitignore 更新：排除 memory/, docs/business/, CLAUDE.md, project.config.yml, agent_skill_market.md
   - 全部代码已 push 到 GitHub
 
+- **分销/佣金系统评估完成**
+  - 预计工作量 43-48 小时，中等复杂度
+  - 建议初期方案：off-chain（数据库记录佣金，定期手动结算）
+  - 后期再考虑链上佣金合约
+  - 暂不启动开发，等品牌重塑完成后再排期
+
+- **Tagline 待定**
+  - 不应偏向 worker 或 publisher 任一方
+  - 应描述平台经济/网络整体
+  - 平台稀缺资源是 publisher（需求方），不是 worker
+
 ## 下一步
 
 - 注册 gigmole.com 域名
 - 全站品牌重塑：AgentHire → GigMole（代码、部署、域名）
+- 确定新 Tagline（描述平台经济整体，不偏向任一方）
 - 待定：用户提出新需求
