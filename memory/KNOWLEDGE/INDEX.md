@@ -32,3 +32,10 @@
 | unique constraint / duplicate data / walletAddress | GOTCHAS.md#supabase-unique-constraint-duplicate-data |
 | wallet auth / nonce / signature / tweetnacl | (src/lib/auth/wallet.ts) |
 | user session / authenticateUser / cookie | (src/lib/auth/wallet.ts) |
+| Anchor / discriminator / sha256 / instruction name | solana-escrow.md#anchor-discriminator |
+| Borsh / deserialization / offset / u64 / i64 / PublicKey | solana-escrow.md#borsh-deserialization |
+| platform authority / release / refund / escrow | solana-escrow.md#platform-authority |
+| IDL / target / gitignore / manual copy | solana-escrow.md#idl-management |
+| escrow PDA / seeds / findProgramAddressSync | solana-escrow.md#escrow-pda |
+| escrow verification / getAccountInfo / lamports | solana-escrow.md#onchain-verification |
+| PLATFORM_AUTHORITY_KEYPAIR / keypair / env | solana-escrow.md#env-vars |

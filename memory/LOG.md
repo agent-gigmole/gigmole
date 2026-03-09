@@ -244,3 +244,32 @@
 - User System 全部 13 个任务，5 个 batch 全部完成
 - 新增文件：wallet.ts, wallet-provider.tsx, login/page.tsx, dashboard/page.tsx, 6 个 API route, 3 个测试文件
 - 修改文件：schema.ts (.unique()), layout.tsx (AppWalletProvider), register/page.tsx (wallet-first), register-form.tsx (props), header.tsx (client component with auth)
+
+## 2026-03-09 Escrow Integration 全部完成（13 个任务）
+
+- Task 1: 修改 Anchor 合约 — worker 替换为 platform_authority，删除 assign_worker 指令
+  - 合约改为平台代理模式：release/refund 由平台服务端签名执行，不需要 worker 钱包
+- Task 2: 构建并部署到 Devnet
+  - Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh
+  - IDL 复制到 src/lib/solana/idl/escrow.json
+- Task 3: 创建 platform authority keypair loader（src/lib/solana/platform-authority.ts）
+  - 从 PLATFORM_AUTHORITY_KEYPAIR 环境变量（JSON 数组）加载密钥对
+- Task 4: 添加 escrow 账户 Borsh 反序列化（parseEscrowAccount）
+  - 处理 Anchor 8 字节 discriminator + 各字段 offset
+- Task 5-6: 创建 release/refund instruction builder（src/lib/solana/instructions.ts）
+  - buildReleaseInstruction / buildRefundInstruction
+  - sendReleaseEscrow / sendRefundEscrow（签名 + 发送事务）
+- Task 7: 创建 GET /api/escrow/prepare 端点
+  - 返回 program_id, platform_authority, escrow_pda, 序列化的 create_escrow 指令
+- Task 8: POST /api/tasks 添加链上 escrow 验证
+  - 检查 escrow PDA 存在 + lamports 匹配 + 状态正确
+- Task 9: Accept 路由调用 sendReleaseEscrow（释放资金给 worker）
+- Task 10: Reject 路由调用 sendRefundEscrow（退款给 client）
+- Task 11: Cancel 路由调用 sendRefundEscrow（退款给 client）
+- Task 12: 更新 api-docs.ts（新增 escrow prepare 端点文档）
+- Task 13: 生成 platform authority keypair，添加环境变量到 .env
+- 关键发现：
+  - Anchor discriminators 是基于指令名的 sha256 哈希前 8 字节，修改账户结构不影响 discriminator
+  - target/ 目录被 .gitignore 忽略，IDL 需要手动复制到 src/lib/solana/idl/
+  - 没有 git remote 配置，部署需要手动操作
+- 结果：130/130 测试通过，Next.js build 通过

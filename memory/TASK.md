@@ -6,7 +6,7 @@
 
 ## 目标
 
-User System 全部完成并部署。等待下一个任务。
+Escrow Integration 全部完成。等待下一个任务。
 
 ## 已完成步骤
 
@@ -18,23 +18,19 @@ User System 全部完成并部署。等待下一个任务。
 - [x] 平台基础设施升级（13 个任务）
 - [x] 网站设计风格重做
 - [x] Admin Dashboard（15 个任务）
-- [x] **User System Batch 1 Task 1**: 安装 wallet adapter + tweetnacl 依赖
-- [x] **User System Batch 1 Task 2**: schema.ts walletAddress 加 .unique()，清理重复数据，推送 constraint 到 Supabase
-- [x] **User System Batch 1 Task 3**: 创建 src/lib/auth/wallet.ts（nonce、签名验证、session token、authenticateUser）+ 测试
-
-- [x] **User System Batch 2 Task 4**: /api/auth/nonce + /api/auth/verify 端点
-- [x] **User System Batch 2 Task 5**: /api/auth/logout + /api/auth/me 端点
-- [x] **User System Batch 2 Task 6**: /api/agents/register-with-wallet + /api/agents/regenerate-key 端点
-
-- [x] **User System Batch 3 Task 7**: 创建 wallet-provider.tsx + 修改 (main)/layout.tsx 包裹 AppWalletProvider + 添加 NEXT_PUBLIC_SOLANA_RPC_URL
-- [x] **User System Batch 3 Task 8**: 创建 /login 页面（钱包连接 + 签名登录流程）
-- [x] **User System Batch 3 Task 9**: 重构 /register 页面（钱包优先流程）+ 简化 register-form.tsx 为纯表单组件
-
-- [x] **User System Batch 4 Task 10**: /api/user/tasks + /api/user/bids 端点
-- [x] **User System Batch 4 Task 11**: /dashboard 页面（agent info + tasks/bids/reviews tabs）
-- [x] **User System Batch 4 Task 12**: Header 升级为 client component（登录/登出 + 钱包地址显示）
-
-- [x] **User System Batch 5 Task 13**: Build + Deploy + E2E 验证 — ALL COMPLETE
+- [x] User System（13 个任务）
+- [x] **Escrow Integration Task 1**: 修改 Anchor 合约 — worker 替换为 platform_authority，删除 assign_worker
+- [x] **Escrow Integration Task 2**: 构建并部署到 Devnet，IDL 复制到 src/lib/solana/idl/escrow.json
+- [x] **Escrow Integration Task 3**: 创建 platform authority keypair loader
+- [x] **Escrow Integration Task 4**: 添加 escrow 账户 Borsh 反序列化（parseEscrowAccount）
+- [x] **Escrow Integration Task 5-6**: 创建 release/refund instruction builder
+- [x] **Escrow Integration Task 7**: 创建 GET /api/escrow/prepare 端点
+- [x] **Escrow Integration Task 8**: POST /api/tasks 添加链上 escrow 验证
+- [x] **Escrow Integration Task 9**: Accept 路由调用 sendReleaseEscrow
+- [x] **Escrow Integration Task 10**: Reject 路由调用 sendRefundEscrow
+- [x] **Escrow Integration Task 11**: Cancel 路由调用 sendRefundEscrow
+- [x] **Escrow Integration Task 12**: 更新 api-docs.ts
+- [x] **Escrow Integration Task 13**: 生成 platform authority keypair，添加环境变量到 .env — ALL COMPLETE
 
 ## 待完成步骤
 
@@ -42,7 +38,7 @@ User System 全部完成并部署。等待下一个任务。
 
 ## 状态
 
-User System 全部 13 个任务完成并部署。108/108 测试通过。E2E 验证通过。
+Escrow Integration 全部 13 个任务完成。130/130 测试通过。Next.js build 通过。
 
 ## 阻塞项
 

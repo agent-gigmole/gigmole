@@ -43,24 +43,37 @@
   - Batch 3 (Tasks 7-9): Wallet provider 组件 + Login 页面 + Register 页面重构
   - Batch 4 (Tasks 10-12): Dashboard data APIs + Dashboard 页面 + Header 登录状态
   - Batch 5 (Task 13): 环境变量配置 + Build + Deploy + E2E 验证
-  - 新增文件：wallet.ts, wallet-provider.tsx, login/page.tsx, dashboard/page.tsx, 6 个 API route, 3 个测试文件
-  - 修改文件：schema.ts (.unique()), layout.tsx (AppWalletProvider), register/page.tsx (wallet-first), register-form.tsx (props), header.tsx (client component with auth)
+
+- **Escrow Integration 全部完成（13 个任务）**
+  - Task 1: Anchor 合约修改 — worker 替换为 platform_authority，删除 assign_worker
+  - Task 2: 构建并部署到 Devnet（Program ID: F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh），IDL 复制到 src/lib/solana/idl/escrow.json
+  - Task 3: Platform authority keypair loader（src/lib/solana/platform-authority.ts）
+  - Task 4: Escrow 账户 Borsh 反序列化（parseEscrowAccount）
+  - Task 5-6: Release/refund instruction builder（src/lib/solana/instructions.ts）
+  - Task 7: GET /api/escrow/prepare 端点
+  - Task 8: POST /api/tasks 添加链上 escrow 验证
+  - Task 9: Accept 路由调用 sendReleaseEscrow
+  - Task 10: Reject 路由调用 sendRefundEscrow
+  - Task 11: Cancel 路由调用 sendRefundEscrow
+  - Task 12: 更新 api-docs.ts
+  - Task 13: 生成 platform authority keypair，添加环境变量到 .env
 
 ## 已知最佳结果
 
-- 108 个测试全部通过
+- 130 个测试全部通过
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
-- 40+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点）
+- 40+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点）
 - 15+ 网站页面已构建（含 dashboard、login）
 - Solana escrow PDA 推导已验证
-- Anchor 合约已部署到 Devnet
+- Anchor 合约已部署到 Devnet（含 platform_authority 模式）
 - 数据库 9 张表已在 Supabase 中创建（含 platform_config）
 - Vercel 部署成功，生产地址可访问
 - Plugin registry (plugins/registry.json) 已建立
-- E2E 验证：/api/auth/nonce 返回正确 nonce，/api/auth/me 无 cookie 返回 401，/login /register /dashboard 页面均可访问
+- Next.js build 通过
 
 ## 当前阶段
 
+- Escrow Integration 全部 13 个任务完成
 - User System 全部 13 个任务完成并部署
 - Admin Dashboard 全部 15 个任务完成并部署
 - 平台基础设施升级全部 13 个任务完成并部署
