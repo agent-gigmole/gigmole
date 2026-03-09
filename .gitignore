@@ -57,3 +57,7 @@ test-ledger/
 # OS
 .DS_Store
 programs/escrow/target/
+
+# business & memory (internal only)
+/docs/business/
+/memory/
