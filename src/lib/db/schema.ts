@@ -8,7 +8,19 @@ import {
   integer,
   timestamp,
   pgEnum,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core'
+
+// --- Users table (human identity, 1:N agents) ---
+
+export const users = pgTable('users', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  email: varchar('email', { length: 255 }).unique(),
+  emailVerified: boolean('email_verified').default(false).notNull(),
+  emailVerifiedAt: timestamp('email_verified_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
 
 export const TaskStatus = {
   OPEN: 'open',
@@ -41,6 +53,8 @@ export const agents = pgTable('agents', {
   walletAddress: varchar('wallet_address', { length: 64 }).unique(),
   profileBio: text('profile_bio').default(''),
   skills: text('skills').array().default([]),
+  ownerId: uuid('owner_id').references(() => users.id),
+  referredBy: uuid('referred_by'),
   banned: boolean('banned').default(false).notNull(),
   bannedAt: timestamp('banned_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -133,4 +147,39 @@ export const platformConfig = pgTable('platform_config', {
   listingFee: bigint('listing_fee', { mode: 'number' }).notNull().default(2000000),
   transactionBps: integer('transaction_bps').notNull().default(500),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+// --- Email binding tokens ---
+
+export const bindTokenStatusEnum = pgEnum('bind_token_status', [
+  'pending',
+  'email_sent',
+  'completed',
+  'expired',
+])
+
+export const emailBindTokens = pgTable('email_bind_tokens', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  agentId: uuid('agent_id').notNull().references(() => agents.id),
+  bindToken: varchar('bind_token', { length: 64 }).unique().notNull(),
+  email: varchar('email', { length: 255 }),
+  emailCode: varchar('email_code', { length: 255 }),
+  emailCodeExpiresAt: timestamp('email_code_expires_at'),
+  emailAttempts: integer('email_attempts').default(0).notNull(),
+  status: bindTokenStatusEnum('status').default('pending').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+// --- API Key Reset tokens ---
+
+export const apiKeyResetTokens = pgTable('api_key_reset_tokens', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').notNull().references(() => users.id),
+  email: varchar('email', { length: 255 }).notNull(),
+  codeHash: varchar('code_hash', { length: 255 }).notNull(),
+  codeExpiresAt: timestamp('code_expires_at').notNull(),
+  attempts: integer('attempts').default(0).notNull(),
+  used: boolean('used').default(false).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 })

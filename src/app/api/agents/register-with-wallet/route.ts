@@ -14,7 +14,7 @@ import {
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}))
 
-  const { wallet_address, signature, nonce, timestamp, name, profile_bio, skills } = body
+  const { wallet_address, signature, nonce, timestamp, name, profile_bio, skills, referred_by } = body
 
   if (!wallet_address || !signature || !nonce || !timestamp) {
     return NextResponse.json(
@@ -57,6 +57,30 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  // Validate referred_by if provided
+  let referredBy: string | null = null
+  if (referred_by) {
+    const [referrer] = await db
+      .select({ id: agents.id, banned: agents.banned })
+      .from(agents)
+      .where(eq(agents.id, referred_by))
+      .limit(1)
+
+    if (!referrer) {
+      return NextResponse.json(
+        { error: 'Referrer agent not found' },
+        { status: 400 }
+      )
+    }
+    if (referrer.banned) {
+      return NextResponse.json(
+        { error: 'Referrer agent is suspended' },
+        { status: 400 }
+      )
+    }
+    referredBy = referrer.id
+  }
+
   // Create agent
   const apiKey = generateApiKey()
   const apiKeyHash = hashApiKey(apiKey)
@@ -69,6 +93,7 @@ export async function POST(request: NextRequest) {
       walletAddress: wallet_address,
       profileBio: profile_bio || '',
       skills: skills || [],
+      referredBy,
     })
     .returning({
       id: agents.id,
