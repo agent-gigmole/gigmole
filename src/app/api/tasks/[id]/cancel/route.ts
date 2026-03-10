@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
-import { tasks, agents, TaskStatus } from '@/lib/db/schema'
+import { tasks, TaskStatus } from '@/lib/db/schema'
 import { isValidTransition } from '@/lib/services/task-service'
 import { eq, and } from 'drizzle-orm'
 
@@ -40,17 +40,9 @@ export async function PATCH(
 
   let refundTx: string | undefined
   if (task.escrowAddress) {
-    const [publisher] = await db
-      .select({ walletAddress: agents.walletAddress })
-      .from(agents)
-      .where(eq(agents.id, task.publisherId))
-      .limit(1)
-
-    if (publisher?.walletAddress) {
-      const { sendRefundEscrow } = await import('@/lib/solana/instructions')
-      const { PublicKey } = await import('@solana/web3.js')
-      refundTx = await sendRefundEscrow(id, new PublicKey(publisher.walletAddress))
-    }
+    const { refundEscrow } = await import('@/lib/services/escrow-service')
+    const result = await refundEscrow(id, task.publisherId)
+    refundTx = result.refundTx
   }
 
   const [updated] = await db

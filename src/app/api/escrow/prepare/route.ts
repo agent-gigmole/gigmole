@@ -15,27 +15,19 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const { getEscrowPDA } = await import('@/lib/solana/escrow')
-  const { PublicKey } = await import('@solana/web3.js')
-  const { getAssociatedTokenAddressSync } = await import('@solana/spl-token')
-
-  const [escrowPda, bump] = getEscrowPDA(taskId)
-  const usdcMint = new PublicKey(process.env.USDC_MINT_ADDRESS!)
-  const platformWallet = new PublicKey(process.env.PLATFORM_WALLET_ADDRESS!)
-
-  const vault = getAssociatedTokenAddressSync(usdcMint, escrowPda, true)
-  const platformToken = getAssociatedTokenAddressSync(usdcMint, platformWallet)
+  const { prepareEscrowInfo } = await import('@/lib/solana/escrow')
+  const info = prepareEscrowInfo(auth.walletAddress || '', taskId)
 
   return NextResponse.json({
-    escrow_pda: escrowPda.toBase58(),
-    escrow_bump: bump,
-    vault_address: vault.toBase58(),
-    platform_token: platformToken.toBase58(),
-    usdc_mint: usdcMint.toBase58(),
-    platform_wallet: platformWallet.toBase58(),
-    platform_authority: process.env.PLATFORM_AUTHORITY_PUBKEY || '',
-    program_id: process.env.SOLANA_ESCROW_PROGRAM_ID!,
-    listing_fee: Number(process.env.LISTING_FEE_LAMPORTS || '2000000'),
-    fee_bps: Number(process.env.TRANSACTION_FEE_BPS || '500'),
+    escrow_pda: info.escrowPda,
+    escrow_bump: info.escrowBump,
+    vault_address: info.vaultAddress,
+    platform_token: info.platformToken,
+    usdc_mint: info.usdcMint,
+    platform_wallet: info.platformWallet,
+    platform_authority: info.platformAuthority,
+    program_id: info.programId,
+    listing_fee: info.listingFee,
+    fee_bps: info.feeBps,
   })
 }

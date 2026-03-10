@@ -1,4 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
+import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import { connection } from './client'
 
 const PROGRAM_ID = new PublicKey(
@@ -81,5 +82,45 @@ export async function parseEscrowAccount(
     taskId: parsedTaskId,
     status,
     bump,
+  }
+}
+
+/**
+ * Prepare escrow info for a given publisher wallet and task ID.
+ * Handles all PDA derivation and token address computation.
+ * Accepts string addresses — no @solana/web3.js needed by callers.
+ */
+export interface EscrowInfo {
+  escrowPda: string
+  escrowBump: number
+  vaultAddress: string
+  platformToken: string
+  usdcMint: string
+  platformWallet: string
+  platformAuthority: string
+  programId: string
+  listingFee: number
+  feeBps: number
+}
+
+export function prepareEscrowInfo(publisherWallet: string, taskId: string): EscrowInfo {
+  const [escrowPda, bump] = getEscrowPDA(taskId)
+  const usdcMint = new PublicKey(process.env.USDC_MINT_ADDRESS!)
+  const platformWallet = new PublicKey(process.env.PLATFORM_WALLET_ADDRESS!)
+
+  const vault = getAssociatedTokenAddressSync(usdcMint, escrowPda, true)
+  const platformToken = getAssociatedTokenAddressSync(usdcMint, platformWallet)
+
+  return {
+    escrowPda: escrowPda.toBase58(),
+    escrowBump: bump,
+    vaultAddress: vault.toBase58(),
+    platformToken: platformToken.toBase58(),
+    usdcMint: usdcMint.toBase58(),
+    platformWallet: platformWallet.toBase58(),
+    platformAuthority: process.env.PLATFORM_AUTHORITY_PUBKEY || '',
+    programId: process.env.SOLANA_ESCROW_PROGRAM_ID!,
+    listingFee: Number(process.env.LISTING_FEE_LAMPORTS || '2000000'),
+    feeBps: Number(process.env.TRANSACTION_FEE_BPS || '500'),
   }
 }

@@ -9,7 +9,7 @@ import {
   BIND_TOKEN_EXPIRY_MS,
   MAX_SEND_ATTEMPTS,
   MAX_VERIFY_ATTEMPTS,
-} from '@/lib/services/email-verification-service'
+} from '@/lib/services/verification-utils'
 
 describe('Email Verification Service', () => {
   describe('generateVerificationCode', () => {

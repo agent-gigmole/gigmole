@@ -51,40 +51,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { parseEscrowAccount, getEscrowPDA } = await import('@/lib/solana/escrow')
-
-    const escrowData = await parseEscrowAccount(body.id)
-
-    if (!escrowData) {
-      return NextResponse.json(
-        { error: 'Escrow account not found on-chain' },
-        { status: 400 }
-      )
+    const { verifyEscrowDeposit, EscrowVerificationError } = await import('@/lib/services/escrow-service')
+    try {
+      const result = await verifyEscrowDeposit(body.id, auth.walletAddress, body.budget)
+      escrowAddress = result.escrowAddress
+    } catch (err) {
+      if (err instanceof EscrowVerificationError) {
+        return NextResponse.json({ error: err.message }, { status: 400 })
+      }
+      throw err
     }
-
-    if (escrowData.status !== 'Funded') {
-      return NextResponse.json(
-        { error: 'Escrow is not in Funded status' },
-        { status: 400 }
-      )
-    }
-
-    if (escrowData.amount + escrowData.listingFee !== body.budget) {
-      return NextResponse.json(
-        { error: 'Escrow amount mismatch with budget' },
-        { status: 400 }
-      )
-    }
-
-    if (escrowData.publisher !== auth.walletAddress) {
-      return NextResponse.json(
-        { error: 'Escrow publisher does not match authenticated agent wallet' },
-        { status: 400 }
-      )
-    }
-
-    const [pda] = getEscrowPDA(body.id)
-    escrowAddress = pda.toBase58()
     escrowTx = body.escrow_tx
     taskId = body.id
   }

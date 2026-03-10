@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { PublicKey } from '@solana/web3.js'
 import { NextResponse } from 'next/server'
 
 vi.mock('@/lib/auth/middleware', () => ({
@@ -11,25 +10,19 @@ vi.mock('@/lib/auth/middleware', () => ({
 }))
 
 vi.mock('@/lib/solana/escrow', () => ({
-  getEscrowPDA: vi.fn().mockReturnValue([
-    new PublicKey('11111111111111111111111111111112'),
-    254,
-  ]),
+  prepareEscrowInfo: vi.fn().mockReturnValue({
+    escrowPda: '11111111111111111111111111111112',
+    escrowBump: 254,
+    vaultAddress: '11111111111111111111111111111113',
+    platformToken: '11111111111111111111111111111114',
+    usdcMint: '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU',
+    platformWallet: 'D1yNArYHmypsKNph46i2Zpa9m7sHYtdXzkxYrP1vswfQ',
+    platformAuthority: 'TestPlatformAuthority111111111111111111111111',
+    programId: 'F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh',
+    listingFee: 2000000,
+    feeBps: 500,
+  }),
 }))
-
-vi.mock('@solana/spl-token', () => ({
-  getAssociatedTokenAddressSync: vi.fn().mockReturnValue(
-    new PublicKey('11111111111111111111111111111113')
-  ),
-}))
-
-// Set env vars before importing route
-process.env.SOLANA_ESCROW_PROGRAM_ID = 'F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh'
-process.env.USDC_MINT_ADDRESS = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'
-process.env.PLATFORM_WALLET_ADDRESS = 'D1yNArYHmypsKNph46i2Zpa9m7sHYtdXzkxYrP1vswfQ'
-process.env.PLATFORM_AUTHORITY_PUBKEY = 'TestPlatformAuthority111111111111111111111111'
-process.env.LISTING_FEE_LAMPORTS = '2000000'
-process.env.TRANSACTION_FEE_BPS = '500'
 
 import { GET } from '@/app/api/escrow/prepare/route'
 import { authenticateRequest } from '@/lib/auth/middleware'
@@ -52,9 +45,9 @@ describe('GET /api/escrow/prepare', () => {
     const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(data.escrow_pda).toBeDefined()
+    expect(data.escrow_pda).toBe('11111111111111111111111111111112')
     expect(data.escrow_bump).toBe(254)
-    expect(data.vault_address).toBeDefined()
+    expect(data.vault_address).toBe('11111111111111111111111111111113')
     expect(data.usdc_mint).toBe('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU')
     expect(data.platform_wallet).toBe('D1yNArYHmypsKNph46i2Zpa9m7sHYtdXzkxYrP1vswfQ')
     expect(data.program_id).toBe('F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh')

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { emailBindTokens } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { getBindStatus, EmailBindError } from '@/lib/services/email-bind-service'
 
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get('token')
@@ -13,34 +11,13 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const [record] = await db
-    .select({
-      status: emailBindTokens.status,
-      email: emailBindTokens.email,
-      expiresAt: emailBindTokens.expiresAt,
-    })
-    .from(emailBindTokens)
-    .where(eq(emailBindTokens.bindToken, token))
-    .limit(1)
-
-  if (!record) {
-    return NextResponse.json(
-      { error: 'Invalid token' },
-      { status: 404 }
-    )
+  try {
+    const result = await getBindStatus(token)
+    return NextResponse.json(result)
+  } catch (err) {
+    if (err instanceof EmailBindError) {
+      return NextResponse.json({ error: err.message }, { status: err.statusCode })
+    }
+    throw err
   }
-
-  // Check if expired by time
-  let status = record.status
-  if (status !== 'completed' && status !== 'expired' && new Date() > record.expiresAt) {
-    status = 'expired'
-  }
-
-  const response: Record<string, unknown> = { status }
-
-  if (status === 'completed' && record.email) {
-    response.email = record.email
-  }
-
-  return NextResponse.json(response)
 }

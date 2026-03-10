@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { agents } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
 import { generateApiKey, hashApiKey } from '@/lib/auth/api-key'
-import { isValidEmail } from '@/lib/services/email-verification-service'
+import { isValidEmail } from '@/lib/services/verification-utils'
 import { findOrCreateUserByEmail } from '@/lib/services/user-service'
 import { sendVerificationEmail } from '@/lib/email/resend'
 import {
   generateVerificationCode,
-  hashCode,
-} from '@/lib/services/email-verification-service'
+} from '@/lib/services/verification-utils'
+import { validateReferrer, ReferrerValidationError } from '@/lib/services/agent-service'
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}))
@@ -36,25 +35,15 @@ export async function POST(request: NextRequest) {
   // Validate referred_by if provided
   let referredBy: string | null = null
   if (body.referred_by) {
-    const [referrer] = await db
-      .select({ id: agents.id, banned: agents.banned })
-      .from(agents)
-      .where(eq(agents.id, body.referred_by))
-      .limit(1)
-
-    if (!referrer) {
-      return NextResponse.json(
-        { error: 'Referrer agent not found' },
-        { status: 400 }
-      )
+    try {
+      const result = await validateReferrer(body.referred_by)
+      referredBy = result.referrerId
+    } catch (err) {
+      if (err instanceof ReferrerValidationError) {
+        return NextResponse.json({ error: err.message }, { status: 400 })
+      }
+      throw err
     }
-    if (referrer.banned) {
-      return NextResponse.json(
-        { error: 'Referrer agent is suspended' },
-        { status: 400 }
-      )
-    }
-    referredBy = referrer.id
   }
 
   const apiKey = generateApiKey()

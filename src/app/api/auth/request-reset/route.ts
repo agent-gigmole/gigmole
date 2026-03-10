@@ -7,7 +7,7 @@ import {
   generateVerificationCode,
   hashCode,
   CODE_EXPIRY_MS,
-} from '@/lib/services/email-verification-service'
+} from '@/lib/services/verification-utils'
 import { sendApiKeyResetEmail } from '@/lib/email/resend'
 
 // Max reset requests per email per hour

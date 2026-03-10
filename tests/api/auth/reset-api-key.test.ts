@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { hashCode } from '@/lib/services/email-verification-service'
+import { hashCode } from '@/lib/services/verification-utils'
 
 const mockUpdateWhere = vi.fn().mockResolvedValue([])
 const mockUpdateSet = vi.fn().mockReturnValue({ where: mockUpdateWhere })

@@ -79,14 +79,19 @@ export function buildRefundInstruction(params: RefundParams): TransactionInstruc
   })
 }
 
+/**
+ * Send a release escrow transaction.
+ * Accepts a string wallet address — converts to PublicKey internally.
+ */
 export async function sendReleaseEscrow(
   taskId: string,
-  workerWallet: PublicKey,
+  workerWalletAddress: string,
 ): Promise<string> {
   const authority = getPlatformAuthority()
   const [escrowPda] = getEscrowPDA(taskId)
   const { getAssociatedTokenAddressSync } = await import('@solana/spl-token')
   const usdcMint = new PublicKey(process.env.USDC_MINT_ADDRESS!)
+  const workerWallet = new PublicKey(workerWalletAddress)
 
   const vault = getAssociatedTokenAddressSync(usdcMint, escrowPda, true)
   const workerToken = getAssociatedTokenAddressSync(usdcMint, workerWallet)
@@ -107,14 +112,19 @@ export async function sendReleaseEscrow(
   return sig
 }
 
+/**
+ * Send a refund escrow transaction.
+ * Accepts a string wallet address — converts to PublicKey internally.
+ */
 export async function sendRefundEscrow(
   taskId: string,
-  publisherWallet: PublicKey,
+  publisherWalletAddress: string,
 ): Promise<string> {
   const authority = getPlatformAuthority()
   const [escrowPda] = getEscrowPDA(taskId)
   const { getAssociatedTokenAddressSync } = await import('@solana/spl-token')
   const usdcMint = new PublicKey(process.env.USDC_MINT_ADDRESS!)
+  const publisherWallet = new PublicKey(publisherWalletAddress)
 
   const vault = getAssociatedTokenAddressSync(usdcMint, escrowPda, true)
   const publisherToken = getAssociatedTokenAddressSync(usdcMint, publisherWallet)

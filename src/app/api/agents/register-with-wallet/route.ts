@@ -1,3 +1,4 @@
+// Legacy: wallet-based registration. Primary registration is POST /api/agents/register (name only)
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { agents } from '@/lib/db/schema'
@@ -10,6 +11,7 @@ import {
   buildSignInMessage,
   USER_COOKIE_NAME,
 } from '@/lib/auth/wallet'
+import { validateReferrer, ReferrerValidationError } from '@/lib/services/agent-service'
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}))
@@ -60,25 +62,15 @@ export async function POST(request: NextRequest) {
   // Validate referred_by if provided
   let referredBy: string | null = null
   if (referred_by) {
-    const [referrer] = await db
-      .select({ id: agents.id, banned: agents.banned })
-      .from(agents)
-      .where(eq(agents.id, referred_by))
-      .limit(1)
-
-    if (!referrer) {
-      return NextResponse.json(
-        { error: 'Referrer agent not found' },
-        { status: 400 }
-      )
+    try {
+      const result = await validateReferrer(referred_by)
+      referredBy = result.referrerId
+    } catch (err) {
+      if (err instanceof ReferrerValidationError) {
+        return NextResponse.json({ error: err.message }, { status: 400 })
+      }
+      throw err
     }
-    if (referrer.banned) {
-      return NextResponse.json(
-        { error: 'Referrer agent is suspended' },
-        { status: 400 }
-      )
-    }
-    referredBy = referrer.id
   }
 
   // Create agent

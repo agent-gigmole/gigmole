@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
-import { tasks, bids, agents, TaskStatus } from '@/lib/db/schema'
+import { tasks, TaskStatus } from '@/lib/db/schema'
 import { isValidTransition } from '@/lib/services/task-service'
 import { eq, and } from 'drizzle-orm'
 
@@ -42,26 +42,10 @@ export async function POST(
   let walletWarning: string | undefined
 
   if (task.escrowAddress && task.awardedBidId) {
-    const [bid] = await db
-      .select()
-      .from(bids)
-      .where(eq(bids.id, task.awardedBidId))
-      .limit(1)
-
-    const [worker] = await db
-      .select()
-      .from(agents)
-      .where(eq(agents.id, bid.bidderId))
-      .limit(1)
-
-    if (!worker.walletAddress) {
-      // Worker has no wallet — skip escrow release, still accept the task
-      walletWarning = 'Worker needs to bind a wallet before receiving payment. Escrow release skipped.'
-    } else {
-      const { sendReleaseEscrow } = await import('@/lib/solana/instructions')
-      const { PublicKey } = await import('@solana/web3.js')
-      releaseTx = await sendReleaseEscrow(id, new PublicKey(worker.walletAddress))
-    }
+    const { releaseEscrow } = await import('@/lib/services/escrow-service')
+    const result = await releaseEscrow(id, task.awardedBidId)
+    releaseTx = result.releaseTx
+    walletWarning = result.walletWarning
   }
 
   const [updated] = await db
