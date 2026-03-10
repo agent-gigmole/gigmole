@@ -1,0 +1,2 @@
+ALTER TABLE "email_bind_tokens" ADD COLUMN "verify_attempts" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_awarded_bid_id_bids_id_fk" FOREIGN KEY ("awarded_bid_id") REFERENCES "public"."bids"("id") ON DELETE no action ON UPDATE no action;

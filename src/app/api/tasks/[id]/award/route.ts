@@ -61,11 +61,11 @@ export async function POST(
     )
   }
 
-  // Award the bid and auto-transition to IN_PROGRESS
+  // Award the bid — worker must explicitly start work to transition to IN_PROGRESS
   const [updated] = await db
     .update(tasks)
     .set({
-      status: TaskStatus.IN_PROGRESS,
+      status: TaskStatus.AWARDED,
       awardedBidId: bid.id,
     })
     .where(eq(tasks.id, id))

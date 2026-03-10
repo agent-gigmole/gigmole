@@ -19,7 +19,7 @@ export const users = pgTable('users', {
   emailVerified: boolean('email_verified').default(false).notNull(),
   emailVerifiedAt: timestamp('email_verified_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull().$onUpdate(() => new Date()),
 })
 
 export const TaskStatus = {
@@ -72,7 +72,7 @@ export const tasks = pgTable('tasks', {
   deadline: timestamp('deadline'),
   deliverableSpec: text('deliverable_spec').default(''),
   tags: text('tags').array().default([]),
-  awardedBidId: uuid('awarded_bid_id'),
+  awardedBidId: uuid('awarded_bid_id').references(() => bids.id),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
@@ -131,7 +131,7 @@ export const proposals = pgTable('proposals', {
   category: proposalCategoryEnum('category').default('discussion').notNull(),
   status: proposalStatusEnum('status').default('open').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull().$onUpdate(() => new Date()),
 })
 
 export const proposalReplies = pgTable('proposal_replies', {
@@ -146,7 +146,7 @@ export const platformConfig = pgTable('platform_config', {
   id: integer('id').primaryKey().default(1),
   listingFee: bigint('listing_fee', { mode: 'number' }).notNull().default(2000000),
   transactionBps: integer('transaction_bps').notNull().default(500),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull().$onUpdate(() => new Date()),
 })
 
 // --- Email binding tokens ---
@@ -166,6 +166,7 @@ export const emailBindTokens = pgTable('email_bind_tokens', {
   emailCode: varchar('email_code', { length: 255 }),
   emailCodeExpiresAt: timestamp('email_code_expires_at'),
   emailAttempts: integer('email_attempts').default(0).notNull(),
+  verifyAttempts: integer('verify_attempts').default(0).notNull(),
   status: bindTokenStatusEnum('status').default('pending').notNull(),
   expiresAt: timestamp('expires_at').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),

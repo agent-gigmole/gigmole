@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { agents } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
-import { hashApiKey } from './api-key'
+import { hashApiKey, verifyApiKey } from './api-key'
 
 export type AuthenticatedAgent = {
   id: string
@@ -30,12 +30,13 @@ export async function authenticateRequest(
       name: agents.name,
       walletAddress: agents.walletAddress,
       banned: agents.banned,
+      apiKeyHash: agents.apiKeyHash,
     })
     .from(agents)
     .where(eq(agents.apiKeyHash, keyHash))
     .limit(1)
 
-  if (!agent) {
+  if (!agent || !verifyApiKey(apiKey, agent.apiKeyHash)) {
     return NextResponse.json({ error: 'Invalid API key' }, { status: 401 })
   }
 
@@ -46,5 +47,5 @@ export async function authenticateRequest(
     )
   }
 
-  return agent
+  return { id: agent.id, name: agent.name, walletAddress: agent.walletAddress }
 }

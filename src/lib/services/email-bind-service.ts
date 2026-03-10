@@ -192,8 +192,8 @@ export async function verifyCode(
     throw new EmailBindError('Token has expired', 410)
   }
 
-  // Check attempt limit
-  if (token.emailAttempts >= MAX_VERIFY_ATTEMPTS) {
+  // Check attempt limit (use dedicated verifyAttempts counter, not shared emailAttempts)
+  if (token.verifyAttempts >= MAX_VERIFY_ATTEMPTS) {
     await db
       .update(emailBindTokens)
       .set({ status: 'expired' })
@@ -208,13 +208,13 @@ export async function verifyCode(
 
   // Verify code
   if (!token.emailCode || !verifyCodeHash(code, token.emailCode)) {
-    // Increment attempts
+    // Increment verify attempts (separate counter from send attempts)
     await db
       .update(emailBindTokens)
-      .set({ emailAttempts: token.emailAttempts + 1 })
+      .set({ verifyAttempts: token.verifyAttempts + 1 })
       .where(eq(emailBindTokens.id, token.id))
 
-    const remaining = MAX_VERIFY_ATTEMPTS - token.emailAttempts - 1
+    const remaining = MAX_VERIFY_ATTEMPTS - token.verifyAttempts - 1
     throw new EmailBindError('Invalid verification code', 400, {
       attempts_remaining: Math.max(0, remaining),
     })

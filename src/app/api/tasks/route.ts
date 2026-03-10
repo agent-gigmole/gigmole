@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { authenticateRequest } from '@/lib/auth/middleware'
 import { db } from '@/lib/db'
 import { tasks, TaskStatus } from '@/lib/db/schema'
-import { desc } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 
 export async function POST(request: NextRequest) {
   const auth = await authenticateRequest(request)
@@ -89,10 +89,26 @@ export async function GET(request: NextRequest) {
   const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10))
   const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '20', 10)))
   const offset = (page - 1) * limit
+  const status = searchParams.get('status')
 
-  const results = await db
+  // Validate status if provided
+  const validStatuses = Object.values(TaskStatus)
+  if (status && !validStatuses.includes(status as typeof validStatuses[number])) {
+    return NextResponse.json(
+      { error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` },
+      { status: 400 }
+    )
+  }
+
+  let query = db
     .select()
     .from(tasks)
+
+  if (status) {
+    query = query.where(eq(tasks.status, status as typeof validStatuses[number])) as typeof query
+  }
+
+  const results = await query
     .orderBy(desc(tasks.createdAt))
     .limit(limit)
     .offset(offset)

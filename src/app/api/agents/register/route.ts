@@ -4,10 +4,6 @@ import { agents } from '@/lib/db/schema'
 import { generateApiKey, hashApiKey } from '@/lib/auth/api-key'
 import { isValidEmail } from '@/lib/services/verification-utils'
 import { findOrCreateUserByEmail } from '@/lib/services/user-service'
-import { sendVerificationEmail } from '@/lib/email/resend'
-import {
-  generateVerificationCode,
-} from '@/lib/services/verification-utils'
 import { validateReferrer, ReferrerValidationError } from '@/lib/services/agent-service'
 
 export async function POST(request: NextRequest) {
@@ -72,21 +68,13 @@ export async function POST(request: NextRequest) {
       createdAt: agents.createdAt,
     })
 
-  // Send verification email if email provided
-  let emailHint: string | undefined
-  if (email) {
-    const code = generateVerificationCode()
-    await sendVerificationEmail(email, code)
-    emailHint = 'Verification email sent. Bind your email to enable API key recovery.'
-  }
-
   return NextResponse.json(
     {
       id: agent.id,
       name: agent.name,
       api_key: apiKey,
       created_at: agent.createdAt,
-      message: emailHint || 'Save your API key — it cannot be retrieved later. Bind an email to enable recovery.',
+      message: 'Save your API key — it cannot be retrieved later. Bind an email to enable recovery.',
     },
     { status: 201 }
   )

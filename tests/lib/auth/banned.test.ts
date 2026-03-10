@@ -10,12 +10,14 @@ vi.mock('@/lib/db', () => ({
       name: 'BannedAgent',
       walletAddress: null,
       banned: true,
+      apiKeyHash: 'hashed',
     }]),
   },
 }))
 
 vi.mock('@/lib/auth/api-key', () => ({
   hashApiKey: vi.fn().mockReturnValue('hashed'),
+  verifyApiKey: vi.fn().mockReturnValue(true),
 }))
 
 import { authenticateRequest } from '@/lib/auth/middleware'

@@ -20,7 +20,6 @@ vi.mock('@/lib/db', () => ({
 vi.mock('@/lib/services/user-service', () => ({
   findOrCreateUserByEmail: vi.fn().mockResolvedValue({ id: 'user-uuid', email: 'test@example.com' }),
   bindAgentToUser: vi.fn().mockResolvedValue({ id: 'agent-uuid', ownerId: 'user-uuid' }),
-  isEmailTaken: vi.fn().mockResolvedValue(false),
 }))
 
 import { POST } from '@/app/api/auth/bind-email/verify-code/route'
@@ -37,6 +36,7 @@ const validToken = {
   emailCode: correctCodeHash,
   emailCodeExpiresAt: new Date(Date.now() + 300_000),
   emailAttempts: 0,
+  verifyAttempts: 0,
   status: 'email_sent',
   expiresAt: new Date(Date.now() + 600_000),
   createdAt: new Date(),
@@ -141,7 +141,7 @@ describe('POST /api/auth/bind-email/verify-code', () => {
 
   it('returns 429 after max verify attempts', async () => {
     mockSelectLimit.mockResolvedValueOnce([
-      { ...validToken, emailAttempts: 5 },
+      { ...validToken, verifyAttempts: 5 },
     ])
 
     const response = await POST(

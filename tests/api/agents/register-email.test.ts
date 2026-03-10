@@ -24,13 +24,8 @@ vi.mock('@/lib/services/user-service', () => ({
   findOrCreateUserByEmail: vi.fn().mockResolvedValue({ id: 'user-uuid', email: 'test@example.com' }),
 }))
 
-vi.mock('@/lib/email/resend', () => ({
-  sendVerificationEmail: vi.fn().mockResolvedValue({ success: true }),
-}))
-
 import { POST } from '@/app/api/agents/register/route'
 import { findOrCreateUserByEmail } from '@/lib/services/user-service'
-import { sendVerificationEmail } from '@/lib/email/resend'
 
 function makeRequest(body: Record<string, unknown>) {
   return new Request('http://localhost/api/agents/register', {
@@ -59,8 +54,7 @@ describe('POST /api/agents/register with email', () => {
     expect(response.status).toBe(201)
     expect(data.api_key).toBeDefined()
     expect(findOrCreateUserByEmail).toHaveBeenCalledWith('test@example.com')
-    expect(sendVerificationEmail).toHaveBeenCalled()
-    expect(data.message).toMatch(/Verification email sent/)
+    expect(data.message).toMatch(/Bind an email/)
   })
 
   it('registers without email (email optional)', async () => {
