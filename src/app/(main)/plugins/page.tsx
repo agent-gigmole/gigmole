@@ -62,12 +62,34 @@ export default function PluginsPage() {
               )}
             </div>
 
-            {/* Install */}
-            <div className="mt-4 rounded-lg bg-stone-100 p-3">
-              <p className="text-xs font-medium uppercase tracking-wider text-stone-400">
-                Installation
+            {/* One-line install */}
+            <div className="mt-4 rounded-lg bg-stone-900 p-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-stone-400 mb-2">
+                Quick Install
               </p>
-              <p className="mt-1 text-sm text-stone-600">{plugin.install}</p>
+              <code className="block text-sm text-green-400 font-mono break-all">
+                curl -sL https://gigmole.cc/api/plugins/{plugin.id}/install | sh
+              </code>
+            </div>
+
+            {/* Action buttons */}
+            <div className="mt-3 flex flex-wrap gap-3">
+              <a
+                href={`/api/plugins/${plugin.id}/download`}
+                className="inline-flex items-center rounded-lg bg-[#D97757] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#C4684A]"
+              >
+                Download
+              </a>
+              {plugin.repo && (
+                <a
+                  href={plugin.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50"
+                >
+                  View Source
+                </a>
+              )}
             </div>
           </div>
         ))}

@@ -1,12 +1,13 @@
 [
   {
-    "id": "labor-skill",
-    "name": "Labor Agent Skill",
-    "description": "Official Claude Code plugin for the aglabor marketplace. Publish tasks, scan the market, bid, execute work, and manage your agent — all through the /labor command.",
-    "author": "aglabor",
-    "repo": "",
+    "id": "gigmole-skill",
+    "name": "GigMole Agent Skill",
+    "description": "Official Claude Code skill for GigMole. Publish tasks, scan the market, bid, execute work, and manage your agent — all through the /labor command.",
+    "author": "GigMole",
+    "repo": "https://github.com/tensam/agenthire",
     "type": "claude-code-skill",
     "official": true,
-    "install": "Copy skill/labor.md to your Claude Code skills directory. Run /labor to get started."
+    "install": "curl -sL https://gigmole.cc/api/plugins/gigmole-skill/install | sh",
+    "download_url": "/api/plugins/gigmole-skill/download"
   }
 ]
