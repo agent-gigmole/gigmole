@@ -114,24 +114,62 @@
     3. request-reset 加 rate limit（3次/邮箱/小时）
   - 12 个安全领域验证通过，4 个低优先级项记录待后续处理
 
+- **全面代码审计完成（23 项修复）**
+  - 对照 docs/business/decisions.md 设计要求审计全代码库（前端+后端+Schema）
+  - 严重修复（8项）：
+    1. 前端注册页重写：去掉钱包强制，改为 name-only 零摩擦注册
+    2. 前端登录页：增加非钱包替代路径提示
+    3. WalletProvider 从全局改为按需加载（只在 login 页面）
+    4. autoConnect 改为 false
+    5. register-with-wallet 标记为 legacy
+    6. award 路由状态机 bug：现在正确写入 AWARDED 状态
+    7. register 路由移除死代码（发了验证码但不存 hash）
+    8. verify-code 计数器分离：verifyAttempts 独立于 emailAttempts
+  - 中等修复（6项）：
+    9. users.updatedAt 加了 $onUpdate hook
+    10. 移除 isEmailTaken dead import/export
+    11. 4 个路由的 @solana/web3.js 直接导入清理
+    12. GET /api/tasks 加 status 筛选（skill plugin /labor scan 现在能工作）
+    13. Header 显示 name 优先（不再默认显示钱包地址）
+    14. Dashboard 加邮箱绑定提示 banner
+  - 低优先修复（9项）：
+    15. 业务逻辑全部抽取到 services 层（escrow-service, email-bind-service, api-key-service, agent-service）
+    16. GET /api/messages 加了鉴权（需要 Bearer token + task_id + 参与者验证）
+    17. tasks.awardedBidId FK 约束（migration 0003）
+    18. verifyApiKey 不再是 dead code（middleware 现在调用它）
+    19. email-verification-service.ts 重命名为 verification-utils.ts
+    20. 设计文档补充 resolved/cancelled 状态
+    21. /api/auth/me join users 表返回 email
+    22. Dashboard 状态筛选补全 disputed/resolved/cancelled
+    23. 新增 GET /api/agents/me/tasks 和 /api/agents/me/bids（程序化自查端点）
+
 ## 已知最佳结果
 
 - 平台数据：18 tasks, 21 agents（含 5 个示范 Agent + 10 个示范任务）
-- **207 个测试全部通过**（从 143 增长到 207，+64）
+- **207+ 个测试全部通过**
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
-- 46+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点 + bind-wallet 端点 + 6 个 email 绑定端点）
+- 48+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点 + bind-wallet 端点 + 6 个 email 绑定端点 + 2 个 agent 自查端点）
 - 15+ 网站页面已构建（含 dashboard、login、bind/[token]）
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（含 platform_authority 模式）
-- 数据库 12 张表已在 Supabase 中创建（原 9 张 + users + email_bind_tokens + api_key_reset_tokens）
+- 数据库 12 张表已在 Supabase 中创建（原 9 张 + users + email_bind_tokens + api_key_reset_tokens）+ migration 0003 新增 awardedBidId FK
 - Vercel 部署成功，生产地址可访问，Escrow 集成已上线
 - Plugin registry (plugins/registry.json) 已建立
 - Next.js build 通过
 - 身份体系三层确立：Email（身份证）→ API Key（钥匙）→ Wallet（银行账户）
+- 业务逻辑全部抽取到 services 层，API route 层干净
+- WalletProvider 按需加载，注册零摩擦
 
 ## 当前阶段
 
-- **Email 绑定系统全部完成，安全审计通过**
+- **全面代码审计完成，23 项修复已实施**
+  - 对照 decisions.md 设计要求逐一验证
+  - 前端注册流程完全符合"弱化 Web3"决策：name-only 注册，钱包可选
+  - 业务逻辑全部 services 层化
+  - award 状态机 bug 修复，verify-code 计数器隔离
+  - messages API 鉴权加固
+  - tasks.awardedBidId FK 约束（migration 0003）
+- Email 绑定系统全部完成，安全审计通过
   - users 表和 agents 表正式分离（1:N 关系）
   - 207 个测试全部通过
   - Email 发送开发阶段用 console.log fallback，生产需配置 RESEND_API_KEY
@@ -180,9 +218,9 @@
 
 ## 下一步
 
-1. **推送品牌重塑 + email 绑定到 GitHub**（触发 Vercel 自动部署到 gigmole.cc）
+1. **推送品牌重塑 + email 绑定 + 审计修复到 GitHub**（触发 Vercel 自动部署到 gigmole.cc）
 2. **生产环境配置 RESEND_API_KEY**（启用真实邮件发送）
-3. **Supabase schema push**（新增 users、email_bind_tokens、api_key_reset_tokens 表）
+3. **Supabase schema push**（新增 users、email_bind_tokens、api_key_reset_tokens 表 + awardedBidId FK）
 4. **安全审计 4 个低优先级项**（后续处理）
 5. **分销/佣金系统开发**（待排期）
 6. 待定：用户提出新需求

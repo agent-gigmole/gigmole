@@ -67,3 +67,16 @@
 | email_bind_tokens / api_key_reset_tokens / 绑定流程 | DECISIONS.md#email-binding-architecture |
 | user-service / email-verification-service / resend.ts | DECISIONS.md#email-binding-architecture |
 | bind/[token] / 前端绑定页面 / Magic Link | DECISIONS.md#email-binding-architecture |
+| Drizzle / 循环引用 / circular reference / FK / 外键 | drizzle-tips.md#circular-reference-fk |
+| awardedBidId / tasks / bids / 双向引用 | drizzle-tips.md#circular-reference-fk |
+| defaultNow / updatedAt / $onUpdate / 自动更新 | drizzle-tips.md#updated-at-on-update |
+| ON UPDATE CURRENT_TIMESTAMP / PostgreSQL / MySQL 差异 | drizzle-tips.md#updated-at-on-update |
+| relations / references / query builder / DDL | drizzle-tips.md#relations-vs-fk |
+| 代码审计 / 23项修复 / decisions.md 对照 | (memory/LOG.md#2026-03-10) |
+| 零摩擦注册 / name-only / 弱化钱包 | (memory/LOG.md#2026-03-10) |
+| WalletProvider / 按需加载 / autoConnect false | (memory/LOG.md#2026-03-10) |
+| services 层 / escrow-service / agent-service / 业务逻辑抽取 | (memory/LOG.md#2026-03-10) |
+| award 状态机 / AWARDED 状态 / bug 修复 | (memory/LOG.md#2026-03-10) |
+| verifyAttempts / emailAttempts / 计数器分离 | (memory/LOG.md#2026-03-10) |
+| messages 鉴权 / Bearer token / 参与者验证 | (memory/LOG.md#2026-03-10) |
+| /api/agents/me/tasks / /api/agents/me/bids / 程序化自查 | (memory/LOG.md#2026-03-10) |

@@ -6,7 +6,7 @@
 
 ## 目标
 
-推送品牌重塑 + email 绑定到 GitHub，配置生产环境，排期后续功能。
+推送品牌重塑 + email 绑定 + 审计修复到 GitHub，配置生产环境，排期后续功能。
 
 ## 已完成步骤
 
@@ -61,19 +61,23 @@
   - [x] Admin 任务状态更新加 TaskStatus enum 验证
   - [x] request-reset 加 rate limit（3次/邮箱/小时）
   - [x] 12 个安全领域验证通过
+- [x] **全面代码审计（23 项修复）**
+  - [x] 严重修复 8 项（注册零摩擦、WalletProvider 按需、award 状态机、verify-code 计数器等）
+  - [x] 中等修复 6 项（updatedAt hook、status 筛选、Header name 优先等）
+  - [x] 低优先修复 9 项（services 层抽取、messages 鉴权、awardedBidId FK、agent 自查端点等）
 
 ## 待完成步骤
 
-- [ ] **推送品牌重塑 + email 绑定到 GitHub**（触发 Vercel 自动部署）
+- [ ] **推送品牌重塑 + email 绑定 + 审计修复到 GitHub**（触发 Vercel 自动部署）
 - [ ] **生产环境配置**
-  - [ ] Supabase schema push（新增 3 张表 + agents 表变更）
+  - [ ] Supabase schema push（新增 3 张表 + agents 表变更 + awardedBidId FK）
   - [ ] Vercel 添加 RESEND_API_KEY 环境变量
 - [ ] **安全审计 4 个低优先级项**（后续处理）
 - [ ] **分销/佣金系统开发**（待排期，43-48h）
 
 ## 状态
 
-整晚 CTO 工作全部完成。Email 绑定系统开发 + 安全 Code Review 均已完成。207 个测试全部通过。待推送 GitHub 并配置生产环境。
+全面审计完成，23 项修复已实施。代码库与 decisions.md 设计要求完全一致。待推送 GitHub 并配置生产环境。
 
 ## 阻塞项
 

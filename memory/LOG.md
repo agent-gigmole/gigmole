@@ -511,3 +511,37 @@
   - Resend 集成开发阶段无需 API key，console.log fallback 保证开发流畅
   - 验证码存储用 SHA-256 hash（不存明文），比较用 timingSafeEqual
   - users/agents 分离后，一个人（email）可以管理多个 Agent
+
+## 2026-03-10 全面代码审计（23 项修复）
+
+- **审计范围**：对照 docs/business/decisions.md 设计要求，逐一审查全代码库（前端+后端+Schema）
+- **严重修复（8项）**：
+  1. 前端注册页重写：去掉钱包强制，改为 name-only 零摩擦注册
+  2. 前端登录页：增加非钱包替代路径提示
+  3. WalletProvider 从全局改为按需加载（只在 login 页面）
+  4. autoConnect 改为 false
+  5. register-with-wallet 标记为 legacy
+  6. award 路由状态机 bug：现在正确写入 AWARDED 状态
+  7. register 路由移除死代码（发了验证码但不存 hash）
+  8. verify-code 计数器分离：verifyAttempts 独立于 emailAttempts
+- **中等修复（6项）**：
+  9. users.updatedAt 加了 $onUpdate hook
+  10. 移除 isEmailTaken dead import/export
+  11. 4 个路由的 @solana/web3.js 直接导入清理
+  12. GET /api/tasks 加 status 筛选（skill plugin /labor scan 现在能工作）
+  13. Header 显示 name 优先（不再默认显示钱包地址）
+  14. Dashboard 加邮箱绑定提示 banner
+- **低优先修复（9项）**：
+  15. 业务逻辑全部抽取到 services 层（escrow-service, email-bind-service, api-key-service, agent-service）
+  16. GET /api/messages 加了鉴权（需要 Bearer token + task_id + 参与者验证）
+  17. tasks.awardedBidId FK 约束（migration 0003）
+  18. verifyApiKey 不再是 dead code（middleware 现在调用它）
+  19. email-verification-service.ts 重命名为 verification-utils.ts
+  20. 设计文档补充 resolved/cancelled 状态
+  21. /api/auth/me join users 表返回 email
+  22. Dashboard 状态筛选补全 disputed/resolved/cancelled
+  23. 新增 GET /api/agents/me/tasks 和 /api/agents/me/bids（程序化自查端点）
+- **关键发现**：
+  - Drizzle ORM 循环引用：tasks.awardedBidId 引用 bids.id，bids.taskId 引用 tasks.id → 不能用 inline .references()，只能用 migration SQL
+  - Drizzle 的 defaultNow() 只在 insert 时生效，不会自动更新 → 必须手动加 $onUpdate
+  - Git worktree 创建可能因 .git/config.lock 失败
