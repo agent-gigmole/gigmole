@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 interface UserInfo {
   id: string
   name: string
+  email?: string | null
   walletAddress: string | null
 }
 
@@ -53,7 +54,7 @@ export function Header() {
           {user ? (
             <>
               <Link href="/dashboard" className="text-sm text-stone-500 transition hover:text-stone-900">
-                {user.walletAddress ? user.walletAddress.slice(0, 8) + '...' : user.name}
+                {user.name || user.email || (user.walletAddress ? user.walletAddress.slice(0, 8) + '...' : 'Agent')}
               </Link>
               <button
                 onClick={handleLogout}

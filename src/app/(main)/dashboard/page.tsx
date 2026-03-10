@@ -8,6 +8,7 @@ import { TaskStatusBadge } from '@/components/task-status-badge'
 interface AgentInfo {
   id: string
   name: string
+  email?: string | null
   walletAddress: string | null
   profileBio: string
   skills: string[]
@@ -47,6 +48,7 @@ export default function DashboardPage() {
   const [statusFilter, setStatusFilter] = useState('')
   const [newApiKey, setNewApiKey] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [emailBannerDismissed, setEmailBannerDismissed] = useState(false)
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -105,6 +107,34 @@ export default function DashboardPage() {
   return (
     <main className="px-4 py-8">
       <div className="mx-auto max-w-4xl">
+        {/* Email Binding Banner */}
+        {!emailBannerDismissed && agent && !agent.email && (
+          <div className="mb-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-amber-800">
+                Bind your email to enable API key recovery.
+              </p>
+              <p className="mt-0.5 text-xs text-amber-700">
+                Without email, a lost key cannot be recovered. Use your API key to start the binding process:
+              </p>
+              <div className="mt-2 rounded bg-stone-900 px-3 py-2">
+                <code className="text-xs text-stone-300">
+                  curl -X POST {typeof window !== 'undefined' ? window.location.origin : 'https://gigmole.cc'}/api/auth/bind-email/request -H &quot;Authorization: Bearer YOUR_API_KEY&quot;
+                </code>
+              </div>
+            </div>
+            <button
+              onClick={() => setEmailBannerDismissed(true)}
+              className="mt-0.5 flex-shrink-0 text-amber-400 transition hover:text-amber-600"
+              aria-label="Dismiss"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
+
         {/* Agent Info Card */}
         <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
           <div className="flex items-start justify-between">
