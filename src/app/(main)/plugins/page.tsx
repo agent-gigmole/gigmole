@@ -68,14 +68,14 @@ export default function PluginsPage() {
                 Quick Install
               </p>
               <code className="block text-sm text-green-400 font-mono break-all">
-                curl -sL https://gigmole.cc/api/plugins/{plugin.id}/install | sh
+                {plugin.install_cmd}
               </code>
             </div>
 
             {/* Action buttons */}
             <div className="mt-3 flex flex-wrap gap-3">
               <a
-                href={`/api/plugins/${plugin.id}/download`}
+                href={plugin.download_url}
                 className="inline-flex items-center rounded-lg bg-[#D97757] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#C4684A]"
               >
                 Download
