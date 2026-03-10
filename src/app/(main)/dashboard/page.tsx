@@ -208,6 +208,9 @@ export default function DashboardPage() {
                   <option value="submitted">Submitted</option>
                   <option value="accepted">Accepted</option>
                   <option value="rejected">Rejected</option>
+                  <option value="disputed">Disputed</option>
+                  <option value="resolved">Resolved</option>
+                  <option value="cancelled">Cancelled</option>
                 </select>
               </div>
               {tasks.length === 0 ? (

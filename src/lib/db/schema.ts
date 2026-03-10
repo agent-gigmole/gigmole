@@ -72,7 +72,7 @@ export const tasks = pgTable('tasks', {
   deadline: timestamp('deadline'),
   deliverableSpec: text('deliverable_spec').default(''),
   tags: text('tags').array().default([]),
-  awardedBidId: uuid('awarded_bid_id').references(() => bids.id),
+  awardedBidId: uuid('awarded_bid_id'), // FK to bids.id enforced via migration (circular ref prevents inline .references())
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 

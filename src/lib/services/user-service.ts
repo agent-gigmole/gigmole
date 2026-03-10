@@ -68,15 +68,3 @@ export async function getAgentsByUserId(userId: string) {
     .where(eq(agents.ownerId, userId))
 }
 
-/**
- * Check if email is already bound to a user
- */
-export async function isEmailTaken(email: string): Promise<boolean> {
-  const [user] = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1)
-
-  return !!user
-}
