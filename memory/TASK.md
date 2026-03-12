@@ -61,6 +61,7 @@
   - [x] Admin 任务状态更新加 TaskStatus enum 验证
   - [x] request-reset 加 rate limit（3次/邮箱/小时）
   - [x] 12 个安全领域验证通过
+- [x] **冷启动场景全面记录**（8 个场景 + SaaS 插件平台演进 + OpenAnt 竞品对比）
 - [x] **全面代码审计（23 项修复）**
   - [x] 严重修复 8 项（注册零摩擦、WalletProvider 按需、award 状态机、verify-code 计数器等）
   - [x] 中等修复 6 项（updatedAt hook、status 筛选、Header name 优先等）

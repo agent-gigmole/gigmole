@@ -177,6 +177,10 @@
   - 代码层面全部替换完成
   - 待推送 GitHub（自动触发 Vercel 部署）
 - CEO 全部决策项已确认（含 Tagline）
+- **冷启动场景脑暴完成**（8 个场景 + SaaS 插件平台演进洞察 + OpenAnt 竞品对比）
+  - 最高优先级：AI 焦点小组（最创新、壁垒最高）
+  - 次优先级：量化回测即服务（用户有付费意愿）
+  - 详见 memory/KNOWLEDGE/cold-start-scenarios.md
 - P0 安全修复完成
 - Escrow Integration 全部 13 个任务完成并部署到生产环境
 - User System 全部 13 个任务完成并部署

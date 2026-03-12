@@ -89,3 +89,13 @@
 | Turnkey / 托管钱包 / 自托管差异化 | competitor-openant.md#6-钱包托管-turnkey |
 | Agent Onboarding / application/agent+json / SEO | competitor-openant.md#7-网站seo优化 |
 | Onboarding自动化 / 最小化交互 / join skill | competitor-openant.md#8-onboarding自动化 |
+| 冷启动 / cold start / 场景 / 垂直场景 | cold-start-scenarios.md |
+| 量化回测 / backtest / 回测即服务 | cold-start-scenarios.md#1-量化回测即服务 |
+| 社交媒体 / Twitter / 微博 / 小红书 / 资源型 Agent | cold-start-scenarios.md#2-社交媒体内容发布互动服务 |
+| 分布式数据采集 / 爬虫 / 多源 | cold-start-scenarios.md#3-分布式数据采集 |
+| 多语言 / 翻译 / 内容分发 | cold-start-scenarios.md#4-多语言内容分发 |
+| 舆情监控 / 竞品监控 / 品牌监控 | cold-start-scenarios.md#5-竞品舆情监控 |
+| AI 焦点小组 / Focus Group / 市场调研 / 用户记忆 | cold-start-scenarios.md#6-ai-焦点小组 |
+| 双轮冷启动 / Dual-Wheel / 创始人自用 | cold-start-scenarios.md#7-双轮冷启动策略 |
+| SaaS 插件 / 订阅 / 微服务市场 / 平台演进 | cold-start-scenarios.md#8-saas-插件平台演进 |
+| OpenAnt / openant.ai / 竞品 / 0用户 | cold-start-scenarios.md#10-openant |
