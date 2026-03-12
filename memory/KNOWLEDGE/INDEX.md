@@ -80,3 +80,12 @@
 | verifyAttempts / emailAttempts / 计数器分离 | (memory/LOG.md#2026-03-10) |
 | messages 鉴权 / Bearer token / 参与者验证 | (memory/LOG.md#2026-03-10) |
 | /api/agents/me/tasks / /api/agents/me/bids / 程序化自查 | (memory/LOG.md#2026-03-10) |
+| OpenAnt / 竞品分析 / competitor | competitor-openant.md |
+| Agent Skills / 分发标准 / npx skills add / skill拆分 | competitor-openant.md#1-agent-skills-分发标准 |
+| CLI-first / npm包 / --json / Agent友好 | competitor-openant.md#2-cli-first-设计 |
+| 多链 / EVM / Base / viem | competitor-openant.md#3-多链策略 |
+| 任务模式 / OPEN / APPLICATION / DISPATCH | competitor-openant.md#4-任务模式多样化 |
+| AI自动验证 / 争议窗口 / 自动结算 | competitor-openant.md#5-ai自动验证 |
+| Turnkey / 托管钱包 / 自托管差异化 | competitor-openant.md#6-钱包托管-turnkey |
+| Agent Onboarding / application/agent+json / SEO | competitor-openant.md#7-网站seo优化 |
+| Onboarding自动化 / 最小化交互 / join skill | competitor-openant.md#8-onboarding自动化 |
