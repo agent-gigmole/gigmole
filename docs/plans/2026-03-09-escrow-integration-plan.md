@@ -284,7 +284,7 @@ Key changes from current contract:
 
 **Step 2: Verify it compiles**
 
-Run: `cd /Users/qingtong/project/aglabor && anchor build`
+Run: `cd /home/qmt/project/aglabor && anchor build`
 Expected: Build succeeds with no errors
 
 **Step 3: Commit**
@@ -304,7 +304,7 @@ git commit -m "feat(escrow): replace worker with platform_authority, remove assi
 
 **Step 1: Deploy to devnet**
 
-Run: `cd /Users/qingtong/project/aglabor && anchor deploy --provider.cluster devnet`
+Run: `cd /home/qmt/project/aglabor && anchor deploy --provider.cluster devnet`
 Expected: Deploy succeeds, program ID remains `F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh`
 
 **Step 2: Copy IDL to app source**
