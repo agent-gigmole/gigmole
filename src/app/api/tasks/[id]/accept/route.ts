@@ -48,6 +48,14 @@ export async function POST(
     walletWarning = result.walletWarning
   }
 
+  // HIGH-06: walletWarning 时不更新状态，保持 SUBMITTED
+  if (walletWarning) {
+    return NextResponse.json({
+      ...task,
+      walletWarning,
+    })
+  }
+
   const [updated] = await db
     .update(tasks)
     .set({ status: TaskStatus.ACCEPTED })
@@ -57,6 +65,5 @@ export async function POST(
   return NextResponse.json({
     ...updated,
     releaseTx,
-    ...(walletWarning ? { walletWarning } : {}),
   })
 }

@@ -2,9 +2,11 @@ import { PublicKey } from '@solana/web3.js'
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import { connection } from './client'
 
-const PROGRAM_ID = new PublicKey(
-  process.env.SOLANA_ESCROW_PROGRAM_ID || '11111111111111111111111111111111'
-)
+// CRIT-06: 不允许 fallback 到 System Program，环境变量未设置时直接报错
+if (!process.env.SOLANA_ESCROW_PROGRAM_ID) {
+  throw new Error('SOLANA_ESCROW_PROGRAM_ID environment variable is not set')
+}
+const PROGRAM_ID = new PublicKey(process.env.SOLANA_ESCROW_PROGRAM_ID)
 
 export function getEscrowPDA(taskId: string): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
@@ -22,11 +24,13 @@ export async function getEscrowAccount(taskId: string) {
 export interface EscrowData {
   publisher: string
   platformAuthority: string
+  usdcMint: string
   amount: number
   listingFee: number
   feeBps: number
   taskId: string
   status: 'Funded' | 'Released' | 'Refunded'
+  worker: string
   bump: number
 }
 
@@ -53,6 +57,10 @@ export async function parseEscrowAccount(
   ).toBase58()
   offset += 32
 
+  // CRIT-03: 解析新增的 usdc_mint 字段
+  const usdcMint = new PublicKey(data.subarray(offset, offset + 32)).toBase58()
+  offset += 32
+
   const amount = Number(data.readBigUInt64LE(offset))
   offset += 8
 
@@ -69,18 +77,28 @@ export async function parseEscrowAccount(
 
   const statusByte = data[offset]
   offset += 1
-  const status = STATUS_MAP[statusByte] ?? 'Funded'
+  // HIGH-05: 未知状态抛出错误而非 fallback 为 Funded
+  const status = STATUS_MAP[statusByte]
+  if (!status) {
+    throw new Error(`Unknown escrow status byte: ${statusByte}`)
+  }
+
+  // CRIT-04: 解析新增的 worker 字段
+  const worker = new PublicKey(data.subarray(offset, offset + 32)).toBase58()
+  offset += 32
 
   const bump = data[offset]
 
   return {
     publisher,
     platformAuthority,
+    usdcMint,
     amount,
     listingFee,
     feeBps,
     taskId: parsedTaskId,
     status,
+    worker,
     bump,
   }
 }

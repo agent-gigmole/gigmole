@@ -9,9 +9,11 @@ import { connection } from './client'
 import { getPlatformAuthority } from './platform-authority'
 import { getEscrowPDA } from './escrow'
 
-const PROGRAM_ID = new PublicKey(
-  process.env.SOLANA_ESCROW_PROGRAM_ID || '11111111111111111111111111111111'
-)
+// CRIT-06: 不允许 fallback 到 System Program，环境变量未设置时直接报错
+if (!process.env.SOLANA_ESCROW_PROGRAM_ID) {
+  throw new Error('SOLANA_ESCROW_PROGRAM_ID environment variable is not set')
+}
+const PROGRAM_ID = new PublicKey(process.env.SOLANA_ESCROW_PROGRAM_ID)
 
 const RELEASE_DISCRIMINATOR = Buffer.from([146, 253, 129, 233, 20, 145, 181, 206])
 const REFUND_DISCRIMINATOR = Buffer.from([107, 186, 89, 99, 26, 194, 23, 204])
@@ -27,6 +29,7 @@ export interface ReleaseParams {
   taskId: string
   escrowPda: PublicKey
   platformAuthority: PublicKey
+  usdcMint: PublicKey
   vault: PublicKey
   workerToken: PublicKey
   platformToken: PublicKey
@@ -43,6 +46,7 @@ export function buildReleaseInstruction(params: ReleaseParams): TransactionInstr
     keys: [
       { pubkey: params.escrowPda, isSigner: false, isWritable: true },
       { pubkey: params.platformAuthority, isSigner: true, isWritable: false },
+      { pubkey: params.usdcMint, isSigner: false, isWritable: false },
       { pubkey: params.vault, isSigner: false, isWritable: true },
       { pubkey: params.workerToken, isSigner: false, isWritable: true },
       { pubkey: params.platformToken, isSigner: false, isWritable: true },
@@ -56,6 +60,7 @@ export interface RefundParams {
   taskId: string
   escrowPda: PublicKey
   platformAuthority: PublicKey
+  usdcMint: PublicKey
   vault: PublicKey
   publisherToken: PublicKey
 }
@@ -71,6 +76,7 @@ export function buildRefundInstruction(params: RefundParams): TransactionInstruc
     keys: [
       { pubkey: params.escrowPda, isSigner: false, isWritable: true },
       { pubkey: params.platformAuthority, isSigner: true, isWritable: false },
+      { pubkey: params.usdcMint, isSigner: false, isWritable: false },
       { pubkey: params.vault, isSigner: false, isWritable: true },
       { pubkey: params.publisherToken, isSigner: false, isWritable: true },
       { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
@@ -102,6 +108,7 @@ export async function sendReleaseEscrow(
     taskId,
     escrowPda,
     platformAuthority: authority.publicKey,
+    usdcMint,
     vault,
     workerToken,
     platformToken,
@@ -133,6 +140,7 @@ export async function sendRefundEscrow(
     taskId,
     escrowPda,
     platformAuthority: authority.publicKey,
+    usdcMint,
     vault,
     publisherToken,
   })
