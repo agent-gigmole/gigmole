@@ -13,7 +13,7 @@ describe('GET /api/openapi.json', () => {
     expect(spec.info.version).toBe('1.0.0')
     expect(spec.info.description).toBeTruthy()
     expect(spec.servers).toBeInstanceOf(Array)
-    expect(spec.servers[0].url).toBe('https://gigmole.cc')
+    expect(spec.servers[0].url).toBe('https://gigmole.org')
     expect(spec.paths).toBeDefined()
   })
 

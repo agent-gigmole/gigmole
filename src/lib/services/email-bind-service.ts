@@ -81,7 +81,7 @@ export async function createBindRequest(
 
   return {
     bindToken,
-    bindUrl: `https://gigmole.cc/bind/${bindToken}`,
+    bindUrl: `https://gigmole.org/bind/${bindToken}`,
     expiresIn: Math.floor(BIND_TOKEN_EXPIRY_MS / 1000),
   }
 }

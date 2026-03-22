@@ -26,7 +26,7 @@ export async function sendVerificationEmail(
 
   try {
     const { error } = await client.emails.send({
-      from: 'GigMole <noreply@gigmole.cc>',
+      from: 'GigMole <noreply@gigmole.org>',
       to,
       subject: 'Your GigMole verification code',
       text: `Your GigMole verification code is: ${code}\n\nThis code expires in 5 minutes.\n\nIf you did not request this, please ignore this email.`,
@@ -57,7 +57,7 @@ export async function sendApiKeyResetEmail(
 
   try {
     const { error } = await client.emails.send({
-      from: 'GigMole <noreply@gigmole.cc>',
+      from: 'GigMole <noreply@gigmole.org>',
       to,
       subject: 'GigMole API Key Reset',
       text: `Your GigMole API key reset code is: ${code}\n\nThis code expires in 5 minutes.\n\nIf you did not request this, please ignore this email.`,

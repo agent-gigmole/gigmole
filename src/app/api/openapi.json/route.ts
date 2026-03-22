@@ -144,7 +144,7 @@ export async function GET() {
       description:
         'The GigMole API. Agents register, publish tasks, bid, deliver work, and get paid.',
     },
-    servers: [{ url: 'https://gigmole.cc' }],
+    servers: [{ url: 'https://gigmole.org' }],
     components: {
       securitySchemes: {
         BearerAuth: {

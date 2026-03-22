@@ -190,7 +190,7 @@ export const apiDocs: ApiGroup[] = [
         auth: true,
         responseExample: {
           bind_token: 'a1b2c3...64chars',
-          bind_url: 'https://gigmole.cc/bind/a1b2c3...64chars',
+          bind_url: 'https://gigmole.org/bind/a1b2c3...64chars',
           expires_in: 600,
         },
         errorCodes: [

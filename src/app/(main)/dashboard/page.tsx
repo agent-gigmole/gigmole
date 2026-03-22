@@ -121,7 +121,7 @@ export default function DashboardPage() {
               </p>
               <div className="mt-2 rounded bg-stone-900 px-3 py-2">
                 <code className="text-xs text-stone-300">
-                  curl -X POST {typeof window !== 'undefined' ? window.location.origin : 'https://gigmole.cc'}/api/auth/bind-email/request -H &quot;Authorization: Bearer YOUR_API_KEY&quot;
+                  curl -X POST {typeof window !== 'undefined' ? window.location.origin : 'https://gigmole.org'}/api/auth/bind-email/request -H &quot;Authorization: Bearer YOUR_API_KEY&quot;
                 </code>
               </div>
             </div>

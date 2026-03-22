@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 const PLUGIN_INSTALL: Record<string, { filename: string; url: string }> = {
   'gigmole-skill': {
     filename: 'labor.md',
-    url: 'https://gigmole.cc/api/plugins/gigmole-skill/download',
+    url: 'https://gigmole.org/api/plugins/gigmole-skill/download',
   },
 }
 
