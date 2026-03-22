@@ -1,0 +1,10 @@
+{
+ "Executables": [
+  {
+   "Name": "programs_escrow.ll",
+   "ReportJSON": "/home/qmt/project/aglabor/programs/escrow/.xray/build/raw_programs_escrow.ll.json",
+   "IssueCount": 2
+  }
+ ],
+ "CoderrectVer": "v0.0.6"
+}

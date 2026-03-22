@@ -1,0 +1,32 @@
+01:37:16 [info] [xray] [cli.go:219:cli.Start] Start a new session. version=v0.0.6, args=[.]
+01:37:16 [info] [xray] [cli.go:236:cli.Start] Create the build directory. dir=/home/qmt/project/aglabor/programs/escrow/.xray/build
+01:37:16 [info] [xray] [cli.go:275:cli.Start] Passed cmdline args via env. cmdlineOpts={"Opts":["-logger.logFolder=/home/qmt/project/aglabor/programs/escrow/.xray/logs","-cwd=/home/qmt/project/aglabor/programs/escrow"]}
+01:37:16 [info] [xray] [cli.go:279:cli.Start] Execute sol-code-parser to generate IR files. cmdline=[.]
+01:37:16 [info] [xray] [cli.go:120:cli.findAllXargoTomlDirectory.func1] skip path: /home/qmt/project/aglabor/programs/escrow/target/debug
+01:37:16 [info] [xray] [cli.go:120:cli.findAllXargoTomlDirectory.func1] skip path: /home/qmt/project/aglabor/programs/escrow/target/deploy
+01:37:16 [info] [xray] [cli.go:120:cli.findAllXargoTomlDirectory.func1] skip path: /home/qmt/project/aglabor/programs/escrow/target/release
+01:37:16 [info] [xray] [cli.go:120:cli.findAllXargoTomlDirectory.func1] skip path: /home/qmt/project/aglabor/programs/escrow/target/sbpf-solana-solana
+01:37:16 [debug] [xray] [Logger.cpp:153] Set logging configs: level=debug, logFolder=/home/qmt/project/aglabor/programs/escrow/.xray/logs, logFile=log.current, enableTerminal=false, enableFile=true
+01:40:25 [info] [xray] [cli.go:353:cli.Start] Analyzing IR file "/home/qmt/project/aglabor/programs/escrow/programs_escrow.ll" for issues...
+01:40:25 [info] [xray] [cli.go:358:cli.Start] Generating the JSON file. jsonPath=/home/qmt/project/aglabor/programs/escrow/.xray/tmp/coderrect-1774201036/xray_programs_escrow.ll_report.json
+01:40:25 [debug] [xray] [Logger.cpp:153] Set logging configs: level=debug, logFolder=/home/qmt/project/aglabor/programs/escrow/.xray/logs, logFile=log.current, enableTerminal=false, enableFile=true
+01:40:25 [info] [xray] [Main.cpp:219] Loading IR From File: /home/qmt/project/aglabor/programs/escrow/programs_escrow.ll
+01:40:25 [info] [xray] [Main.cpp:227] Running Transformation Passes
+01:40:25 [info] [xray] [AccountIDL.cpp:105] Anchor IDL result: 
+01:40:25 [info] [xray] [SolverBase.h:458] Pointer Analysis Starting to Solve
+01:40:25 [debug] [xray] [PartialUpdateSolver.h:355] PTA Iteration No: 0 - nodes: 709
+01:40:25 [info] [xray] [SolverBase.h:463] Pointer Analysis Finished Solving
+01:40:25 [debug] [xray] [SolverBase.h:467] PTA constraint graph node number 709, callgraph node number 18
+01:40:25 [info] [xray] [SolanaAnalysisPass.cpp:3416] Start Analyzing
+01:40:25 [info] [xray] [SolanaAnalysisPass.cpp:3420] Start Building SHB
+01:40:25 [debug] [xray] [SolanaAnalysisPass.cpp:3427] Start travering thread 0, thread start = cr_main
+01:40:25 [debug] [xray] [SolanaAnalysisPass.cpp:3427] Start travering thread 1, thread start = sol.create_escrow.5
+01:40:25 [debug] [xray] [SolanaAnalysisPass.cpp:3427] Start travering thread 2, thread start = sol.set_worker.3
+01:40:25 [debug] [xray] [SolanaAnalysisPass.cpp:3427] Start travering thread 3, thread start = sol.release_escrow.2
+01:40:25 [debug] [xray] [SolanaAnalysisPass.cpp:3427] Start travering thread 4, thread start = sol.refund_escrow.2
+01:40:25 [debug] [xray] [SolanaAnalysisPass.cpp:3489] Finish Building SHB. time=0.002698064s
+01:40:25 [debug] [xray] [SolanaAnalysisPass.cpp:3490] Number of threads: 5
+01:40:25 [debug] [xray] [SolanaAnalysisPass.cpp:3497] Finished Analysis. time=1e-08s
+01:40:25 [info] [reporter] [reporter.go:106:reporter.GenerateReport] Check the cmdlineenv. cmdlineEnv={"Opts":["-logger.logFolder=/home/qmt/project/aglabor/programs/escrow/.xray/logs","-cwd=/home/qmt/project/aglabor/programs/escrow"]}
+01:40:25 [info] [reporter] [reporter.go:139:reporter.GenerateReport] Reporter exits gracefully
+01:40:25 [info] [reporter] [cli.go:439:cli.Start] End the session

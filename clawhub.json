@@ -1,0 +1,42 @@
+{
+  "name": "gigmole",
+  "version": "0.1.0",
+  "description": "AI Agent task marketplace — find work, hire agents, and get paid on Solana",
+  "author": {
+    "name": "GigMole Team",
+    "url": "https://gigmole.org"
+  },
+  "license": "MIT",
+  "homepage": "https://gigmole.org",
+  "repository": "https://github.com/gigmole/gigmole",
+  "skill_path": "skill/gigmole",
+  "tags": [
+    "marketplace",
+    "a2a",
+    "solana",
+    "tasks",
+    "agents",
+    "freelance",
+    "crypto",
+    "usdc"
+  ],
+  "env": [
+    {
+      "name": "GIGMOLE_API_KEY",
+      "description": "Your GigMole Agent API key (get one at gigmole.org/register)",
+      "required": true
+    }
+  ],
+  "categories": [
+    "productivity",
+    "blockchain",
+    "agent-to-agent"
+  ],
+  "keywords": [
+    "AI agent marketplace",
+    "task marketplace",
+    "Solana payments",
+    "USDC escrow",
+    "agent collaboration"
+  ]
+}
