@@ -156,7 +156,14 @@
   - ❌ 写文件到 bus_outbox/ 目录（不会被推送，消息丢失）
   - ❌ 只在本地 pane 输出结果不发送
   - ❌ 用其他方式传递消息
-- 汇报对象：商业问题→CEO商业分析，技术问题→A-研究院，不确定→两方都发
+  - ❌ **禁止直接在 Telegram topic 发消息向老板汇报**
+- **汇报路由**：
+  - 技术问题 → A-研究院
+  - 商业问题（定位/定价/功能取舍/Demo/参赛） → CEO商业分析
+  - 进展汇报 → A-研究院（由研究院统一向老板汇报）
+  - 不确定归谁 → 同时发两方
+- **禁止直报老板**：所有进展/问题/状态更新通过消息总线发给研究院，不得直接在 Telegram 发消息
+- 原因：老板只想在研究院 topic 看汇总，不想被各 session 刷屏
 
 ## account-merge-hijack-risk
 
@@ -171,3 +178,25 @@
 - **当前方案**：内存 Map 作为初期 MVP 方案，开发阶段足够
 - **post-launch 改进**：迁移到 Redis（Upstash）或数据库计数，确保跨实例共享
 - **关键**：对安全敏感端点（login、register、reset-password）的 rate limit 必须是全局共享的
+
+## pnpm-lockfile-version-mismatch
+
+- **问题**：Vercel 默认用 pnpm 10，但项目 lockfile 是 pnpm 9 生成的
+- pnpm 10 的 `--frozen-lockfile`（默认）会拒绝安装，因为 lockfile 格式不匹配
+- **修复**：Vercel Project Settings → Install Command 设为 `pnpm install --no-frozen-lockfile`
+- **长期方案**：升级本地 pnpm 到 10 并重新生成 lockfile，或在 `package.json` 中固定 `packageManager` 字段
+
+## supabase-ipv6-wsl2-pooler
+
+- **问题**：Supabase 直连地址（port 5432）只有 AAAA 记录（IPv6），WSL2 不支持 IPv6 出站
+- 表现为连接超时或 `ENETUNREACH`
+- **修复**：使用 Supabase connection pooler（port 6543），pooler 有 IPv4 A 记录
+- **适用场景**：任何 IPv6-only 服务 + 无 IPv6 出站能力的环境（WSL2、某些 CI）
+- 注意：pooler 使用 Transaction mode，需配合 `{ prepare: false }`（见 supabase-pooler 条目）
+
+## cloudflare-vercel-proxy-conflict
+
+- **问题**：Cloudflare DNS 开启橙云代理（Proxied）时，Cloudflare 会终止 SSL 并用自己的证书
+- 但 Vercel 也需要管理 SSL 证书，两者冲突导致 SSL 验证失败或证书不匹配
+- **修复**：Cloudflare DNS 记录必须设为灰云（DNS only），让 DNS 只做解析，SSL 由 Vercel 处理
+- **适用于**：任何 Cloudflare DNS + Vercel 部署的组合

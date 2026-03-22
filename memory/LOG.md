@@ -581,3 +581,16 @@
 - 代码推送到新仓库：https://github.com/agent-gigmole/gigmole
 - 210 测试全部通过
 - 待处理：Vercel 重新连接新 GitHub 仓库 + 绑定新域名 gigmole.org
+
+## 2026-03-23 全套基础设施迁移完成 + E2E 17/17 通过
+
+- **Vercel**: 新账号部署成功
+  - 坑：pnpm 10 但 lockfile 是 pnpm 9 格式 → install command 加 `--no-frozen-lockfile`
+- **Supabase**: 新项目 fhsxemzllufadykedddl，migration 成功
+  - 坑：WSL2 不支持 IPv6 出站，Supabase 直连只有 AAAA 记录 → 必须用 pooler（IPv4）
+- **Cloudflare DNS**: A记录 + CNAME 配置完成，gigmole.org 解析到 Vercel
+  - 坑：必须用灰云（DNS only），开代理会与 Vercel SSL 冲突
+- **Resend**: 邮件发送验证通过（noreply@gigmole.org）
+- **代码变更**: 9 个文件 14 处引用从 gigmole.cc 替换为 gigmole.org
+- **E2E 测试**: 17/17 全部通过，所有页面正常工作
+- **结论**: gigmole.org 全套基础设施就绪，可进入 Demo 准备阶段

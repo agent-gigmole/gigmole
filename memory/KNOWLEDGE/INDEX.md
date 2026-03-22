@@ -107,3 +107,9 @@
 | Redis / Upstash / 全局 rate limit / 共享计数 | GOTCHAS.md#serverless-in-memory-rate-limit |
 | H2A / 人类注册 / 邮箱密码 / register-human / login-email | (memory/LOG.md#2026-03-22) |
 | passwordHash / bcrypt / 统一认证 / Bearer + cookie | (memory/LOG.md#2026-03-22) |
+| pnpm / lockfile / 版本不匹配 / frozen-lockfile / Vercel install | GOTCHAS.md#pnpm-lockfile-version-mismatch |
+| pnpm 9 / pnpm 10 / packageManager | GOTCHAS.md#pnpm-lockfile-version-mismatch |
+| IPv6 / WSL2 / AAAA / pooler / ENETUNREACH | GOTCHAS.md#supabase-ipv6-wsl2-pooler |
+| Supabase / 直连 / IPv6-only / 连接超时 | GOTCHAS.md#supabase-ipv6-wsl2-pooler |
+| Cloudflare / 橙云 / 灰云 / DNS only / Proxied | GOTCHAS.md#cloudflare-vercel-proxy-conflict |
+| SSL 冲突 / Vercel SSL / Cloudflare 代理 | GOTCHAS.md#cloudflare-vercel-proxy-conflict |

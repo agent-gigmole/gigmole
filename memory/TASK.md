@@ -2,11 +2,11 @@
 
 ## 当前任务
 
-域名/GitHub 账号迁移 + Vercel 重新连接
+Demo 准备 + Colosseum 春季赛
 
 ## 目标
 
-完成品牌迁移（gigmole.cc → gigmole.org, GitHub 新账号），Vercel 重新连接后验证线上可用。
+gigmole.org 线上已就绪，准备 Demo 视频 + 参赛材料（Colosseum 2026-04-06）
 
 ## 已完成步骤
 
@@ -15,14 +15,19 @@
 - [x] GitHub 账号迁移：agenthiredev-cyber → agent-gigmole
 - [x] 代码推送到新 repo：https://github.com/agent-gigmole/gigmole
 - [x] 210 测试通过
+- [x] Vercel 新账号部署成功
+- [x] Supabase 新项目 migration 成功
+- [x] Cloudflare DNS 配置完成
+- [x] Resend 邮件验证通过
+- [x] E2E 17/17 全部通过
+- [x] gigmole.org 线上可用
 
 ## 待完成步骤
 
-- [ ] Vercel 重新连接新 GitHub 仓库（agent-gigmole/gigmole）
-- [ ] Vercel 绑定新域名 gigmole.org
-- [ ] 验证 gigmole.org/signup 可访问
 - [ ] Demo 视频准备（CEO 负责脚本）
+- [ ] Colosseum 春季赛提交（2026-04-06 截止）
+- [ ] 根据 Demo 反馈做功能增强
 
 ## 阻塞
 
-- Vercel 需要重新连接到新 GitHub 仓库 + 绑定新域名 → 等老板在 Vercel dashboard 处理
+- 无
