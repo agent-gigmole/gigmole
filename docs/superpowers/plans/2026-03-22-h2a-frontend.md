@@ -416,7 +416,7 @@ describe('POST /api/auth/register-human', () => {
       .mockResolvedValueOnce([{ id: 'agent-1', name: 'TestUser' }]) // agent insert
   })
 
-  it('returns 201 with user and agent on success', async () => {
+  it('returns 201 with user and agent on success (no apiKey in response)', async () => {
     const req = new NextRequest('http://localhost/api/auth/register-human', {
       method: 'POST',
       body: JSON.stringify({ email: 'test@example.com', password: 'password123', name: 'TestUser' }),
@@ -426,7 +426,7 @@ describe('POST /api/auth/register-human', () => {
     const data = await res.json()
     expect(data.user.email).toBe('test@example.com')
     expect(data.agent.name).toBe('TestUser')
-    expect(data.agent.apiKey).toBe('agl_testkey123')
+    expect(data.agent.apiKey).toBeUndefined() // P1: no apiKey in response
   })
 
   it('returns 400 if email is missing', async () => {
@@ -447,14 +447,23 @@ describe('POST /api/auth/register-human', () => {
     expect(res.status).toBe(400)
   })
 
-  it('returns 409 if email already exists with password', async () => {
-    mockSelectWhere.mockResolvedValue([{ id: 'existing-user', passwordHash: '$2a$12$existing' }])
+  it('returns 409 if email already exists (any state — P0 fix)', async () => {
+    mockSelectWhere.mockResolvedValue([{ id: 'existing-user' }])
     const req = new NextRequest('http://localhost/api/auth/register-human', {
       method: 'POST',
       body: JSON.stringify({ email: 'taken@example.com', password: 'password123', name: 'TestUser' }),
     })
     const res = await POST(req)
     expect(res.status).toBe(409)
+  })
+
+  it('returns 400 if password too long (P1 bcrypt DoS fix)', async () => {
+    const req = new NextRequest('http://localhost/api/auth/register-human', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'test@example.com', password: 'a'.repeat(200), name: 'TestUser' }),
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(400)
   })
 
   it('sets user_session cookie on success', async () => {
@@ -511,61 +520,41 @@ export async function POST(request: NextRequest) {
     .where(eq(users.email, email.toLowerCase().trim()))
     .limit(1)
 
-  if (existingUser && existingUser.passwordHash) {
+  // P0 fix: email exists → always reject (no merge, prevents account hijacking)
+  if (existingUser) {
     return NextResponse.json({ error: 'Email already registered' }, { status: 409 })
+  }
+
+  // P1 fix: max password length 128 (bcrypt truncates at 72 bytes, long strings waste CPU)
+  if (password.length > 128) {
+    return NextResponse.json({ error: 'Password must not exceed 128 characters' }, { status: 400 })
   }
 
   const passwordHash = await hashPassword(password)
   const apiKey = generateApiKey()
   const apiKeyHash = hashApiKey(apiKey)
 
-  let userId: string
-  let agentId: string
+  // New user — no merge path (P0 security fix)
+  const [newUser] = await db.insert(users).values({
+    email: email.toLowerCase().trim(),
+    passwordHash,
+    emailVerified: false,
+  }).returning()
+  const userId = newUser.id
 
-  if (existingUser && !existingUser.passwordHash) {
-    // Email exists from bind flow but no password — merge account
-    userId = existingUser.id
-    await db.update(users).set({ passwordHash }).where(eq(users.id, userId))
-
-    // Check if user already has an agent
-    const [existingAgent] = await db
-      .select()
-      .from(agents)
-      .where(eq(agents.ownerId, userId))
-      .limit(1)
-
-    if (existingAgent) {
-      agentId = existingAgent.id
-    } else {
-      const [newAgent] = await db.insert(agents).values({
-        name: name.trim(),
-        apiKeyHash,
-        ownerId: userId,
-      }).returning()
-      agentId = newAgent.id
-    }
-  } else {
-    // New user
-    const [newUser] = await db.insert(users).values({
-      email: email.toLowerCase().trim(),
-      passwordHash,
-      emailVerified: false,
+  const [newAgent] = await db.insert(agents).values({
+    name: name.trim(),
+    apiKeyHash,
+    ownerId: userId,
     }).returning()
-    userId = newUser.id
-
-    const [newAgent] = await db.insert(agents).values({
-      name: name.trim(),
-      apiKeyHash,
-      ownerId: userId,
-    }).returning()
-    agentId = newAgent.id
-  }
+  const agentId = newAgent.id
 
   // Issue session cookie
+  // P1 fix: don't return apiKey in response (human users don't need it, reduces leak surface)
   const sessionToken = createUserSessionToken(agentId)
   const response = NextResponse.json({
     user: { id: userId, email: email.toLowerCase().trim() },
-    agent: { id: agentId, name: name.trim(), apiKey },
+    agent: { id: agentId, name: name.trim() },
   }, { status: 201 })
 
   response.cookies.set(USER_COOKIE_NAME, sessionToken, {
@@ -708,6 +697,9 @@ import { eq } from 'drizzle-orm'
 import { verifyPassword } from '@/lib/auth/password'
 import { createUserSessionToken, USER_COOKIE_NAME } from '@/lib/auth/wallet'
 
+// P0 fix: in-memory rate limiter (5 attempts per email per minute)
+const loginAttempts = new Map<string, { count: number; resetAt: number }>()
+
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}))
   const { email, password } = body
@@ -716,10 +708,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Email and password are required' }, { status: 400 })
   }
 
+  // P0: Rate limiting — 5 attempts per email per minute
+  const key = email.toLowerCase().trim()
+  const now = Date.now()
+  const attempt = loginAttempts.get(key)
+  if (attempt && now < attempt.resetAt) {
+    if (attempt.count >= 5) {
+      return NextResponse.json({ error: 'Too many login attempts. Try again later.' }, { status: 429 })
+    }
+    attempt.count++
+  } else {
+    loginAttempts.set(key, { count: 1, resetAt: now + 60_000 })
+  }
+
   const [user] = await db
     .select()
     .from(users)
-    .where(eq(users.email, email.toLowerCase().trim()))
+    .where(eq(users.email, key))
     .limit(1)
 
   if (!user || !user.passwordHash) {
@@ -731,7 +736,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
   }
 
-  // Find user's agent
+  // P2 fix: ORDER BY created_at ASC for deterministic agent selection
   const [agent] = await db
     .select({ id: agents.id, name: agents.name })
     .from(agents)
