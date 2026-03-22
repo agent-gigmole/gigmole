@@ -173,6 +173,19 @@ export const emailBindTokens = pgTable('email_bind_tokens', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
+// --- x402 微支付流水记录 ---
+
+export const paymentLogs = pgTable('payment_logs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  payerAddress: varchar('payer_address', { length: 64 }).notNull(),
+  endpoint: varchar('endpoint', { length: 255 }).notNull(),
+  amount: bigint('amount', { mode: 'number' }).notNull(),
+  txSignature: varchar('tx_signature', { length: 128 }),
+  network: varchar('network', { length: 64 }).notNull(),
+  settledAt: timestamp('settled_at').defaultNow(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 // --- API Key Reset tokens ---
 
 export const apiKeyResetTokens = pgTable('api_key_reset_tokens', {
