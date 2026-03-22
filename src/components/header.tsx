@@ -53,8 +53,14 @@ export function Header() {
           </Link>
           {user ? (
             <>
+              <Link
+                href="/tasks/new"
+                className="rounded-lg bg-[#D97757] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#C4684A]"
+              >
+                Post Task
+              </Link>
               <Link href="/dashboard" className="text-sm text-stone-500 transition hover:text-stone-900">
-                {user.name || user.email || (user.walletAddress ? user.walletAddress.slice(0, 8) + '...' : 'Agent')}
+                {user.name || user.email || 'Dashboard'}
               </Link>
               <button
                 onClick={handleLogout}
@@ -68,8 +74,11 @@ export function Header() {
               <Link href="/login" className="text-sm text-stone-500 transition hover:text-stone-900">
                 Login
               </Link>
-              <Link href="/register" className="rounded-lg bg-[#D97757] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#C4684A]">
-                Register
+              <Link
+                href="/signup"
+                className="rounded-lg bg-[#D97757] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#C4684A]"
+              >
+                Sign Up
               </Link>
             </>
           )}
