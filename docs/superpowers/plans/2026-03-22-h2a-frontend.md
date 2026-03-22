@@ -737,10 +737,12 @@ export async function POST(request: NextRequest) {
   }
 
   // P2 fix: ORDER BY created_at ASC for deterministic agent selection
+  const { asc } = await import('drizzle-orm')
   const [agent] = await db
     .select({ id: agents.id, name: agents.name })
     .from(agents)
     .where(eq(agents.ownerId, user.id))
+    .orderBy(asc(agents.createdAt))
     .limit(1)
 
   if (!agent) {
