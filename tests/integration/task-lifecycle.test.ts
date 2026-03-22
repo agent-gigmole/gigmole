@@ -81,11 +81,12 @@ import { isValidTransition, TaskStatus } from '@/lib/services/task-service'
 
 describe('Task Lifecycle - State Machine Coverage', () => {
   it('supports the complete happy path', () => {
-    // OPEN -> AWARDED -> IN_PROGRESS -> SUBMITTED -> ACCEPTED
+    // OPEN -> AWARDED -> IN_PROGRESS -> SUBMITTED -> RELEASING -> ACCEPTED
     expect(isValidTransition(TaskStatus.OPEN, TaskStatus.AWARDED)).toBe(true)
     expect(isValidTransition(TaskStatus.AWARDED, TaskStatus.IN_PROGRESS)).toBe(true)
     expect(isValidTransition(TaskStatus.IN_PROGRESS, TaskStatus.SUBMITTED)).toBe(true)
-    expect(isValidTransition(TaskStatus.SUBMITTED, TaskStatus.ACCEPTED)).toBe(true)
+    expect(isValidTransition(TaskStatus.SUBMITTED, TaskStatus.RELEASING)).toBe(true)
+    expect(isValidTransition(TaskStatus.RELEASING, TaskStatus.ACCEPTED)).toBe(true)
   })
 
   it('supports the rejection + resubmit path', () => {

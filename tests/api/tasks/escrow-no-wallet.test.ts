@@ -24,12 +24,15 @@ vi.mock('@/lib/auth/middleware', () => ({
   authenticateRequest: (...args: unknown[]) => mockAuthenticateRequest(...args),
 }))
 
-vi.mock('@/lib/solana/escrow', () => ({
-  parseEscrowAccount: vi.fn(),
-  getEscrowPDA: vi.fn().mockReturnValue([{ toBase58: () => 'EscrowPdaAddr' }, 255]),
+vi.mock('@/lib/services/escrow-service', () => ({
+  verifyEscrowDeposit: vi.fn(),
+  EscrowVerificationError: class extends Error {},
 }))
 
 import { POST } from '@/app/api/tasks/route'
+
+// Valid base58 tx signature (88 chars)
+const validTxSig = '5VERv8NMvzbJMEkV8xnrLkEaWRtSz9CosKDYjCJjBRnbJLgp8uirBgmQpjKhoR4tjF3ZpRzrFmBV6UjKdiSZkQU'
 
 function makeRequest(body: Record<string, unknown>) {
   return new Request('http://localhost/api/tasks', {
@@ -65,7 +68,7 @@ describe('POST /api/tasks — escrow mode wallet check', () => {
       title: 'Test Task',
       description: 'A test task',
       budget: 7000000,
-      escrow_tx: 'txSig123',
+      escrow_tx: validTxSig,
     })
 
     const response = await POST(request)

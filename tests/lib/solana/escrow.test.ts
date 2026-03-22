@@ -1,5 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeAll } from 'vitest'
 import { PublicKey } from '@solana/web3.js'
+
+vi.hoisted(() => {
+  process.env.SOLANA_ESCROW_PROGRAM_ID = 'F9hdevLubaFEGveio4w1EtftiyqVbuE4nTfc6Wb2xwJh'
+})
 
 vi.mock('@/lib/solana/client', () => ({
   connection: {
@@ -35,6 +39,7 @@ describe('parseEscrowAccount', () => {
 
     const publisher = PublicKey.unique()
     const platformAuth = PublicKey.unique()
+    const usdcMint = PublicKey.unique()
     const taskId = 'test-task-123'
 
     const discriminator = Buffer.alloc(8)
@@ -48,18 +53,21 @@ describe('parseEscrowAccount', () => {
     const taskIdLen = Buffer.alloc(4)
     taskIdLen.writeUInt32LE(taskIdBytes.length)
     const status = Buffer.from([0]) // Funded
+    const worker = PublicKey.unique()
     const bump = Buffer.from([255])
 
     const data = Buffer.concat([
       discriminator,
       publisher.toBuffer(),
       platformAuth.toBuffer(),
+      usdcMint.toBuffer(),
       amount,
       listingFee,
       feeBps,
       taskIdLen,
       taskIdBytes,
       status,
+      worker.toBuffer(),
       bump,
     ])
 
@@ -74,11 +82,13 @@ describe('parseEscrowAccount', () => {
     expect(result).not.toBeNull()
     expect(result!.publisher).toBe(publisher.toBase58())
     expect(result!.platformAuthority).toBe(platformAuth.toBase58())
+    expect(result!.usdcMint).toBe(usdcMint.toBase58())
     expect(result!.amount).toBe(5000000)
     expect(result!.listingFee).toBe(2000000)
     expect(result!.feeBps).toBe(500)
     expect(result!.taskId).toBe(taskId)
     expect(result!.status).toBe('Funded')
+    expect(result!.worker).toBe(worker.toBase58())
     expect(result!.bump).toBe(255)
   })
 

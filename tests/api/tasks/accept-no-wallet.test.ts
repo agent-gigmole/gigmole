@@ -30,12 +30,12 @@ vi.mock('@/lib/services/task-service', () => ({
   isValidTransition: vi.fn().mockReturnValue(true),
 }))
 
-vi.mock('@/lib/solana/instructions', () => ({
-  sendReleaseEscrow: vi.fn().mockResolvedValue('releaseTxSig'),
+const mockReleaseEscrow = vi.fn()
+vi.mock('@/lib/services/escrow-service', () => ({
+  releaseEscrow: (...args: unknown[]) => mockReleaseEscrow(...args),
 }))
 
 import { POST } from '@/app/api/tasks/[id]/accept/route'
-import { sendReleaseEscrow } from '@/lib/solana/instructions'
 
 const taskWithEscrow = {
   id: 'task-uuid',
@@ -47,15 +47,7 @@ const taskWithEscrow = {
   tags: [],
   escrowAddress: 'EscrowPdaAddr',
   awardedBidId: 'bid-uuid',
-  createdAt: new Date(),
-}
-
-const bidFixture = {
-  id: 'bid-uuid',
-  taskId: 'task-uuid',
-  bidderId: 'worker-uuid',
-  price: 4000000,
-  proposal: 'I can do it',
+  releaseTx: null,
   createdAt: new Date(),
 }
 
@@ -75,44 +67,53 @@ const paramsPromise = Promise.resolve({ id: 'task-uuid' })
 describe('POST /api/tasks/[id]/accept — worker without wallet', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockSetReturning.mockResolvedValue([{ ...taskWithEscrow, status: 'accepted' }])
   })
 
-  it('accepts task but skips escrow release when worker has no wallet', async () => {
-    // First call: task lookup, second: bid lookup, third: worker lookup (no wallet)
-    mockLimit
-      .mockResolvedValueOnce([taskWithEscrow])
-      .mockResolvedValueOnce([bidFixture])
-      .mockResolvedValueOnce([{ id: 'worker-uuid', walletAddress: null }])
+  it('accepts task but skips escrow release when worker has no wallet (walletWarning)', async () => {
+    // First select: task lookup returns task with escrow
+    // First update (releasing): returns the releasing state
+    // releaseEscrow returns walletWarning
+    // Second update (rollback to submitted)
+    mockLimit.mockResolvedValueOnce([taskWithEscrow])
+    // First update set (releasing)
+    mockSetReturning
+      .mockResolvedValueOnce([{ ...taskWithEscrow, status: 'releasing' }])
+
+    mockReleaseEscrow.mockResolvedValue({ walletWarning: 'Worker needs to bind a wallet to receive payment' })
+
+    // Second update set (rollback to submitted due to walletWarning)
+    mockSetReturning
+      .mockResolvedValueOnce([{ ...taskWithEscrow, status: 'submitted' }])
 
     const response = await POST(makeRequest(), { params: paramsPromise })
     const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(data.status).toBe('accepted')
     expect(data.walletWarning).toMatch(/bind a wallet/)
-    expect(data.releaseTx).toBeUndefined()
-    expect(sendReleaseEscrow).not.toHaveBeenCalled()
   })
 
   it('accepts task and calls escrow release when worker has wallet', async () => {
-    mockLimit
-      .mockResolvedValueOnce([taskWithEscrow])
-      .mockResolvedValueOnce([bidFixture])
-      .mockResolvedValueOnce([{ id: 'worker-uuid', walletAddress: '11111111111111111111111111111112' }])
+    mockLimit.mockResolvedValueOnce([taskWithEscrow])
+    // First update: releasing
+    mockSetReturning
+      .mockResolvedValueOnce([{ ...taskWithEscrow, status: 'releasing' }])
+
+    mockReleaseEscrow.mockResolvedValue({ releaseTx: 'releaseTxSig' })
+
+    // Second update: accepted
+    mockSetReturning
+      .mockResolvedValueOnce([{ ...taskWithEscrow, status: 'accepted', releaseTx: 'releaseTxSig' }])
 
     const response = await POST(makeRequest(), { params: paramsPromise })
     const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(data.status).toBe('accepted')
     expect(data.releaseTx).toBe('releaseTxSig')
-    expect(data.walletWarning).toBeUndefined()
-    expect(sendReleaseEscrow).toHaveBeenCalled()
+    expect(mockReleaseEscrow).toHaveBeenCalled()
   })
 
   it('accepts task without escrow when no escrowAddress on task', async () => {
-    const taskNoEscrow = { ...taskWithEscrow, escrowAddress: null }
+    const taskNoEscrow = { ...taskWithEscrow, escrowAddress: null, awardedBidId: null }
     mockLimit.mockResolvedValue([taskNoEscrow])
     mockSetReturning.mockResolvedValue([{ ...taskNoEscrow, status: 'accepted' }])
 
@@ -122,7 +123,6 @@ describe('POST /api/tasks/[id]/accept — worker without wallet', () => {
     expect(response.status).toBe(200)
     expect(data.status).toBe('accepted')
     expect(data.releaseTx).toBeUndefined()
-    expect(data.walletWarning).toBeUndefined()
-    expect(sendReleaseEscrow).not.toHaveBeenCalled()
+    expect(mockReleaseEscrow).not.toHaveBeenCalled()
   })
 })

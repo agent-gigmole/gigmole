@@ -1,5 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 
+const mockLimit = vi.fn()
+const mockWhere = vi.fn().mockReturnValue({ limit: mockLimit })
+const mockSelectFrom = vi.fn().mockReturnValue({ where: mockWhere })
+const mockSelectObj = vi.fn().mockReturnValue({ from: mockSelectFrom })
+
 vi.mock('@/lib/db', () => ({
   db: {
     insert: vi.fn().mockReturnValue({
@@ -13,18 +18,7 @@ vi.mock('@/lib/db', () => ({
         }]),
       }),
     }),
-    select: vi.fn().mockReturnValue({
-      from: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue({
-          orderBy: vi.fn().mockReturnValue({
-            limit: vi.fn().mockResolvedValue([]),
-          }),
-        }),
-        orderBy: vi.fn().mockReturnValue({
-          limit: vi.fn().mockResolvedValue([]),
-        }),
-      }),
-    }),
+    select: (...args: unknown[]) => mockSelectObj(...args),
   },
 }))
 
@@ -40,6 +34,9 @@ import { POST } from '@/app/api/messages/route'
 
 describe('POST /api/messages', () => {
   it('creates a message and returns 201', async () => {
+    // Mock: task lookup returns task with matching publisherId
+    mockLimit.mockResolvedValueOnce([{ publisherId: 'agent-uuid' }])
+
     const request = new Request('http://localhost/api/messages', {
       method: 'POST',
       headers: {

@@ -27,13 +27,20 @@ vi.mock('@/lib/auth/middleware', () => ({
   }),
 }))
 
-vi.mock('@/lib/solana/escrow', () => ({
-  parseEscrowAccount: vi.fn(),
-  getEscrowPDA: vi.fn().mockReturnValue([{ toBase58: () => 'EscrowPdaAddr' }, 255]),
+class EscrowVerificationError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'EscrowVerificationError'
+  }
+}
+
+const mockVerifyEscrowDeposit = vi.fn()
+vi.mock('@/lib/services/escrow-service', () => ({
+  verifyEscrowDeposit: (...args: unknown[]) => mockVerifyEscrowDeposit(...args),
+  EscrowVerificationError,
 }))
 
 import { POST } from '@/app/api/tasks/route'
-import { parseEscrowAccount } from '@/lib/solana/escrow'
 
 function makeRequest(body: Record<string, unknown>) {
   return new Request('http://localhost/api/tasks', {
@@ -55,28 +62,22 @@ describe('POST /api/tasks with escrow', () => {
       budget: 7000000,
       status: 'open',
       escrowAddress: 'EscrowPdaAddr',
-      escrowTx: 'txSig123',
+      escrowTx: 'txSig12345678901234567890123456789012345678901234567890123456789012345678901234567890123456',
     }])
   })
 
+  // Valid base58 tx signature (88 chars)
+  const validTxSig = '5VERv8NMvzbJMEkV8xnrLkEaWRtSz9CosKDYjCJjBRnbJLgp8uirBgmQpjKhoR4tjF3ZpRzrFmBV6UjKdiSZkQU'
+
   it('creates task with escrow verification when escrow_tx provided', async () => {
-    vi.mocked(parseEscrowAccount).mockResolvedValue({
-      publisher: 'PublisherWalletAddr',
-      platformAuthority: 'PlatformAuthPubkey',
-      amount: 5000000,
-      listingFee: 2000000,
-      feeBps: 500,
-      taskId: 'task-uuid',
-      status: 'Funded',
-      bump: 255,
-    })
+    mockVerifyEscrowDeposit.mockResolvedValue({ escrowAddress: 'EscrowPdaAddr' })
 
     const request = makeRequest({
       id: 'task-uuid',
       title: 'Test Task',
       description: 'A test task',
       budget: 7000000,
-      escrow_tx: 'txSig123',
+      escrow_tx: validTxSig,
     })
 
     const response = await POST(request)
@@ -85,19 +86,19 @@ describe('POST /api/tasks with escrow', () => {
     // Verify insert was called with escrow fields
     const insertedValues = mockValues.mock.calls[0][0]
     expect(insertedValues.escrowAddress).toBe('EscrowPdaAddr')
-    expect(insertedValues.escrowTx).toBe('txSig123')
+    expect(insertedValues.escrowTx).toBe(validTxSig)
     expect(insertedValues.id).toBe('task-uuid')
   })
 
   it('rejects if escrow not found on-chain', async () => {
-    vi.mocked(parseEscrowAccount).mockResolvedValue(null)
+    mockVerifyEscrowDeposit.mockRejectedValue(new EscrowVerificationError('Escrow account not found on-chain'))
 
     const request = makeRequest({
       id: 'task-uuid',
       title: 'Test Task',
       description: 'A test task',
       budget: 7000000,
-      escrow_tx: 'txSig123',
+      escrow_tx: validTxSig,
     })
 
     const response = await POST(request)
@@ -107,23 +108,14 @@ describe('POST /api/tasks with escrow', () => {
   })
 
   it('rejects if escrow amount does not match budget', async () => {
-    vi.mocked(parseEscrowAccount).mockResolvedValue({
-      publisher: 'PublisherWalletAddr',
-      platformAuthority: 'PlatformAuthPubkey',
-      amount: 1000000,
-      listingFee: 2000000,
-      feeBps: 500,
-      taskId: 'task-uuid',
-      status: 'Funded',
-      bump: 255,
-    })
+    mockVerifyEscrowDeposit.mockRejectedValue(new EscrowVerificationError('Escrow amount mismatch'))
 
     const request = makeRequest({
       id: 'task-uuid',
       title: 'Test Task',
       description: 'A test task',
       budget: 7000000,
-      escrow_tx: 'txSig123',
+      escrow_tx: validTxSig,
     })
 
     const response = await POST(request)
@@ -133,23 +125,14 @@ describe('POST /api/tasks with escrow', () => {
   })
 
   it('rejects if escrow publisher does not match agent wallet', async () => {
-    vi.mocked(parseEscrowAccount).mockResolvedValue({
-      publisher: 'SomeOtherWallet',
-      platformAuthority: 'PlatformAuthPubkey',
-      amount: 5000000,
-      listingFee: 2000000,
-      feeBps: 500,
-      taskId: 'task-uuid',
-      status: 'Funded',
-      bump: 255,
-    })
+    mockVerifyEscrowDeposit.mockRejectedValue(new EscrowVerificationError('Escrow publisher mismatch'))
 
     const request = makeRequest({
       id: 'task-uuid',
       title: 'Test Task',
       description: 'A test task',
       budget: 7000000,
-      escrow_tx: 'txSig123',
+      escrow_tx: validTxSig,
     })
 
     const response = await POST(request)
@@ -176,6 +159,6 @@ describe('POST /api/tasks with escrow', () => {
 
     const response = await POST(request)
     expect(response.status).toBe(201)
-    expect(parseEscrowAccount).not.toHaveBeenCalled()
+    expect(mockVerifyEscrowDeposit).not.toHaveBeenCalled()
   })
 })
