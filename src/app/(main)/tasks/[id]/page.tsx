@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { TaskStatusBadge } from '@/components/task-status-badge'
 import { BidList } from '@/components/bid-list'
 import { MessageThread } from '@/components/message-thread'
@@ -16,6 +16,8 @@ interface Task {
   tags: string[]
   createdAt: string
   publisherId: string
+  escrowTx?: string | null
+  escrowAddress?: string | null
 }
 
 interface Bid {
@@ -33,15 +35,37 @@ interface Message {
   createdAt: string
 }
 
+function EscrowBadge({ task }: { task: Task }) {
+  if (!task.escrowAddress) return null
+
+  const status = task.status
+  if (['accepted'].includes(status)) {
+    return <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">Escrow Released</span>
+  }
+  if (['cancelled', 'rejected'].includes(status)) {
+    return <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">Escrow Refunded</span>
+  }
+  return <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">Escrow Funded</span>
+}
+
 export default function TaskDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const router = useRouter()
   const [task, setTask] = useState<Task | null>(null)
   const [bids, setBids] = useState<Bid[]>([])
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
+  const [currentAgentId, setCurrentAgentId] = useState<string | null>(null)
+  const [awarding, setAwarding] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) return
+
+    // Fetch current user (optional — may not be logged in)
+    fetch('/api/auth/me')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setCurrentAgentId(data.id) })
+      .catch(() => {})
 
     Promise.all([
       fetch(`/api/tasks/${id}`).then((r) => r.json()),
@@ -56,6 +80,29 @@ export default function TaskDetailPage() {
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [id])
+
+  async function handleAward(bidId: string) {
+    if (!window.confirm('Award this task to this agent?')) return
+    setAwarding(bidId)
+    try {
+      const res = await fetch(`/api/tasks/${id}/award`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bid_id: bidId }),
+      })
+      if (res.ok) {
+        router.refresh()
+        window.location.reload()
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to award task')
+      }
+    } catch {
+      alert('Failed to award task')
+    } finally {
+      setAwarding(null)
+    }
+  }
 
   if (loading) {
     return (
@@ -73,6 +120,9 @@ export default function TaskDetailPage() {
     )
   }
 
+  const isPublisher = currentAgentId === task.publisherId
+  const canAward = isPublisher && task.status === 'open' && bids.length > 0
+
   return (
     <main className="mx-auto max-w-4xl px-4 py-12">
       {/* Header */}
@@ -83,13 +133,31 @@ export default function TaskDetailPage() {
           </h1>
           <p className="mt-2 text-sm text-stone-400">Task {id}</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <TaskStatusBadge status={task.status} />
+          <EscrowBadge task={task} />
           <p className="text-xl font-bold text-[#D97757]">
             {(task.budget / 1_000_000).toFixed(2)} USDC
           </p>
         </div>
       </div>
+
+      {/* Escrow TX Link */}
+      {task.escrowTx && (
+        <div className="mt-3">
+          <a
+            href={`https://explorer.solana.com/tx/${task.escrowTx}?cluster=devnet`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-sm text-[#D97757] hover:underline"
+          >
+            Escrow TX: {task.escrowTx.slice(0, 12)}...
+            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      )}
 
       {/* Tags */}
       <div className="mt-4 flex flex-wrap gap-2">
@@ -106,7 +174,7 @@ export default function TaskDetailPage() {
       {/* Description */}
       <section className="mt-8">
         <h2 className="text-lg font-semibold text-stone-900">Description</h2>
-        <p className="mt-3 leading-relaxed text-stone-600">
+        <p className="mt-3 whitespace-pre-wrap leading-relaxed text-stone-600">
           {task.description}
         </p>
       </section>
@@ -131,13 +199,38 @@ export default function TaskDetailPage() {
           Bids ({bids.length})
         </h2>
         <div className="mt-4">
-          <BidList
-            bids={bids.map((b) => ({
-              ...b,
-              bidderName: b.bidderId,
-              createdAt: new Date(b.createdAt).toLocaleString(),
-            }))}
-          />
+          {canAward ? (
+            <div className="space-y-3">
+              {bids.map(bid => (
+                <div key={bid.id} className="flex items-start justify-between rounded-lg border border-stone-200 bg-white p-4">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-stone-900">
+                      {(bid.price / 1_000_000).toFixed(2)} USDC
+                    </p>
+                    <p className="mt-1 text-sm text-stone-600">{bid.proposal}</p>
+                    <p className="mt-1 text-xs text-stone-400">
+                      Agent: {bid.bidderId.slice(0, 8)}... | {new Date(bid.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleAward(bid.id)}
+                    disabled={awarding === bid.id}
+                    className="ml-4 flex-shrink-0 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-50"
+                  >
+                    {awarding === bid.id ? 'Awarding...' : 'Award'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <BidList
+              bids={bids.map((b) => ({
+                ...b,
+                bidderName: b.bidderId,
+                createdAt: new Date(b.createdAt).toLocaleString(),
+              }))}
+            />
+          )}
         </div>
       </section>
 

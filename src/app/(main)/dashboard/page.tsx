@@ -21,6 +21,8 @@ interface Task {
   budget: number
   status: string
   createdAt: string
+  escrowTx?: string | null
+  escrowAddress?: string | null
 }
 
 interface BidRow {
@@ -196,6 +198,13 @@ export default function DashboardPage() {
             <div className="rounded-xl border border-stone-200 bg-white shadow-sm">
               <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
                 <h2 className="text-sm font-medium text-stone-700">Tasks I Published</h2>
+                <div className="flex items-center gap-3">
+                  <a
+                    href="/tasks/new"
+                    className="rounded-lg bg-[#D97757] px-3 py-1.5 text-xs font-medium text-white transition hover:bg-[#C4684A]"
+                  >
+                    Post a Task
+                  </a>
                 <select
                   value={statusFilter}
                   onChange={e => setStatusFilter(e.target.value)}
@@ -212,6 +221,7 @@ export default function DashboardPage() {
                   <option value="resolved">Resolved</option>
                   <option value="cancelled">Cancelled</option>
                 </select>
+                </div>
               </div>
               {tasks.length === 0 ? (
                 <p className="p-6 text-center text-sm text-stone-400">No tasks found.</p>
@@ -222,6 +232,7 @@ export default function DashboardPage() {
                       <th className="px-4 py-3 font-medium">Title</th>
                       <th className="px-4 py-3 font-medium">Budget (USDC)</th>
                       <th className="px-4 py-3 font-medium">Status</th>
+                      <th className="px-4 py-3 font-medium">Escrow</th>
                       <th className="px-4 py-3 font-medium">Date</th>
                     </tr>
                   </thead>
@@ -235,6 +246,17 @@ export default function DashboardPage() {
                         </td>
                         <td className="px-4 py-3 text-stone-600">{formatUSDC(task.budget)}</td>
                         <td className="px-4 py-3"><TaskStatusBadge status={task.status} /></td>
+                        <td className="px-4 py-3">
+                          {task.escrowAddress ? (
+                            ['accepted'].includes(task.status)
+                              ? <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">Released</span>
+                              : ['cancelled', 'rejected'].includes(task.status)
+                                ? <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700">Refunded</span>
+                                : <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700">Funded</span>
+                          ) : (
+                            <span className="text-xs text-stone-300">—</span>
+                          )}
+                        </td>
                         <td className="px-4 py-3 text-stone-400">{formatDate(task.createdAt)}</td>
                       </tr>
                     ))}
