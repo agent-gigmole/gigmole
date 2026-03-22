@@ -928,15 +928,20 @@ git commit -m "feat(ui): header — add Post Task button + Sign Up link"
 - [ ] **Step 1: Add escrow info and award button**
 
 Changes to task detail page:
-1. After the budget display, if `task.escrowTx` exists, show a link:
+1. Add `escrowTx`, `escrowAddress` to the Task interface
+2. After the budget display, if `task.escrowTx` exists, show a link:
    - Text: "Escrow TX: {tx.slice(0,8)}..."
    - Link to: `https://explorer.solana.com/tx/${task.escrowTx}?cluster=devnet`
-2. If `task.escrowAddress` exists, show badge: "Escrow Funded"
-3. In the Bids section, if current user is the publisher (compare agentId from /api/auth/me with task.publisherId) and task status is OPEN, show an "Award" button next to each bid
+3. Show escrow status badge derived from task state:
+   - `escrowAddress` exists + status is open/awarded/in_progress/submitted → "Funded" (green)
+   - status is accepted → "Released" (blue)
+   - status is cancelled/rejected → "Refunded" (amber)
+   - no escrowAddress → no badge
+4. In the Bids section, if current user is the publisher (compare agentId from /api/auth/me with task.publisherId) and task status is OPEN, show an "Award" button next to each bid
    - Award button: POST /api/tasks/[id]/award with `{ bid_id: bid.id }`
    - On success: reload page
 
-Need to fetch /api/auth/me on mount to get current user's agentId. Add `escrowTx` and `escrowAddress` to the Task interface.
+Need to fetch /api/auth/me on mount to get current user's agentId.
 
 - [ ] **Step 2: Verify renders**
 
@@ -959,7 +964,7 @@ git commit -m "feat(ui): task detail — escrow tx link + award button for publi
 - [ ] **Step 1: Add escrow status and Post Task button**
 
 Changes:
-1. Add escrow status column to the "My Tasks" table: show "Funded" (green badge) if escrowTx exists, "No Escrow" otherwise
+1. Add escrow status column to the "My Tasks" table using same 3-state logic as Task 10 (Funded/Released/Refunded based on task status + escrowAddress)
 2. Need to extend the /api/user/tasks response or the Task interface to include escrowTx/escrowAddress fields
 3. Add "Post a Task" CTA button in the tasks tab header (links to /tasks/new)
 4. Show email in the agent info card if available
@@ -977,31 +982,46 @@ git commit -m "feat(ui): dashboard — escrow status column + Post Task CTA"
 
 ---
 
-### Task 12: Build verification + full test suite
+### Task 12: Integration test + build verification
 
-**Files:** None (verification only)
+**Files:**
+- Create: `tests/integration/h2a-flow.test.ts`
 
-- [ ] **Step 1: Run full test suite**
+- [ ] **Step 1: Write H2A integration test**
+
+```typescript
+// tests/integration/h2a-flow.test.ts
+// Test the full H2A flow: register-human → login-email → create task
+// Use same mock patterns as tests/integration/task-lifecycle.test.ts
+```
+
+Cover:
+1. Register human (email + password + name) → 201, returns apiKey
+2. Login with same email + password → 200, returns agent info
+3. Create task via cookie auth → 201, returns task
+4. Verify task has correct publisherId (proxy agent's ID)
+
+- [ ] **Step 2: Run full test suite**
 
 Run: `npx vitest run`
-Expected: All tests PASS (207+ existing + ~15 new = 222+ total)
+Expected: All tests PASS (207+ existing + ~20 new = 227+ total)
 
-- [ ] **Step 2: Build check**
+- [ ] **Step 3: Build check**
 
 Run: `npx next build`
 Expected: Build succeeds with no errors
 
-- [ ] **Step 3: Commit any fixes if needed**
+- [ ] **Step 4: Commit any fixes if needed**
 
 If any tests fail or build errors occur, fix and commit.
 
-- [ ] **Step 4: Final commit — update API docs**
+- [ ] **Step 5: Update API docs**
 
 Update `src/lib/api-docs.ts` to add the 2 new endpoints (register-human, login-email).
 
 ```bash
-git add src/lib/api-docs.ts
-git commit -m "docs: add register-human and login-email to API docs"
+git add src/lib/api-docs.ts tests/integration/h2a-flow.test.ts
+git commit -m "test: H2A integration test + API docs update"
 ```
 
 ---
