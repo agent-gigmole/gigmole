@@ -133,3 +133,41 @@
 - request-reset 端点：3次/邮箱/小时
 - 实现方式：数据库查询最近 1 小时内该邮箱的请求次数
 - 不要依赖内存中的 rate limiter（serverless 环境每次请求可能是新实例）
+
+## implementation-plan-review-process
+
+- **实施计划必须经过三方审批才能开始实施**（即刻生效）
+- 流程：
+  1. 写完计划 → 通过消息总线发给「A-研究院」和「审计」
+  2. 研究院审技术方案，审计审安全和代码质量
+  3. **两方都确认后才开始实施**
+  4. 实施完成后 → 通知审计做代码审计
+- 禁止在本地自行审查后就开始实施
+- 消息格式：发送计划文件路径 + 简要说明
+
+## message-bus-api
+
+- **跨 session 消息总线的唯一正确方式**：HTTP API
+- 发送：`curl -s -X POST http://localhost:9400/send -H 'Content-Type: application/json' -d '{"from":"GigMole","to":"目标session","message":"内容"}'`
+- 查看在线 session：`curl -s http://localhost:9400/sessions`
+- 目标 session 名称示例：`A-研究院`、`CEO商业分析`
+- 成功响应：`{"ok": true, "pushed_via": "tmux:%1"}`
+- **禁止事项（即刻生效）**：
+  - ❌ 写文件到 bus_outbox/ 目录（不会被推送，消息丢失）
+  - ❌ 只在本地 pane 输出结果不发送
+  - ❌ 用其他方式传递消息
+- 汇报对象：商业问题→CEO商业分析，技术问题→A-研究院，不确定→两方都发
+
+## account-merge-hijack-risk
+
+- **问题**：用户注册时如果发现同一 email 已有 user 记录，直接将新 agent 合并（merge）到该 user 下 → 攻击者用目标 email 注册即可劫持他人账号下的所有 agent
+- **修复**：删除 merge 路径。同一 email 已注册 → 返回 409 Conflict，要求用原账号登录
+- **教训**：任何"自动合并"逻辑都是潜在的账号劫持入口，必须要求用户先证明已有账号的所有权（如输入旧密码、发验证邮件确认）才能合并
+
+## serverless-in-memory-rate-limit
+
+- **问题**：serverless 环境（Vercel Functions）中每个实例有独立的内存 Map，rate limit 计数器不共享
+- **影响**：攻击者的请求可能被分配到不同实例，绕过 rate limit
+- **当前方案**：内存 Map 作为初期 MVP 方案，开发阶段足够
+- **post-launch 改进**：迁移到 Redis（Upstash）或数据库计数，确保跨实例共享
+- **关键**：对安全敏感端点（login、register、reset-password）的 rate limit 必须是全局共享的

@@ -116,39 +116,23 @@
 
 - **全面代码审计完成（23 项修复）**
   - 对照 docs/business/decisions.md 设计要求审计全代码库（前端+后端+Schema）
-  - 严重修复（8项）：
-    1. 前端注册页重写：去掉钱包强制，改为 name-only 零摩擦注册
-    2. 前端登录页：增加非钱包替代路径提示
-    3. WalletProvider 从全局改为按需加载（只在 login 页面）
-    4. autoConnect 改为 false
-    5. register-with-wallet 标记为 legacy
-    6. award 路由状态机 bug：现在正确写入 AWARDED 状态
-    7. register 路由移除死代码（发了验证码但不存 hash）
-    8. verify-code 计数器分离：verifyAttempts 独立于 emailAttempts
-  - 中等修复（6项）：
-    9. users.updatedAt 加了 $onUpdate hook
-    10. 移除 isEmailTaken dead import/export
-    11. 4 个路由的 @solana/web3.js 直接导入清理
-    12. GET /api/tasks 加 status 筛选（skill plugin /labor scan 现在能工作）
-    13. Header 显示 name 优先（不再默认显示钱包地址）
-    14. Dashboard 加邮箱绑定提示 banner
-  - 低优先修复（9项）：
-    15. 业务逻辑全部抽取到 services 层（escrow-service, email-bind-service, api-key-service, agent-service）
-    16. GET /api/messages 加了鉴权（需要 Bearer token + task_id + 参与者验证）
-    17. tasks.awardedBidId FK 约束（migration 0003）
-    18. verifyApiKey 不再是 dead code（middleware 现在调用它）
-    19. email-verification-service.ts 重命名为 verification-utils.ts
-    20. 设计文档补充 resolved/cancelled 状态
-    21. /api/auth/me join users 表返回 email
-    22. Dashboard 状态筛选补全 disputed/resolved/cancelled
-    23. 新增 GET /api/agents/me/tasks 和 /api/agents/me/bids（程序化自查端点）
+  - 严重修复 8 项 + 中等修复 6 项 + 低优先修复 9 项
+  - 业务逻辑全部抽取到 services 层，API route 层干净
+  - 身份体系三层确立：Email（身份证）→ API Key（钥匙）→ Wallet（银行账户）
+
+- **H2A（Human-to-Agent）后端 Tasks 1-5 完成**
+  - Task 1: Schema 变更 — agents 表新增 passwordHash 字段
+  - Task 2: bcrypt helpers（hash + verify）
+  - Task 3: 统一认证中间件 — 支持 Bearer token + cookie 双模式
+  - Task 4: POST /api/auth/register-human — 人类用户注册（email + password）
+  - Task 5: POST /api/auth/login-email — 邮箱密码登录
 
 ## 已知最佳结果
 
 - 平台数据：18 tasks, 21 agents（含 5 个示范 Agent + 10 个示范任务）
 - **207+ 个测试全部通过**
 - E2E 测试 69/82 通过（13 个超时/级联失败，非代码问题）
-- 48+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点 + bind-wallet 端点 + 6 个 email 绑定端点 + 2 个 agent 自查端点）
+- 48+ API 端点已实现（含 13 个 admin 端点 + 6 个 auth/wallet 端点 + 2 个 user dashboard 端点 + escrow prepare 端点 + bind-wallet 端点 + 6 个 email 绑定端点 + 2 个 agent 自查端点 + 2 个 H2A 端点）
 - 15+ 网站页面已构建（含 dashboard、login、bind/[token]）
 - Solana escrow PDA 推导已验证
 - Anchor 合约已部署到 Devnet（含 platform_authority 模式）
@@ -162,25 +146,16 @@
 
 ## 当前阶段
 
-- **全面代码审计完成，23 项修复已实施**
-  - 对照 decisions.md 设计要求逐一验证
-  - 前端注册流程完全符合"弱化 Web3"决策：name-only 注册，钱包可选
-  - 业务逻辑全部 services 层化
-  - award 状态机 bug 修复，verify-code 计数器隔离
-  - messages API 鉴权加固
-  - tasks.awardedBidId FK 约束（migration 0003）
+- **H2A（Human-to-Agent）后端实施中**
+  - Tasks 1-5 完成：schema passwordHash + bcrypt helpers + 统一认证中间件(Bearer+cookie) + register-human API + login-email API
+  - Tasks 6-13 待完成
+  - 审计发现的 P0 账号劫持漏洞（merge 路径）已删除
+  - Rate limiting 用内存 Map（serverless 环境每实例独立，post-launch 需改进）
+- 全面代码审计完成，23 项修复已实施
 - Email 绑定系统全部完成，安全审计通过
-  - users 表和 agents 表正式分离（1:N 关系）
-  - 207 个测试全部通过
-  - Email 发送开发阶段用 console.log fallback，生产需配置 RESEND_API_KEY
 - 品牌重塑已完成：GigMole, gigmole.cc, "Agents, Co-working."
-  - 代码层面全部替换完成
-  - 待推送 GitHub（自动触发 Vercel 部署）
 - CEO 全部决策项已确认（含 Tagline）
 - **冷启动场景脑暴完成**（8 个场景 + SaaS 插件平台演进洞察 + OpenAnt 竞品对比）
-  - 最高优先级：AI 焦点小组（最创新、壁垒最高）
-  - 次优先级：量化回测即服务（用户有付费意愿）
-  - 详见 memory/KNOWLEDGE/cold-start-scenarios.md
 - P0 安全修复完成
 - Escrow Integration 全部 13 个任务完成并部署到生产环境
 - User System 全部 13 个任务完成并部署
@@ -222,9 +197,9 @@
 
 ## 下一步
 
-1. **推送品牌重塑 + email 绑定 + 审计修复到 GitHub**（触发 Vercel 自动部署到 gigmole.cc）
-2. **生产环境配置 RESEND_API_KEY**（启用真实邮件发送）
-3. **Supabase schema push**（新增 users、email_bind_tokens、api_key_reset_tokens 表 + awardedBidId FK）
-4. **安全审计 4 个低优先级项**（后续处理）
-5. **分销/佣金系统开发**（待排期）
-6. 待定：用户提出新需求
+1. **完成 H2A Tasks 6-13**（logout、me、前端页面、dashboard 改造等）
+2. **推送品牌重塑 + email 绑定 + 审计修复 + H2A 到 GitHub**（触发 Vercel 自动部署到 gigmole.cc）
+3. **生产环境配置 RESEND_API_KEY**（启用真实邮件发送）
+4. **Supabase schema push**（新增 users、email_bind_tokens、api_key_reset_tokens 表 + awardedBidId FK + passwordHash）
+5. **安全审计 4 个低优先级项**（后续处理）
+6. **分销/佣金系统开发**（待排期）

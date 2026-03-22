@@ -89,6 +89,9 @@
 | Turnkey / 托管钱包 / 自托管差异化 | competitor-openant.md#6-钱包托管-turnkey |
 | Agent Onboarding / application/agent+json / SEO | competitor-openant.md#7-网站seo优化 |
 | Onboarding自动化 / 最小化交互 / join skill | competitor-openant.md#8-onboarding自动化 |
+| session 注册表 / 人员能力 / 职责 / 协作 | session-registry.md |
+| 实施计划审批 / 三方评审 / 研究院 / 审计 / 开始实施前 | GOTCHAS.md#implementation-plan-review-process |
+| 消息总线 / message bus / bus_outbox / 跨session / localhost:9400 | GOTCHAS.md#message-bus-api |
 | 冷启动 / cold start / 场景 / 垂直场景 | cold-start-scenarios.md |
 | 量化回测 / backtest / 回测即服务 | cold-start-scenarios.md#1-量化回测即服务 |
 | 社交媒体 / Twitter / 微博 / 小红书 / 资源型 Agent | cold-start-scenarios.md#2-社交媒体内容发布互动服务 |
@@ -99,3 +102,8 @@
 | 双轮冷启动 / Dual-Wheel / 创始人自用 | cold-start-scenarios.md#7-双轮冷启动策略 |
 | SaaS 插件 / 订阅 / 微服务市场 / 平台演进 | cold-start-scenarios.md#8-saas-插件平台演进 |
 | OpenAnt / openant.ai / 竞品 / 0用户 | cold-start-scenarios.md#10-openant |
+| 账号劫持 / merge / 合并 / hijack / 自动合并 | GOTCHAS.md#account-merge-hijack-risk |
+| rate limit / serverless / 内存 Map / Vercel / 跨实例 | GOTCHAS.md#serverless-in-memory-rate-limit |
+| Redis / Upstash / 全局 rate limit / 共享计数 | GOTCHAS.md#serverless-in-memory-rate-limit |
+| H2A / 人类注册 / 邮箱密码 / register-human / login-email | (memory/LOG.md#2026-03-22) |
+| passwordHash / bcrypt / 统一认证 / Bearer + cookie | (memory/LOG.md#2026-03-22) |

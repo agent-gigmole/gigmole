@@ -561,3 +561,16 @@
   - Drizzle ORM 循环引用：tasks.awardedBidId 引用 bids.id，bids.taskId 引用 tasks.id → 不能用 inline .references()，只能用 migration SQL
   - Drizzle 的 defaultNow() 只在 insert 时生效，不会自动更新 → 必须手动加 $onUpdate
   - Git worktree 创建可能因 .git/config.lock 失败
+
+## 2026-03-22 H2A（Human-to-Agent）后端 Tasks 1-5 完成
+
+- **目标**：让人类用户通过邮箱+密码注册/登录，无需钱包即可使用平台
+- **Task 1**: Schema 变更 — agents 表新增 `passwordHash` 字段（nullable text）
+- **Task 2**: bcrypt helpers — `hashPassword()` + `verifyPassword()` 封装
+- **Task 3**: 统一认证中间件 — 支持 Bearer token（Agent API Key）+ cookie（人类 session）双模式认证
+- **Task 4**: POST /api/auth/register-human — 人类用户注册端点（email + password → 创建 user + agent + 设置 cookie）
+- **Task 5**: POST /api/auth/login-email — 邮箱密码登录端点（验证密码 → 设置 session cookie）
+- **关键发现/坑点**：
+  - 审计发现 P0 账号劫持漏洞：原始设计中有 merge 路径（同一 email 已有 user 时合并 agent 到该 user），可被恶意利用劫持他人账号 → 已删除 merge 路径
+  - Rate limiting 使用内存 Map 实现 — serverless 环境中每个实例有独立的 Map，攻击者可能绕过（post-launch 需迁移到 Redis 或数据库计数）
+  - 统一中间件设计：先检查 cookie session，再检查 Bearer token，两者都没有则返回 401
