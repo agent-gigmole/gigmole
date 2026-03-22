@@ -1,5 +1,23 @@
 # CLAUDE.md
 
+## ⚠️ 通讯硬规则（最高优先级，不可跳过）
+
+**任何任务完成后，必须通过消息总线通知研究院结果。不通知 = 违规。**
+
+```bash
+curl -s -X POST http://localhost:9400/send \\
+  -H "Content-Type: application/json" \\
+  -d '{"from":"你的session名","to":"A-研究院","message":"结论内容"}'
+```
+
+- CHECKPOINT 完成后也必须通知（不只是更新 memory）
+- 进入 idle/等待状态时也必须通知（"任务X完成，等待新指令"）
+- 禁止只在本地输出结果不发消息总线
+- 禁止写文件到 bus_outbox（必须用 API）
+
+---
+
+
 ## ⚠️ CHECKPOINT — 每完成一步必须执行（不可跳过）
 
 **完成任何代码修改、调试、或决策后，立即派后台 agent 更新 memory + 提炼评估，再做下一步。**
