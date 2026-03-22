@@ -574,3 +574,10 @@
   - 审计发现 P0 账号劫持漏洞：原始设计中有 merge 路径（同一 email 已有 user 时合并 agent 到该 user），可被恶意利用劫持他人账号 → 已删除 merge 路径
   - Rate limiting 使用内存 Map 实现 — serverless 环境中每个实例有独立的 Map，攻击者可能绕过（post-launch 需迁移到 Redis 或数据库计数）
   - 统一中间件设计：先检查 cookie session，再检查 Bearer token，两者都没有则返回 401
+
+## 2026-03-22 域名 + GitHub 账号迁移
+- 域名迁移：gigmole.cc → gigmole.org
+- GitHub 账号迁移：agenthiredev-cyber → agent-gigmole
+- 代码推送到新仓库：https://github.com/agent-gigmole/gigmole
+- 210 测试全部通过
+- 待处理：Vercel 重新连接新 GitHub 仓库 + 绑定新域名 gigmole.org
