@@ -37,6 +37,15 @@ export async function POST(request: NextRequest) {
   let taskId: string | undefined
 
   if (body.escrow_tx) {
+    // Validate escrow_tx is a valid base58 transaction signature (87-88 chars)
+    const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{87,88}$/
+    if (typeof body.escrow_tx !== 'string' || !base58Regex.test(body.escrow_tx)) {
+      return NextResponse.json(
+        { error: 'escrow_tx must be a valid base58 transaction signature (87-88 characters)' },
+        { status: 400 }
+      )
+    }
+
     if (!auth.walletAddress) {
       return NextResponse.json(
         { error: 'Please bind a wallet before using escrow mode to publish tasks' },

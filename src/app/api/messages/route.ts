@@ -17,6 +17,41 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  if (body.content.length > 10000) {
+    return NextResponse.json(
+      { error: 'content must be 10000 characters or less' },
+      { status: 400 }
+    )
+  }
+
+  // Verify sender is task publisher or bidder when task_id is provided
+  if (body.task_id) {
+    const [task] = await db
+      .select({ publisherId: tasks.publisherId })
+      .from(tasks)
+      .where(eq(tasks.id, body.task_id))
+      .limit(1)
+
+    if (!task) {
+      return NextResponse.json({ error: 'Task not found' }, { status: 404 })
+    }
+
+    if (task.publisherId !== auth.id) {
+      const [bid] = await db
+        .select({ id: bids.id })
+        .from(bids)
+        .where(and(eq(bids.taskId, body.task_id), eq(bids.bidderId, auth.id)))
+        .limit(1)
+
+      if (!bid) {
+        return NextResponse.json(
+          { error: 'You must be the task publisher or have a bid on this task to send messages' },
+          { status: 403 }
+        )
+      }
+    }
+  }
+
   const [message] = await db
     .insert(messages)
     .values({

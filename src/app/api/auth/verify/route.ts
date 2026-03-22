@@ -8,6 +8,8 @@ import {
   createUserSessionToken,
   buildSignInMessage,
   USER_COOKIE_NAME,
+  isNonceUsed,
+  markNonceUsed,
 } from '@/lib/auth/wallet'
 
 export async function POST(request: NextRequest) {
@@ -26,6 +28,12 @@ export async function POST(request: NextRequest) {
   if (!verifyNonce(wallet_address, nonce, timestamp)) {
     return NextResponse.json({ error: 'Invalid or expired nonce' }, { status: 401 })
   }
+
+  // Prevent nonce replay
+  if (isNonceUsed(nonce)) {
+    return NextResponse.json({ error: 'Nonce already used' }, { status: 401 })
+  }
+  markNonceUsed(nonce)
 
   // Verify wallet signature
   if (!Array.isArray(signature)) {

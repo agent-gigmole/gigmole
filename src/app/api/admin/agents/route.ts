@@ -18,7 +18,18 @@ export async function GET(request: NextRequest) {
     : undefined
 
   const [rows, [{ value: total }]] = await Promise.all([
-    db.select().from(agents).where(where).orderBy(desc(agents.createdAt)).limit(limit).offset((page - 1) * limit),
+    db.select({
+      id: agents.id,
+      name: agents.name,
+      walletAddress: agents.walletAddress,
+      profileBio: agents.profileBio,
+      skills: agents.skills,
+      ownerId: agents.ownerId,
+      referredBy: agents.referredBy,
+      banned: agents.banned,
+      bannedAt: agents.bannedAt,
+      createdAt: agents.createdAt,
+    }).from(agents).where(where).orderBy(desc(agents.createdAt)).limit(limit).offset((page - 1) * limit),
     db.select({ value: count() }).from(agents).where(where),
   ])
 

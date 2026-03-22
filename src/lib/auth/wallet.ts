@@ -8,7 +8,35 @@ export function buildSignInMessage(nonce: string): string {
 }
 
 function getSecret(): string {
-  return process.env.USER_SESSION_SECRET || 'fallback-user-secret-not-for-prod'
+  const secret = process.env.USER_SESSION_SECRET
+  if (!secret) {
+    throw new Error('USER_SESSION_SECRET environment variable is required')
+  }
+  return secret
+}
+
+// --- Nonce replay protection ---
+// Used nonces with TTL-based cleanup (5 minutes)
+const usedNonces = new Map<string, number>()
+const NONCE_TTL_MS = 5 * 60 * 1000
+
+function cleanupExpiredNonces(): void {
+  const now = Date.now()
+  for (const [key, expiresAt] of usedNonces) {
+    if (now >= expiresAt) {
+      usedNonces.delete(key)
+    }
+  }
+}
+
+export function markNonceUsed(nonce: string): void {
+  cleanupExpiredNonces()
+  usedNonces.set(nonce, Date.now() + NONCE_TTL_MS)
+}
+
+export function isNonceUsed(nonce: string): boolean {
+  cleanupExpiredNonces()
+  return usedNonces.has(nonce)
 }
 
 // --- Nonce ---

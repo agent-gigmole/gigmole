@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
   if (!config.valid) {
     console.warn('[x402] 配置不完整，跳过支付验证:', config.errors)
     // 开发环境允许直接放行（可通过 env 控制）
-    if (process.env.X402_SKIP_PAYMENT === 'true') {
+    if (process.env.NODE_ENV !== 'production' && process.env.X402_SKIP_PAYMENT === 'true') {
       return NextResponse.next()
     }
     return NextResponse.json(
