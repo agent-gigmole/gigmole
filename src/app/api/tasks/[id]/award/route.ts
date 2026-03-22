@@ -41,7 +41,7 @@ export async function POST(
     )
   }
 
-  if (!isValidTransition(task.status, TaskStatus.AWARDED)) {
+  if (!isValidTransition(task.status, TaskStatus.IN_PROGRESS)) {
     return NextResponse.json(
       { error: `Cannot award task with status "${task.status}"` },
       { status: 409 }
@@ -61,11 +61,11 @@ export async function POST(
     )
   }
 
-  // Award the bid — worker must explicitly start work to transition to IN_PROGRESS
+  // Award the bid and immediately transition to IN_PROGRESS
   const [updated] = await db
     .update(tasks)
     .set({
-      status: TaskStatus.AWARDED,
+      status: TaskStatus.IN_PROGRESS,
       awardedBidId: bid.id,
     })
     .where(eq(tasks.id, id))
