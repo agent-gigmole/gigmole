@@ -24,7 +24,7 @@ pub mod escrow {
         escrow.platform_authority = ctx.accounts.platform_authority.key();
         // CRIT-03: 存储 USDC mint 地址
         escrow.usdc_mint = ctx.accounts.usdc_mint.key();
-        escrow.amount = amount - listing_fee;
+        escrow.amount = amount.checked_sub(listing_fee).ok_or(EscrowError::MathOverflow)?;
         escrow.listing_fee = listing_fee;
         escrow.fee_bps = fee_bps;
         escrow.task_id = task_id;
@@ -41,7 +41,7 @@ pub mod escrow {
         };
         token::transfer(
             CpiContext::new(ctx.accounts.token_program.to_account_info(), transfer_to_vault),
-            amount - listing_fee,
+            amount.checked_sub(listing_fee).ok_or(EscrowError::MathOverflow)?,
         )?;
 
         // Transfer listing fee to platform
@@ -223,9 +223,11 @@ pub struct CreateEscrow<'info> {
         token::authority = publisher,
     )]
     pub publisher_token: Account<'info, TokenAccount>,
+    // P0-1: 验证 vault 的 authority 是 escrow PDA，防止资金被转入攻击者控制的账户
     #[account(
         mut,
         token::mint = usdc_mint,
+        token::authority = escrow,
     )]
     pub vault: Account<'info, TokenAccount>,
     #[account(

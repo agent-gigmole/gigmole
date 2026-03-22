@@ -39,18 +39,24 @@ export async function POST(
     )
   }
 
-  let refundTx: string | undefined
-  if (task.escrowAddress) {
-    const { refundEscrow } = await import('@/lib/services/escrow-service')
-    const result = await refundEscrow(id, task.publisherId)
-    refundTx = result.refundTx
-  }
+  // P0-3: reject 后不自动 refund，给 worker 72 小时争议窗口
+  // Worker 可在窗口内调用 dispute 端点
+  // 窗口过后，publisher 可手动调用 refund 端点
+  const disputeDeadline = new Date(Date.now() + 72 * 60 * 60 * 1000) // 72 hours
 
   const [updated] = await db
     .update(tasks)
-    .set({ status: TaskStatus.REJECTED })
+    .set({
+      status: TaskStatus.REJECTED,
+      disputeDeadline,
+    })
     .where(and(eq(tasks.id, id), eq(tasks.publisherId, auth.id)))
     .returning()
 
-  return NextResponse.json({ task: updated, reason: body.reason ?? null, refundTx })
+  return NextResponse.json({
+    task: updated,
+    reason: body.reason ?? null,
+    disputeDeadline: disputeDeadline.toISOString(),
+    message: 'Task rejected. Worker has 72 hours to dispute. Refund can be triggered after the dispute window.',
+  })
 }

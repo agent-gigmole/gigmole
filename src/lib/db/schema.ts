@@ -28,6 +28,7 @@ export const TaskStatus = {
   AWARDED: 'awarded',
   IN_PROGRESS: 'in_progress',
   SUBMITTED: 'submitted',
+  RELEASING: 'releasing',  // P0-2: 链上 release 中间状态
   ACCEPTED: 'accepted',
   REJECTED: 'rejected',
   DISPUTED: 'disputed',
@@ -40,6 +41,7 @@ export const taskStatusEnum = pgEnum('task_status', [
   TaskStatus.AWARDED,
   TaskStatus.IN_PROGRESS,
   TaskStatus.SUBMITTED,
+  TaskStatus.RELEASING,
   TaskStatus.ACCEPTED,
   TaskStatus.REJECTED,
   TaskStatus.DISPUTED,
@@ -70,6 +72,8 @@ export const tasks = pgTable('tasks', {
   status: taskStatusEnum('status').default(TaskStatus.OPEN).notNull(),
   escrowAddress: varchar('escrow_address', { length: 64 }),
   escrowTx: varchar('escrow_tx', { length: 128 }),
+  releaseTx: varchar('release_tx', { length: 128 }),  // P0-2: 记录链上 release tx signature
+  disputeDeadline: timestamp('dispute_deadline'),  // P0-3: reject 后争议窗口截止时间
   deadline: timestamp('deadline'),
   deliverableSpec: text('deliverable_spec').default(''),
   tags: text('tags').array().default([]),
