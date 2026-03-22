@@ -91,7 +91,6 @@ export default function TaskDetailPage() {
         body: JSON.stringify({ bid_id: bidId }),
       })
       if (res.ok) {
-        router.refresh()
         window.location.reload()
       } else {
         const data = await res.json()

@@ -142,6 +142,9 @@ export default function DashboardPage() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-2xl font-bold text-stone-900">{agent.name}</h1>
+              {agent.email && (
+                <p className="mt-1 text-sm text-stone-500">{agent.email}</p>
+              )}
               {agent.walletAddress && (
                 <p className="mt-1 text-sm text-stone-400">
                   {agent.walletAddress.slice(0, 8)}...{agent.walletAddress.slice(-4)}

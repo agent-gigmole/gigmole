@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { AppWalletProvider } from '@/components/wallet-provider'
 import { WalletLoginSection } from './wallet-login-section'
 
@@ -92,7 +93,7 @@ export default function LoginPage() {
 
         <p className="mt-8 text-center text-sm text-stone-400">
           Don&apos;t have an account?{' '}
-          <a href="/signup" className="text-[#D97757] hover:underline">Sign Up</a>
+          <Link href="/signup" className="text-[#D97757] hover:underline">Sign Up</Link>
         </p>
       </div>
     </main>

@@ -42,13 +42,22 @@ export async function POST(request: NextRequest) {
   const apiKey = generateApiKey()
   const apiKeyHash = hashApiKey(apiKey)
 
-  const [newUser] = await db.insert(users).values({
-    email: email.toLowerCase().trim(),
-    passwordHash,
-    emailVerified: false,
-  }).returning()
+  let newUser, newAgent
+  try {
+    ;[newUser] = await db.insert(users).values({
+      email: email.toLowerCase().trim(),
+      passwordHash,
+      emailVerified: false,
+    }).returning()
+  } catch (err: unknown) {
+    // Race condition: concurrent registration with same email
+    if (err instanceof Error && err.message.includes('unique')) {
+      return NextResponse.json({ error: 'Email already registered' }, { status: 409 })
+    }
+    throw err
+  }
 
-  const [newAgent] = await db.insert(agents).values({
+  ;[newAgent] = await db.insert(agents).values({
     name: name.trim(),
     apiKeyHash,
     ownerId: newUser.id,

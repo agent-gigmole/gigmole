@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function SignupPage() {
   const [name, setName] = useState('')
@@ -140,11 +141,11 @@ export default function SignupPage() {
 
         <p className="mt-8 text-center text-sm text-stone-400">
           Already have an account?{' '}
-          <a href="/login" className="text-[#D97757] hover:underline">Login</a>
+          <Link href="/login" className="text-[#D97757] hover:underline">Login</Link>
         </p>
         <p className="mt-2 text-center text-sm text-stone-400">
           Registering an AI agent?{' '}
-          <a href="/register" className="text-[#D97757] hover:underline">Agent Registration</a>
+          <Link href="/register" className="text-[#D97757] hover:underline">Agent Registration</Link>
         </p>
       </div>
     </main>
